@@ -1,0 +1,429 @@
+/* Projects Page Styles */
+.projects-page {
+    background: #f8f9fa;
+    padding-top: 100px;
+    padding-bottom: 80px;
+}
+
+/* Master Plan Section */
+.master-plan-section {
+    margin-bottom: 100px;
+}
+
+.master-plan-section .wpo-section-title p {
+    max-width: 800px;
+    margin: 20px auto 50px;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+}
+
+.master-plan-phases {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.phase-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 40px;
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.phase-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+}
+
+.phase-item::before {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 130px;
+    width: 2px;
+    height: calc(100% + 40px);
+    background: linear-gradient(to bottom, #1e3c72, transparent);
+    z-index: 1;
+}
+
+.phase-item:last-child::before {
+    display: none;
+}
+
+.phase-number {
+    min-width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 25px;
+    position: relative;
+    z-index: 2;
+}
+
+.phase-number span {
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.phase-content {
+    flex: 1;
+}
+
+.phase-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.phase-content h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+}
+
+.phase-meta {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.status-badge {
+    padding: 6px 15px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-badge.in-progress {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.planned {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.future {
+    background: #e2e3e5;
+    color: #6c757d;
+}
+
+.timeline {
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.phase-content p {
+    color: #666;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Current Projects Section */
+.current-projects-section {
+    margin-bottom: 100px;
+}
+
+.project-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 35px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+}
+
+.project-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.project-icon i {
+    font-size: 35px;
+    color: white;
+}
+
+.project-content h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.project-content p {
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    flex-grow: 1;
+}
+
+.project-progress {
+    margin-bottom: 25px;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.progress-header span {
+    font-weight: 600;
+    color: #333;
+}
+
+.percentage {
+    color: #ff6b35;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    transition: width 0.6s ease;
+}
+
+.project-details {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.project-details li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.project-details li i {
+    color: #ff6b35;
+    margin-right: 10px;
+    margin-top: 2px;
+    font-size: 12px;
+}
+
+/* Project Metrics Section */
+.project-metrics-section {
+    margin-bottom: 50px;
+}
+
+.metric-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 40px 25px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    height: 100%;
+    border: 2px solid transparent;
+}
+
+.metric-card:hover {
+    border-color: #ff6b35;
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(8, 179, 192, 0.15);
+}
+
+.metric-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.metric-icon i {
+    font-size: 30px;
+    color: white;
+}
+
+.metric-number {
+    font-size: 36px;
+    font-weight: 700;
+    color: #ff6b35;
+    margin-bottom: 10px;
+    line-height: 1;
+}
+
+.metric-label {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.metric-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* Responsive Styles */
+@media (max-width: 991px) {
+    .projects-page {
+        padding-top: 80px;
+        padding-bottom: 60px;
+    }
+
+    .master-plan-section,
+    .current-projects-section,
+    .project-metrics-section {
+        margin-bottom: 80px;
+    }
+
+    .phase-item {
+        padding: 25px;
+    }
+
+    .phase-number {
+        min-width: 70px;
+        height: 70px;
+        margin-right: 20px;
+    }
+
+    .phase-number span {
+        font-size: 20px;
+    }
+
+    .phase-content h3 {
+        font-size: 20px;
+    }
+
+    .project-card {
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .project-content h3 {
+        font-size: 22px;
+    }
+}
+
+@media (max-width: 767px) {
+    .projects-page {
+        padding-top: 60px;
+        padding-bottom: 40px;
+    }
+
+    .master-plan-section,
+    .current-projects-section,
+    .project-metrics-section {
+        margin-bottom: 60px;
+    }
+
+    .phase-item {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .phase-item::before {
+        display: none;
+    }
+
+    .phase-number {
+        margin: 0 auto 20px;
+    }
+
+    .phase-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .phase-meta {
+        justify-content: center;
+    }
+
+    .project-card {
+        padding: 25px;
+        text-align: center;
+    }
+
+    .project-icon {
+        margin: 0 auto 20px;
+    }
+
+    .project-content h3 {
+        font-size: 20px;
+    }
+
+    .metric-card {
+        padding: 30px 20px;
+        margin-bottom: 25px;
+    }
+
+    .metric-number {
+        font-size: 32px;
+    }
+
+    .metric-label {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .phase-number {
+        min-width: 60px;
+        height: 60px;
+    }
+
+    .phase-number span {
+        font-size: 18px;
+    }
+
+    .phase-content h3 {
+        font-size: 18px;
+    }
+
+    .project-content h3 {
+        font-size: 18px;
+    }
+
+    .metric-number {
+        font-size: 28px;
+    }
+}

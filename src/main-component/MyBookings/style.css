@@ -1,0 +1,307 @@
+.my-bookings-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 2rem 0;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.back-button {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white !important;
+    color: #666 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.page-header h1 {
+    margin: 1rem 0 0.5rem 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.bookings-card {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.bookings-tabs {
+    margin-bottom: 2rem;
+}
+
+.booking-item {
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+    transition: all 0.3s ease !important;
+    border-left: 4px solid transparent;
+}
+
+.booking-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+}
+
+.booking-item[data-status="confirmed"] {
+    border-left-color: #4CAF50;
+}
+
+.booking-item[data-status="pending"] {
+    border-left-color: #FF9800;
+}
+
+.booking-item[data-status="completed"] {
+    border-left-color: #2196F3;
+}
+
+.booking-icon-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.booking-icon {
+    width: 80px;
+    height: 80px;
+    background: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.booking-details {
+    height: 100%;
+}
+
+.booking-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+    gap: 1rem;
+}
+
+.booking-header h3 {
+    margin: 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.booking-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #666;
+}
+
+.info-item .MuiSvgIcon-root {
+    color: #999;
+}
+
+.special-requirements {
+    color: #666;
+    background: #f8f9fa;
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+}
+
+.booking-payment {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-info {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.amount {
+    font-weight: 700 !important;
+    font-size: 1.5rem !important;
+}
+
+.payment-status {
+    margin: 0.5rem 0 !important;
+}
+
+.booking-actions {
+    border-top: 1px solid #eee;
+    padding: 1rem 1.5rem !important;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.documents-title {
+    color: #333 !important;
+    font-weight: 600 !important;
+    margin-bottom: 1rem !important;
+}
+
+.document-card {
+    border-radius: 12px !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+    transition: all 0.3s ease !important;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.document-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12) !important;
+}
+
+.document-icon {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.document-title {
+    color: #333 !important;
+    font-weight: 600 !important;
+    margin-bottom: 0.5rem !important;
+    text-align: center;
+}
+
+.document-description {
+    text-align: center;
+    margin-bottom: 1rem !important;
+    min-height: 2.5rem;
+}
+
+.document-meta {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: auto;
+}
+
+.document-meta .MuiTypography-root {
+    margin-bottom: 0.25rem !important;
+}
+
+.document-actions {
+    padding: 1rem 1.5rem !important;
+    justify-content: center;
+    margin-top: auto;
+}
+
+@media (max-width: 768px) {
+    .my-bookings-wrapper {
+        padding: 1rem 0;
+    }
+    
+    .page-header {
+        text-align: left;
+        padding: 0 1rem;
+    }
+    
+    .back-button {
+        position: static;
+        transform: none;
+        margin-bottom: 1rem;
+        align-self: flex-start;
+    }
+    
+    .booking-item .MuiGrid-container {
+        flex-direction: column;
+    }
+    
+    .booking-icon-section {
+        order: 1;
+        margin-bottom: 1rem;
+    }
+    
+    .booking-payment {
+        order: 2;
+        justify-content: flex-start;
+        margin-bottom: 1rem;
+    }
+    
+    .payment-info {
+        flex-direction: row;
+        gap: 1rem;
+        text-align: left;
+        align-items: center;
+    }
+    
+    .booking-details {
+        order: 3;
+    }
+    
+    .booking-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .booking-info {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .booking-actions {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+    
+    .document-card {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .booking-info {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .payment-info {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+    
+    .booking-actions {
+        flex-direction: column;
+    }
+    
+    .booking-actions .MuiButton-root,
+    .booking-actions .MuiIconButton-root {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .empty-state {
+        padding: 2rem 1rem;
+    }
+}

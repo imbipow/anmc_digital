@@ -1,0 +1,583 @@
+/* Facilities Page Styles */
+.facilities-page {
+    background: #f8f9fa;
+    padding-top: 100px;
+    padding-bottom: 80px;
+}
+
+/* Facilities Overview Section */
+.facilities-overview-section {
+    margin-bottom: 80px;
+}
+
+.facilities-overview-section .wpo-section-title p {
+    max-width: 800px;
+    margin: 20px auto 0;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+}
+
+/* Facility Cards Section */
+.facility-cards-section {
+    margin-bottom: 100px;
+}
+
+.facility-cards-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.facility-card {
+    background: #ffffff;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.facility-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+}
+
+.facility-header {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    padding: 30px 40px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.facility-icon {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+    color: white;
+    backdrop-filter: blur(10px);
+}
+
+.facility-title-section {
+    flex: 1;
+    margin-left: 25px;
+}
+
+.facility-title-section h3 {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+    color: white;
+}
+
+.capacity-info {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.capacity-info i {
+    margin-right: 8px;
+    font-size: 18px;
+}
+
+.pricing-badge {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 12px 20px;
+    border-radius: 25px;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.facility-content {
+    padding: 40px;
+}
+
+.facility-description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.facility-features h4 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 12px;
+}
+
+.features-list li {
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    color: #555;
+    padding: 8px 0;
+}
+
+.features-list li i {
+    color: #ff6b35;
+    margin-right: 12px;
+    font-size: 16px;
+}
+
+/* Booking Form Section */
+.booking-form-section {
+    background: #ffffff;
+    margin-top: 60px;
+}
+
+.booking-form-wrapper {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f0f0f0;
+}
+
+.booking-form {
+    max-width: 100%;
+}
+
+.form-section {
+    margin-bottom: 40px;
+    padding-bottom: 40px;
+    border-bottom: 2px solid #f8f9fa;
+}
+
+.form-section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 30px;
+}
+
+.form-section h3 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #1e3c72;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #ff6b35;
+    display: inline-block;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-bottom: 20px;
+}
+
+.form-row:last-child {
+    margin-bottom: 0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group.time-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.time-inputs {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.time-inputs span {
+    color: #666;
+    font-weight: 500;
+}
+
+.form-group label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 12px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: #ffffff;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #1e3c72;
+    box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-submit {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 2px solid #f8f9fa;
+}
+
+.submit-btn {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    color: white;
+    padding: 15px 40px;
+    border: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 8px 25px rgba(30, 60, 114, 0.3);
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 35px rgba(30, 60, 114, 0.4);
+}
+
+.form-note {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive Styles */
+@media (max-width: 991px) {
+    .facilities-page {
+        padding-top: 80px;
+        padding-bottom: 60px;
+    }
+    
+    .facilities-overview-section,
+    .facility-cards-section {
+        margin-bottom: 60px;
+    }
+    
+    .facility-header {
+        padding: 25px 30px;
+    }
+    
+    .facility-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 30px;
+    }
+    
+    .facility-title-section h3 {
+        font-size: 24px;
+    }
+    
+    .facility-content {
+        padding: 30px;
+    }
+    
+    .booking-form-wrapper {
+        padding: 35px;
+    }
+    
+    .form-row {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+    .facility-header {
+        flex-direction: column;
+        text-align: center;
+        padding: 25px 20px;
+    }
+    
+    .facility-title-section {
+        margin-left: 0;
+        margin-top: 15px;
+    }
+    
+    .facility-title-section h3 {
+        font-size: 22px;
+    }
+    
+    .pricing-badge {
+        margin-top: 15px;
+        font-size: 16px;
+    }
+    
+    .facility-content {
+        padding: 25px 20px;
+    }
+    
+    .features-list {
+        grid-template-columns: 1fr;
+    }
+    
+    .booking-form-wrapper {
+        padding: 25px 20px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .time-inputs {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .time-inputs span {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .facility-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 25px;
+    }
+    
+    .facility-title-section h3 {
+        font-size: 20px;
+    }
+    
+    .form-section h3 {
+        font-size: 20px;
+    }
+    
+    .submit-btn {
+        padding: 12px 30px;
+        font-size: 15px;
+    }
+}
+
+
+@media(max-width: 1200px) {
+    .service-wrap-s2 .service-img {
+        left: -80px;
+    }
+}
+
+@media(max-width: 991px) {
+    .service-wrap-s2 {
+        padding-top: 0;
+    }
+}
+
+/*.===============================
+#0.9 wpo-counter-area
+===============================*/
+
+.wpo-counter-grids {
+    margin-top: 40px;
+}
+
+.wpo-counter-grids .grid {
+    width: 31%;
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    position: relative;
+}
+
+.counter-number {
+    width: 150px;
+    height: 150px;
+    line-height: 150px;
+    background: #ddd;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    margin: auto;
+}
+
+.counter-number:before {
+    position: absolute;
+    left: 25px;
+    top: 25px;
+    width: 100px;
+    height: 100px;
+    background: #fff;
+    content: "";
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.wpo-counter-grids .grid:nth-child(1) .counter-number {
+    background: #00c6d1;
+    background: -webkit-linear-gradient(to left, #00a7d5, #00ded8);
+    background: -moz-linear-gradient(to left, #00a7d5, #00ded8);
+    background: -o-linear-gradient(to left, #00a7d5, #00ded8);
+    background: -ms-linear-gradient(to left, #00a7d5, #00ded8);
+    background: -webkit-gradient(linear, left top, right top, from(#00a7d5), to(#00ded8));
+    background: linear-gradient(to left, #00a7d5, #00ded8);
+}
+
+.wpo-counter-grids .grid:nth-child(2) .counter-number {
+    background: -moz-linear-gradient(173deg, rgb(255, 173, 111) 0%, rgb(255, 125, 144) 100%);
+    background: -webkit-linear-gradient(173deg, rgb(255, 173, 111) 0%, rgb(255, 125, 144) 100%);
+    background: -ms-linear-gradient(173deg, rgb(255, 173, 111) 0%, rgb(255, 125, 144) 100%);
+    background: linear-gradient(173deg, rgb(255, 173, 111) 0%, rgb(255, 125, 144) 100%);
+}
+
+.wpo-counter-grids .grid:nth-child(3) .counter-number {
+    background: -moz-linear-gradient(179deg, rgb(216, 205, 255) 0%, rgb(109, 100, 255) 100%);
+    background: -webkit-linear-gradient(179deg, rgb(216, 205, 255) 0%, rgb(109, 100, 255) 100%);
+    background: -ms-linear-gradient(179deg, rgb(216, 205, 255) 0%, rgb(109, 100, 255) 100%);
+    background: linear-gradient(179deg, rgb(216, 205, 255) 0%, rgb(109, 100, 255) 100%);
+}
+
+.wpo-counter-grids .grid p,
+.wpo-counter-grids .grid p {
+    font-size: 18px;
+    font-weight: normal;
+    color: #242f6c;
+    padding-top: 5px;
+    margin-bottom: 0;
+    font-weight: 700;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.wpo-counter-grids,
+.wpo-counter-grids {
+    overflow: hidden;
+    position: relative;
+}
+
+.odometer.odometer-auto-theme,
+.odometer.odometer-theme-default,
+.odometer.odometer-auto-theme,
+.odometer.odometer-theme-default {
+    line-height: 0.8em;
+}
+
+.wpo-counter-grids .grid h2 {
+    font-size: 25px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.service-area .wpo-counter-grids .grid h2 {
+    font-size: 40px;
+    color: #00a7d5;
+}
+
+@media(max-width: 1200px) {
+
+    .wpo-counter-grids .grid p {
+        font-size: 15px;
+    }
+}
+
+@media(max-width: 992px) {
+
+    .wpo-counter-grids .grid h2,
+    .wpo-counter-grids .grid h2 {
+        font-size: 25px;
+    }
+
+
+}
+
+@media(max-width: 767px) {
+
+    .wpo-counter-grids .grid,
+    .wpo-counter-grids .grid {
+        width: 30%;
+    }
+
+    .service-title h2 {
+        font-size: 26px;
+        line-height: 40px;
+    }
+
+    .service-area.section-padding {
+        padding: 80px 0;
+        padding-bottom: 60px;
+    }
+
+    .service-area .wpo-counter-grids .grid {
+        margin-bottom: 20px;
+        width: 25%;
+    }
+}
+
+@media(max-width: 530px) {
+
+    .wpo-counter-grids .grid,
+    .wpo-counter-grids .grid {
+        width: 46%;
+    }
+
+    .routine-table ul li {
+        font-size: 14px;
+        padding: 8px;
+        flex-basis: 69.33%;
+    }
+
+
+}
+
+@media(max-width: 450px) {
+
+    .wpo-counter-grids .grid {
+        width: 100%;
+        margin-bottom: 30px;
+    }
+
+    .wpo-counter-grids .grid:last-child {
+        margin-bottom: 0;
+    }
+
+    .service-area .wpo-counter-grids .grid {
+        margin-bottom: 20px;
+        width: 45%;
+    }
+}

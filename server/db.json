@@ -1,0 +1,234 @@
+{
+  "homepage": [
+    {
+      "id": "hero",
+      "component": "hero",
+      "data": {
+        "welcomeText": "Welcome to ANMC",
+        "title": "Building Bridges, Strengthening Communities",
+        "subtitle": "The Australian Nepalese Multicultural Centre is dedicated to fostering cultural diversity, community engagement, and supporting our members through various programs and initiatives.",
+        "learnMoreText": "Learn More",
+        "memberButtonText": "Become a Member",
+        "heroImage": "/src/images/slider/img-3.png"
+      }
+    }
+  ],
+  "counters": [
+    {
+      "id": 1,
+      "count": 500,
+      "suffix": "+",
+      "label": "Life Members"
+    },
+    {
+      "id": 2,
+      "count": 25,
+      "suffix": "",
+      "label": "Acres of Land"
+    },
+    {
+      "id": 3,
+      "count": 2,
+      "prefix": "$",
+      "suffix": "M+",
+      "label": "Funds Raised"
+    },
+    {
+      "id": 4,
+      "count": 1998,
+      "suffix": "",
+      "label": "Established"
+    }
+  ],
+  "news": [
+    {
+      "id": 1,
+      "title": "ANMC Annual Dashain Celebration 2024",
+      "slug": "dashain-celebration-2024",
+      "content": "Join us for our annual Dashain celebration with traditional music, dance, and authentic Nepalese cuisine.",
+      "excerpt": "Annual Dashain celebration with traditional activities and community gathering.",
+      "authorName": "ANMC Admin",
+      "date": "2024-10-15",
+      "publishedAt": "2024-10-15T10:00:00Z",
+      "featuredImage": "/src/images/blog/img-1.jpg",
+      "featured": true,
+      "status": "published",
+      "category": "community-events",
+      "tags": ["dashain", "festival", "community"]
+    },
+    {
+      "id": 2,
+      "title": "New Community Programs Launched",
+      "slug": "new-community-programs",
+      "content": "ANMC is excited to announce new community programs including language classes, cultural workshops, and youth activities.",
+      "excerpt": "Discover our new range of community programs designed to strengthen cultural connections.",
+      "authorName": "ANMC Admin",
+      "date": "2024-11-20",
+      "publishedAt": "2024-11-20T14:30:00Z",
+      "featuredImage": "/src/images/blog/img-2.jpg",
+      "featured": true,
+      "status": "published",
+      "category": "programs",
+      "tags": ["programs", "community", "education"]
+    }
+  ],
+  "events": [
+    {
+      "id": 1,
+      "title": "Community Picnic 2025",
+      "slug": "community-picnic-2025",
+      "description": "Annual community picnic at Riverside Park with games, food, and entertainment for all ages.",
+      "content": "Join us for our annual community picnic featuring traditional games, delicious food, and live entertainment. A perfect opportunity to connect with fellow community members.",
+      "startDate": "2025-03-15",
+      "endDate": "2025-03-15",
+      "startTime": "10:00",
+      "endTime": "16:00",
+      "location": "Riverside Park, Melbourne",
+      "address": "123 Riverside Drive, Melbourne VIC 3000",
+      "featuredImage": "/src/images/event/img-1.jpg",
+      "featured": true,
+      "status": "upcoming",
+      "category": "community",
+      "maxAttendees": 200,
+      "registrationRequired": true,
+      "contactEmail": "events@anmc.org.au",
+      "tags": ["picnic", "community", "family"]
+    },
+    {
+      "id": 2,
+      "title": "Cultural Dance Workshop",
+      "slug": "cultural-dance-workshop",
+      "description": "Learn traditional Nepalese dances with experienced instructors.",
+      "content": "Experience the beauty of Nepalese culture through traditional dance. Our experienced instructors will teach you basic steps and cultural significance.",
+      "startDate": "2025-02-10",
+      "endDate": "2025-02-10",
+      "startTime": "14:00",
+      "endTime": "17:00",
+      "location": "ANMC Community Center",
+      "address": "456 Community Street, Melbourne VIC 3001",
+      "featuredImage": "/src/images/event/img-2.jpg",
+      "featured": false,
+      "status": "upcoming",
+      "category": "culture",
+      "maxAttendees": 30,
+      "registrationRequired": true,
+      "contactEmail": "culture@anmc.org.au",
+      "tags": ["dance", "culture", "workshop"]
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "title": "Community Garden Initiative",
+      "slug": "community-garden-initiative",
+      "description": "Creating sustainable community gardens to promote local food production and community engagement.",
+      "content": "Our community garden initiative aims to create sustainable spaces where community members can grow their own vegetables and herbs while learning about sustainable practices.",
+      "status": "active",
+      "startDate": "2024-06-01",
+      "endDate": "2025-12-31",
+      "budget": 15000,
+      "fundingSource": "Community Grants",
+      "projectManager": "Sarah Johnson",
+      "featuredImage": "/src/images/service/img-1.png",
+      "featured": true,
+      "category": "sustainability",
+      "progress": 75,
+      "tags": ["garden", "sustainability", "community"]
+    },
+    {
+      "id": 2,
+      "title": "Youth Leadership Program",
+      "slug": "youth-leadership-program",
+      "description": "Developing leadership skills in young community members through mentorship and training.",
+      "content": "A comprehensive program designed to develop leadership skills in young people aged 16-25, providing mentorship, training, and real-world experience.",
+      "status": "active",
+      "startDate": "2024-09-01",
+      "endDate": "2025-08-31",
+      "budget": 25000,
+      "fundingSource": "Government Grant",
+      "projectManager": "Raj Patel",
+      "featuredImage": "/src/images/service/img-2.png",
+      "featured": true,
+      "category": "youth",
+      "progress": 40,
+      "tags": ["youth", "leadership", "mentorship"]
+    }
+  ],
+  "about_us": [
+    {
+      "id": "main",
+      "title": "About ANMC",
+      "subtitle": "Building Bridges, Strengthening Communities",
+      "mission": "To foster cultural diversity, promote community engagement, and support the social, cultural, and economic wellbeing of the Australian Nepalese community.",
+      "vision": "A vibrant, inclusive community where cultural heritage is celebrated and preserved while embracing Australian values and opportunities.",
+      "history": "Established in 1998, the Australian Nepalese Multicultural Centre has been serving the community for over 25 years, growing from a small group of families to a thriving organization representing thousands of community members.",
+      "values": ["Cultural Preservation", "Community Unity", "Inclusivity", "Excellence", "Integrity"],
+      "achievements": [
+        "Over 500 life members",
+        "25 acres of community land",
+        "$2M+ funds raised for community projects",
+        "Multiple award-winning cultural programs"
+      ],
+      "featuredImage": "/src/images/about.png"
+    }
+  ],
+  "facilities": [
+    {
+      "id": 1,
+      "name": "Main Community Hall",
+      "description": "Large multipurpose hall suitable for events, meetings, and celebrations.",
+      "capacity": 300,
+      "amenities": ["Audio/Visual Equipment", "Kitchen Facilities", "Parking", "Wheelchair Access"],
+      "bookingRate": 150,
+      "featuredImage": "/src/images/service/img-3.png",
+      "available": true
+    },
+    {
+      "id": 2,
+      "name": "Meeting Rooms",
+      "description": "Smaller meeting rooms perfect for committee meetings and workshops.",
+      "capacity": 25,
+      "amenities": ["Projector", "WiFi", "Air Conditioning", "Parking"],
+      "bookingRate": 50,
+      "featuredImage": "/src/images/service/img-4.png",
+      "available": true
+    },
+    {
+      "id": 3,
+      "name": "Cultural Center",
+      "description": "Dedicated space for cultural activities, classes, and workshops.",
+      "capacity": 50,
+      "amenities": ["Audio System", "Dance Floor", "Storage", "Cultural Artifacts"],
+      "bookingRate": 80,
+      "featuredImage": "/src/images/service/img-5.png",
+      "available": true
+    }
+  ],
+  "contact": [
+    {
+      "id": "main",
+      "address": "123 Community Street, Melbourne VIC 3001",
+      "phone": "+61 3 9876 5432",
+      "email": "info@anmc.org.au",
+      "emergencyPhone": "+61 400 123 456",
+      "officeHours": "Monday to Friday: 9:00 AM - 5:00 PM",
+      "weekendHours": "Saturday: 10:00 AM - 2:00 PM",
+      "socialMedia": {
+        "facebook": "https://facebook.com/anmc.melbourne",
+        "instagram": "https://instagram.com/anmc_melbourne",
+        "twitter": "https://twitter.com/anmc_melbourne"
+      },
+      "mapCoordinates": {
+        "lat": -37.8136,
+        "lng": 144.9631
+      }
+    }
+  ],
+  "blog_section": [
+    {
+      "id": "blog_section_content",
+      "sectionTitle": "Featured News & Events",
+      "sectionHeading": "Stay Connected with Our Community"
+    }
+  ]
+}

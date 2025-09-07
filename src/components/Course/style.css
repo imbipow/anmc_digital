@@ -1,0 +1,57 @@
+/*=============================
+#4.1 courses-area
+===============================*/
+
+.courses-area {
+    background: #f5fbfd;
+    padding: 100px 0 50px;
+}
+
+.course-text h2 {
+    font-size: 30px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-family: 'Now';
+}
+
+.course-icon {
+    display: block;
+    width: 75px;
+    height: 45px;
+    margin-bottom: 35px;
+}
+
+.course-icon span {
+    display: block;
+    width: 75px;
+    height: 45px;
+}
+
+.courses-item {
+    margin-bottom: 50px;
+}
+
+.support-area-3,
+.wpo-ne-footer-2 {
+    background: #f5fbfd;
+}
+
+.wpo-ne-footer-2 .wpo-site-footer {
+    background: #f5fbfd;
+}
+
+.wpo-ne-footer-2 .wpo-news-letter-section:before {
+    background: #fff;
+}
+
+
+@media(max-height: 767px) {
+    .course-text h2 {
+        font-size: 25px;
+    }
+}
+
+
+.wpo-ne-footer-2 .wpo-news-letter-section{
+    display: none;
+}

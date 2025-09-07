@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(amplify push:*)",
+      "Bash(rm:*)",
+      "Bash(curl:*)",
+      "Bash(amplify status:*)",
+      "Bash(grep:*)",
+      "Bash(taskkill:*)",
+      "Bash(npm start)",
+      "Bash(npm run:*)",
+      "Bash(amplify add:*)",
+      "Bash(claude init)",
+      "Bash(claude --version)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

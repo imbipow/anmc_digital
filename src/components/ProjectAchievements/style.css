@@ -1,0 +1,168 @@
+/* Project Achievements Section */
+.project-achievements-section {
+    background: #f8f9fa;
+    position: relative;
+}
+
+.project-achievements-section .wpo-section-title {
+    margin-bottom: 50px;
+}
+
+.project-achievements-section .wpo-section-title span {
+    color: #ff6b35;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.project-achievements-section .wpo-section-title h2 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 15px;
+    line-height: 1.2;
+}
+
+.project-achievements-section .wpo-section-title p {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Metric Cards */
+.metric-card {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+    border: 1px solid #f0f0f0;
+    height: 100%;
+}
+
+.metric-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.metric-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #ff6b35, #f7931e);
+    border-radius: 50%;
+    margin: 0 auto 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.metric-icon::after {
+    content: '';
+    position: absolute;
+    width: 85px;
+    height: 85px;
+    border: 2px solid rgba(255, 107, 53, 0.3);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.2);
+        opacity: 0;
+    }
+}
+
+.metric-icon i {
+    font-size: 30px;
+    color: #fff;
+}
+
+.metric-number {
+    font-size: 42px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+    line-height: 1;
+}
+
+.metric-label {
+    font-size: 18px;
+    font-weight: 600;
+    color: #ff6b35;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.metric-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+    .project-achievements-section .wpo-section-title h2 {
+        font-size: 30px;
+    }
+    
+    .metric-card {
+        padding: 30px 20px;
+        margin-bottom: 30px;
+    }
+    
+    .metric-number {
+        font-size: 36px;
+    }
+}
+
+@media (max-width: 767px) {
+    .project-achievements-section {
+        padding: 60px 0;
+    }
+    
+    .project-achievements-section .wpo-section-title h2 {
+        font-size: 26px;
+    }
+    
+    .metric-card {
+        padding: 30px 25px;
+        margin-bottom: 25px;
+    }
+    
+    .metric-icon {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 20px;
+    }
+    
+    .metric-icon::after {
+        width: 75px;
+        height: 75px;
+    }
+    
+    .metric-icon i {
+        font-size: 24px;
+    }
+    
+    .metric-number {
+        font-size: 32px;
+    }
+    
+    .metric-label {
+        font-size: 16px;
+    }
+}

@@ -1,0 +1,295 @@
+
+/*====================================================
+#0.7 wpo-about-area
+======================================================*/
+
+
+.wpo-about-text .wpo-section-title,
+.wpo-about-text-2 .wpo-section-title {
+    text-align: left;
+    margin: unset;
+    margin-bottom: 35px;
+}
+
+.wpo-about-text p,
+.wpo-about-text-2 p {
+    margin-bottom: 35px;
+}
+
+.wpo-about-text {}
+
+.wpo-about-img img,
+.wpo-about-img-2 img {
+    width: 100%;
+}
+
+
+.wpo-about-wrap .row {
+    display: flex;
+    align-items: center;
+}
+
+
+@media(max-width: 991px) {
+    .wpo-about-wrap .row {
+        display: unset;
+    }
+
+}
+
+
+.wpo-about-wrap {
+    padding-bottom: 120px;
+}
+
+/* Mission/Vision/History Section */
+.mission-vision-section {
+    margin-bottom: 80px;
+}
+
+.mission-card, .vision-card, .history-card {
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    margin-bottom: 30px;
+}
+
+.mission-card:hover, .vision-card:hover, .history-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+.mission-card .card-icon, .vision-card .card-icon, .history-card .card-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    font-size: 35px;
+    color: white;
+}
+
+.mission-card .card-icon {
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+
+.vision-card .card-icon {
+    background: linear-gradient(135deg, #ff6b35 0%, #dc3545 100%);
+}
+
+.history-card .card-icon {
+    background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+}
+
+.mission-card h3, .vision-card h3, .history-card h3 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.mission-card p, .vision-card p, .history-card p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+}
+
+/* Executive Committee Section */
+.executive-committee-section {
+    background: #f8f9fa;
+    padding: 80px 0;
+    margin: 80px 0;
+    border-radius: 20px;
+}
+
+.team-member-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 30px;
+    height: 100%;
+}
+
+.team-member-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.member-photo {
+    margin-bottom: 25px;
+}
+
+.avatar-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 50px;
+    color: white;
+}
+
+.member-info h4 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+.member-info .position {
+    font-size: 14px;
+    color: #ff6b35;
+    text-transform: uppercase;
+    font-weight: 500;
+    letter-spacing: 1px;
+    display: block;
+    margin-bottom: 15px;
+}
+
+.member-info p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #666;
+}
+
+/* Governance Structure Section */
+.governance-structure-section {
+    margin-bottom: 80px;
+}
+
+.governance-card {
+    background: #ffffff;
+    padding: 40px 30px;
+    border-radius: 15px;
+    text-align: center;
+    border: 2px solid #f0f0f0;
+    transition: all 0.3s ease;
+    height: 100%;
+    margin-bottom: 30px;
+}
+
+.governance-card:hover {
+    border-color: #ff6b35;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(30, 60, 114, 0.15);
+}
+
+.governance-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    font-size: 35px;
+    color: white;
+}
+
+.governance-card h3 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.governance-card p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #666;
+}
+
+.wpo-event-area-2 .wpo-event-item {
+    margin-bottom: 30px;
+}
+
+.wpo-event-area-2.section-padding {
+    padding-bottom: 90px;
+}
+
+@media(max-width: 991px) {
+    .wpo-event-area-2.section-padding {
+        padding-bottom: 50px;
+    }
+
+}
+
+/* Responsive Styles */
+
+@media(max-width: 991px) {
+    .wpo-about-area.section-padding{
+        padding-top: 50px;
+    }
+
+    .executive-committee-section {
+        padding: 60px 30px;
+        margin: 60px 0;
+    }
+
+    .mission-vision-section,
+    .governance-structure-section {
+        margin-bottom: 60px;
+    }
+
+    .mission-card, .vision-card, .history-card,
+    .governance-card {
+        padding: 30px 20px;
+    }
+
+    .team-member-card {
+        padding: 25px;
+    }
+
+    .avatar-placeholder {
+        width: 100px;
+        height: 100px;
+        font-size: 40px;
+    }
+}
+
+@media(max-width: 767px) {
+    .executive-committee-section {
+        padding: 40px 20px;
+        margin: 40px 0;
+    }
+
+    .mission-vision-section,
+    .governance-structure-section {
+        margin-bottom: 40px;
+    }
+
+    .mission-card h3, .vision-card h3, .history-card h3,
+    .governance-card h3 {
+        font-size: 20px;
+    }
+
+    .member-info h4 {
+        font-size: 20px;
+    }
+
+    .mission-card .card-icon, .vision-card .card-icon, .history-card .card-icon,
+    .governance-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 30px;
+    }
+
+    .avatar-placeholder {
+        width: 80px;
+        height: 80px;
+        font-size: 35px;
+    }
+}

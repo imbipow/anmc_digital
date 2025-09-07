@@ -1,0 +1,188 @@
+.member-portal-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 0 0 2rem 0;
+}
+
+.anmc-header {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+.anmc-header .MuiToolbar-root {
+    padding: 1rem 2rem !important;
+}
+
+.header-logo {
+    height: 60px;
+    width: auto;
+    filter: brightness(1.1);
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    padding-top: 2rem;
+}
+
+.member-header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+
+.member-info h1 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.section-title {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 1rem !important;
+    text-align: center;
+}
+
+.feature-card {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s ease !important;
+    border: none !important;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+}
+
+.feature-content {
+    text-align: center;
+    padding: 2rem 1rem 1rem !important;
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.feature-title {
+    color: #333;
+    font-weight: 600 !important;
+    margin-bottom: 1rem !important;
+}
+
+.feature-description {
+    line-height: 1.5;
+    margin-bottom: 1rem !important;
+}
+
+.feature-actions {
+    padding: 0 1rem 1.5rem !important;
+    justify-content: center;
+}
+
+.quick-stats {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    margin-top: 2rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+}
+
+.stat-item h4 {
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .member-portal-wrapper {
+        padding: 0 0 1rem 0;
+    }
+    
+    .container {
+        padding-top: 1rem;
+    }
+    
+    .anmc-header .MuiToolbar-root {
+        flex-direction: column;
+        min-height: auto !important;
+        padding: 1rem !important;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .header-logo {
+        height: 45px;
+    }
+    
+    .header-text h5 {
+        font-size: 1.2rem !important;
+        line-height: 1.1 !important;
+    }
+    
+    .header-text h6 {
+        font-size: 1rem !important;
+        margin-top: 2px !important;
+    }
+    
+    .header-text .MuiTypography-body2 {
+        font-size: 0.85rem;
+    }
+    
+    .member-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .feature-card {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .anmc-header .MuiToolbar-root {
+        padding: 0.75rem !important;
+    }
+    
+    .header-text h5 {
+        font-size: 1rem !important;
+    }
+    
+    .header-text h6 {
+        font-size: 0.9rem !important;
+    }
+    
+    .header-text .MuiTypography-body2 {
+        font-size: 0.8rem;
+    }
+    
+    .member-header {
+        padding: 1.5rem;
+    }
+    
+    .feature-content {
+        padding: 1.5rem 1rem 1rem !important;
+    }
+}

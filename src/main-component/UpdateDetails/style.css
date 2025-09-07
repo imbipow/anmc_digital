@@ -1,0 +1,137 @@
+.update-details-wrapper {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    padding: 2rem 0;
+}
+
+.page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.back-button {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white !important;
+    color: #666 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.page-header h1 {
+    margin: 1rem 0 0.5rem 0;
+    color: #333;
+    font-weight: 600;
+}
+
+.profile-card {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    height: fit-content;
+}
+
+.profile-content {
+    text-align: center;
+    padding: 2rem !important;
+}
+
+.profile-avatar {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+}
+
+.profile-name {
+    color: #333;
+    font-weight: 600 !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.details-card {
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.card-header h2 {
+    color: #333;
+    font-weight: 600;
+    margin: 0;
+}
+
+.edit-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.MuiTextField-root .MuiInputBase-input.Mui-disabled {
+    -webkit-text-fill-color: rgba(0, 0, 0, 0.6);
+    background-color: #f5f5f5;
+}
+
+.MuiTextField-root .MuiInputLabel-root.Mui-disabled {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+    .update-details-wrapper {
+        padding: 1rem 0;
+    }
+    
+    .page-header {
+        text-align: left;
+        padding: 0 1rem;
+    }
+    
+    .back-button {
+        position: static;
+        transform: none;
+        margin-bottom: 1rem;
+        align-self: flex-start;
+    }
+    
+    .card-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .edit-buttons {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .profile-card {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        padding: 0 1rem;
+    }
+    
+    .profile-content {
+        padding: 1.5rem !important;
+    }
+    
+    .edit-buttons {
+        flex-direction: column;
+    }
+    
+    .edit-buttons .MuiButton-root {
+        width: 100%;
+        margin: 0 !important;
+        margin-bottom: 0.5rem !important;
+    }
+}

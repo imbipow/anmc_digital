@@ -1,0 +1,182 @@
+/*==========================================
+#1.0 pilars-area
+=============================================*/
+
+
+.pilarts-img {
+    width: 280px;
+    height: 280px;
+    line-height: 280px;
+    overflow: hidden;
+    border-radius: 50%;
+    background-color: rgb(248, 254, 254);
+    box-shadow: 0px 5px 15px 0px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin: 0 auto;
+}
+
+.pilars-area .grid:nth-child(2) .pilarts-img {
+    background-color: #fcf4f5;
+}
+
+.pilars-area .grid:nth-child(3) .pilarts-img {
+    background-color: #f9f8fe;
+}
+
+.pilars-area .grid:nth-child(4) .pilarts-img {
+    background-color: #fcf3f8;
+}
+
+.pilars-area .grid:nth-child(5) .pilarts-img {
+    background-color: #f9fefa;
+}
+
+.pilars-area .grid:nth-child(1) .pilars-text h2 {
+    background: linear-gradient(to left, #00b3d6, #00ded8);
+    background: -webkit-linear-gradient(to left, #00b3d6, #00ded8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.pilars-area .grid:nth-child(2) .pilars-text h2 {
+    background: linear-gradient(to left, #ff7e8f, #ffa773);
+    background: -webkit-linear-gradient(to left, #ff7e8f, #ffa773);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.pilars-area .grid:nth-child(3) .pilars-text h2 {
+    background: linear-gradient(to left, #6368f3, #c868ff);
+    background: -webkit-linear-gradient(to left, #6368f3, #c868ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.pilars-area .grid:nth-child(4) .pilars-text h2 {
+    background: linear-gradient(to left, #ff77b7, #fbaedd);
+    background: -webkit-linear-gradient(to left, #ff77b7, #fbaedd);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.pilars-area .grid:nth-child(5) .pilars-text h2 {
+    background: linear-gradient(to left, #17cf89, #8cd080);
+    background: -webkit-linear-gradient(to left, #17cf89, #8cd080);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.pilars-area .grid:nth-child(3) .pilarts-img {
+    background-color: #f9f8fe;
+}
+
+.pilars-area .grid:nth-child(4) .pilarts-img {
+    background-color: #fcf3f8;
+}
+
+.pilars-area .grid:nth-child(5) .pilarts-img {
+    background-color: #f9fefa;
+}
+
+.pilars-area .grid .pilars-text h2 {
+    font-size: 30px;
+}
+
+.pilarts-img img {
+    transform: scale(1);
+    transition: all .3s;
+    width: 100%;
+}
+
+.pilarts-img:hover img {
+    transform: scale(0.9);
+    transition: all .3s;
+}
+
+.pilars-area .row-grid {
+    overflow: hidden;
+    padding: 20px 0;
+}
+
+.pilars-area .row-grid .grid {
+    float: left;
+    width: 20%;
+}
+
+.pilars-area {
+    padding: 80px 170px;
+}
+
+.pilars-item {
+    text-align: center;
+}
+
+.pilars-text {
+    margin-top: 40px;
+}
+
+
+@media(max-width: 1800px) {
+    .pilarts-img {
+        width: 195px;
+        height: 195px;
+    }
+}
+
+
+@media(max-width: 1400px) {
+    .pilarts-img {
+        width: 165px;
+        height: 165px;
+    }
+}
+
+@media(max-width: 1200px) {
+    .pilars-area .row-grid .grid {
+        float: left;
+        width: 33.33%;
+    }
+}
+
+@media(max-width: 991px) {
+    .pilars-area .row-grid .grid {
+        float: left;
+        width: 50%;
+    }
+
+    .pilarts-img {
+        width: 205px;
+        height: 205px;
+    }
+
+    .pilars-area {
+        padding: 80px 40px;
+    }
+}
+
+@media(max-width: 767px) {
+    .pilars-area .row-grid .grid {
+        float: none;
+        width: 100%;
+    }
+
+    .pilarts-img {
+        width: 295px;
+        height: 295px;
+    }
+
+    .pilars-item {
+        margin-bottom: 30px;
+    }
+}
+
+@media(max-width: 575px) {
+    .pilarts-img {
+        width: 235px;
+        height: 235px;
+    }
+
+    .pilars-area {
+        padding: 45px 20px 20px;
+    }
+}

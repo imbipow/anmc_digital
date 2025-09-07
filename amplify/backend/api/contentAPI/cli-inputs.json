@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "paths": {
+    "/content": {
+      "name": "/content",
+      "lambdaFunction": "contentAPIHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/homepage": {
+      "name": "/homepage",
+      "lambdaFunction": "contentAPIHandler",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

@@ -1,0 +1,88 @@
+/*============================================
+payment-section
+==============================================*/
+
+.payment-section {
+    background: url(../../images/paymentbg.jpg) no-repeat center top / cover;
+}
+
+.payment-text span {
+    font-size: 18px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 10px;
+    background: -webkit-linear-gradient(left, #00b3d6, #00ded8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.payment-text h2 {
+    font-size: 45px;
+    line-height: 70px;
+    margin-bottom: 20px;
+}
+
+.payment-text p {
+    max-width: 400px;
+    line-height: 35px;
+}
+
+.payment-section .form-group input {
+    width: 100%;
+    padding-left: 20px;
+    height: 55px;
+    background: #fff;
+    border-radius: 2px;
+    border: none;
+}
+
+.payment-section .form-group button {
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 18px 22px;
+}
+
+.payment-section .form-group button:after {
+    border-radius: 0;
+}
+
+.payment-section .form-group {
+    margin-bottom: 0;
+    padding: 10px;
+}
+
+.payment-section .form-group p{
+    margin: 0;
+    font-size: 14px;
+    color: red;
+}
+
+.wpo-donations-form h2 {
+    font-size: 45px;
+    margin-bottom: 20px;
+    margin-top: 0;
+}
+
+@media(max-width: 1200px) {
+    .wpo-donations-form h2 {
+        font-size: 35px;
+    }
+}
+
+@media(max-width: 991px) {
+    .payment-text {
+        margin-bottom: 30px;
+    }
+}
+
+@media(max-width: 767px) {
+    .payment-text h2 {
+        font-size: 30px;
+        line-height: 45px;
+    }
+
+    .wpo-donations-form h2 {
+        font-size: 30px;
+    }
+}
