@@ -1,0 +1,36 @@
+{
+  "mission": {
+    "title": "Our Mission",
+    "content": "To foster cultural diversity and strengthen community bonds through programs that celebrate Nepalese heritage while promoting integration and multicultural understanding in Australia.",
+    "icon": "fa fa-bullseye"
+  },
+  "vision": {
+    "title": "Our Vision",
+    "content": "To be Australia's leading multicultural centre that bridges communities, preserves cultural identity, and creates opportunities for growth, learning, and mutual respect among diverse populations.",
+    "icon": "fa fa-eye"
+  },
+  "history": {
+    "title": "Our History",
+    "content": "Established to serve the growing Nepalese community in Australia, ANMC has evolved into a vibrant multicultural hub, organizing events, providing support services, and fostering community connections since our inception.",
+    "icon": "fa fa-history"
+  },
+  "executiveCommittee": {
+    "title": "Executive Committee",
+    "subtitle": "Meet our dedicated leadership team",
+    "members": [
+      { "title": "President", "position": "Executive Leadership", "description": "Leading the organization's strategic direction and community outreach initiatives while fostering partnerships and growth opportunities." },
+      { "title": "Vice President", "position": "Operations Management", "description": "Supporting organizational operations and coordinating community programs to ensure effective service delivery and member engagement." },
+      { "title": "Secretary", "position": "Administrative Affairs", "description": "Managing organizational documentation, communications, and ensuring compliance with governance requirements and community standards." },
+      { "title": "Treasurer", "position": "Financial Management", "description": "Overseeing financial planning, budget management, and ensuring transparent financial practices for sustainable organizational growth." }
+    ]
+  },
+  "governance": {
+    "title": "Governance Structure",
+    "subtitle": "Our organizational leadership framework",
+    "structure": [
+      { "title": "Presidential Council", "description": "The Presidential Council provides strategic guidance and oversight, ensuring organizational alignment with community needs and long-term sustainability goals.", "icon": "fa fa-gavel" },
+      { "title": "Patrons", "description": "Distinguished community leaders who lend their expertise and support, helping to advance our mission and strengthen community partnerships.", "icon": "fa fa-shield" },
+      { "title": "Advisors", "description": "Experienced professionals providing specialized knowledge and guidance across various domains to enhance our programs and community impact.", "icon": "fa fa-users" }
+    ]
+  }
+}

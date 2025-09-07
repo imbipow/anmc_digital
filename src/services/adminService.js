@@ -1,4 +1,6 @@
 import contentService from './contentService';
+import homepageService from './homepageService';
+import aboutUsService from './aboutUsService';
 
 class AdminService {
   // Blog Posts
@@ -143,35 +145,46 @@ class AdminService {
     return await contentService.deleteItem(id);
   }
 
-  // Homepage (unified hero and counters)
+  // Homepage (unified hero and counters) - New RESTful API
   async getHomepage() {
-    return await contentService.getHomepageContent();
+    return await homepageService.getHomepage();
   }
 
   async updateHomepage(data) {
-    return await contentService.updateHomepageContent(data);
+    return await homepageService.updateHomepage(data);
   }
 
-  // Legacy methods for individual updates
+  // Legacy methods for backward compatibility
   async updateHomepageItem(id, data) {
-    return await contentService.updateItem(id, 'homepage', data);
+    // Convert to new format
+    const currentData = await homepageService.getHomepage();
+    const updatedData = { ...currentData, ...data };
+    return await homepageService.updateHomepage(updatedData);
   }
 
   async updateHeroContent(heroData) {
-    return await contentService.updateHeroContent(heroData);
+    const currentData = await homepageService.getHomepage();
+    return await homepageService.updateHomepage({
+      hero: heroData,
+      counters: currentData.counters
+    });
   }
 
   async updateCountersData(countersData) {
-    return await contentService.updateCounters(countersData);
+    const currentData = await homepageService.getHomepage();
+    return await homepageService.updateHomepage({
+      hero: currentData.hero,
+      counters: countersData
+    });
   }
 
-  // About Us
+  // About Us - New RESTful API
   async getAboutUs() {
-    return await contentService.getAboutUs();
+    return await aboutUsService.getAboutUs();
   }
 
   async updateAboutUs(id, data) {
-    return await contentService.updateItem(id, 'about_us', data);
+    return await aboutUsService.updateAboutUs(data);
   }
 
   // Contact

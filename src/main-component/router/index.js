@@ -30,9 +30,7 @@ import BookServices from '../BookServices'
 import MemberDonate from '../MemberDonate'
 import MyBookings from '../MyBookings'
 import MemberDocuments from '../MemberDocuments'
-import AdminApp from '../../admin/Admin'
-import TestAPI from '../../TestAPI'
-import TestHomepageData from '../../TestHomepageData'
+// Admin and test components removed for static deployment
 
 
 const AllRoute = () => {
@@ -71,9 +69,6 @@ const AllRoute = () => {
           <Route path='member/donate' element={<MemberDonate/>} />
           <Route path='member/bookings' element={<MyBookings/>} />
           <Route path='member/documents' element={<MemberDocuments/>} />
-          <Route path='admin/*' element={<AdminApp/>} />
-          <Route path='test-api' element={<TestAPI/>} />
-          <Route path='test-homepage-data' element={<TestHomepageData/>} />
         </Routes>
       </BrowserRouter>
     </div>

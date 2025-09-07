@@ -1,45 +1,14 @@
-import { get, post, put, del } from 'aws-amplify/api';
+import homepageService from './homepageService';
+import aboutUsService from './aboutUsService';
 
 class ContentService {
   constructor() {
-    this.apiName = 'contentAPI';
+    this.staticMode = true;
   }
 
-  // Homepage content (unified hero and counter data)
+  // Homepage content (unified hero and counter data) - Use new RESTful API
   async getHomepageContent() {
-    try {
-      const restOperation = get({
-        apiName: this.apiName,
-        path: '/homepage',
-        options: {}
-      });
-      const { body } = await restOperation.response;
-      const data = await body.json();
-      
-      // Return unified homepage data structure
-      return {
-        hero: data.hero || data.homepage?.[0]?.data || {},
-        counters: data.counters || []
-      };
-    } catch (error) {
-      console.warn('Failed to fetch homepage content:', error);
-      // Return fallback structure
-      return {
-        hero: {
-          welcomeText: "Welcome to ANMC",
-          title: "Building Bridges, Strengthening Communities",
-          subtitle: "The Australian Nepalese Multicultural Centre is dedicated to fostering cultural diversity, community engagement, and supporting our members through various programs and initiatives.",
-          learnMoreText: "Learn More",
-          memberButtonText: "Become a Member"
-        },
-        counters: [
-          { id: 1, count: 500, suffix: "+", label: "Life Members" },
-          { id: 2, count: 25, suffix: "", label: "Acres of Land" },
-          { id: 3, count: 2, prefix: "$", suffix: "M+", label: "Funds Raised" },
-          { id: 4, count: 1998, suffix: "", label: "Established" }
-        ]
-      };
-    }
+    return await homepageService.getHomepage();
   }
 
   // Legacy method for hero data (maintains backward compatibility)
@@ -64,170 +33,56 @@ class ContentService {
     }
   }
 
-  // Blog posts
+  // Blog posts (static mock data)
   async getBlogPosts() {
-    try {
-      const restOperation = get({
-        apiName: this.apiName,
-        path: '/content',
-        options: {
-          queryStringParameters: {
-            type: 'blog_posts'
-          }
-        }
-      });
-      const { body } = await restOperation.response;
-      return await body.json();
-    } catch (error) {
-      console.warn('Failed to fetch blog posts:', error);
-      return [];
-    }
+    console.log('Static mode: Returning mock blog posts');
+    return [];
   }
 
-  // Blog section content
+  // Blog section content (static mock data)
   async getBlogSectionContent() {
-    try {
-      const restOperation = get({
-        apiName: this.apiName,
-        path: '/content',
-        options: {
-          queryStringParameters: {
-            type: 'blog_section'
-          }
-        }
-      });
-      const { body } = await restOperation.response;
-      const data = await body.json();
-      return data.find(item => item.id === 'blog_section_content') || {};
-    } catch (error) {
-      console.warn('Failed to fetch blog section content:', error);
-      return {};
-    }
+    console.log('Static mode: Returning mock blog section content');
+    return {};
   }
 
-  // News articles
+  // News articles (static mock data)
   async getNews(featured = false) {
-    try {
-      const queryParams = { type: 'news' };
-      if (featured) queryParams.featured = 'true';
-      
-      const restOperation = get({
-        apiName: this.apiName,
-        path: '/content',
-        options: {
-          queryStringParameters: queryParams
-        }
-      });
-      const { body } = await restOperation.response;
-      return await body.json();
-    } catch (error) {
-      console.warn('Failed to fetch news:', error);
-      return [];
-    }
+    console.log('Static mode: Returning mock news');
+    return [];
   }
 
-  // Events
+  // Events (static mock data)
   async getEvents(featured = false) {
-    try {
-      const queryParams = { type: 'events' };
-      if (featured) queryParams.featured = 'true';
-      
-      const restOperation = get({
-        apiName: this.apiName,
-        path: '/content',
-        options: {
-          queryStringParameters: queryParams
-        }
-      });
-      const { body } = await restOperation.response;
-      return await body.json();
-    } catch (error) {
-      console.warn('Failed to fetch events:', error);
-      return [];
-    }
+    console.log('Static mode: Returning mock events');
+    return [];
   }
 
-  // Projects
+  // Projects (static mock data)
   async getProjects(featured = false) {
-    try {
-      const queryParams = { type: 'projects' };
-      if (featured) queryParams.featured = 'true';
-      
-      const restOperation = get({
-        apiName: this.apiName,
-        path: '/content',
-        options: {
-          queryStringParameters: queryParams
-        }
-      });
-      const { body } = await restOperation.response;
-      return await body.json();
-    } catch (error) {
-      console.warn('Failed to fetch projects:', error);
-      return [];
-    }
+    console.log('Static mode: Returning mock projects');
+    return [];
   }
 
-  // About Us content
+  // About Us content - Use new RESTful API
   async getAboutUs() {
-    try {
-      const restOperation = get({
-        apiName: this.apiName,
-        path: '/content',
-        options: {
-          queryStringParameters: {
-            type: 'about_us'
-          }
-        }
-      });
-      const { body } = await restOperation.response;
-      const data = await body.json();
-      return data.find(item => item.id === 'main') || {};
-    } catch (error) {
-      console.warn('Failed to fetch about us content:', error);
-      return {};
-    }
+    return await aboutUsService.getAboutUs();
   }
 
-  // Facilities
+  // Create default about_us record (static mode - no-op)
+  async createAboutUsDefault() {
+    console.log('Static mode: About Us default record creation skipped');
+  }
+
+  // Facilities (static mock data)
   async getFacilities() {
-    try {
-      const restOperation = get({
-        apiName: this.apiName,
-        path: '/content',
-        options: {
-          queryStringParameters: {
-            type: 'facilities'
-          }
-        }
-      });
-      const { body } = await restOperation.response;
-      return await body.json();
-    } catch (error) {
-      console.warn('Failed to fetch facilities:', error);
-      return [];
-    }
+    console.log('Static mode: Returning mock facilities');
+    return [];
   }
 
-  // Contact information
+  // Contact information (static mock data)
   async getContact() {
-    try {
-      const restOperation = get({
-        apiName: this.apiName,
-        path: '/content',
-        options: {
-          queryStringParameters: {
-            type: 'contact'
-          }
-        }
-      });
-      const { body } = await restOperation.response;
-      const data = await body.json();
-      return data.find(item => item.id === 'main') || {};
-    } catch (error) {
-      console.warn('Failed to fetch contact info:', error);
-      return {};
-    }
+    console.log('Static mode: Returning mock contact info');
+    return {};
   }
 
   // Get featured content for homepage
@@ -250,107 +105,32 @@ class ContentService {
     }
   }
 
-  // Generic method to get any resource
+  // Generic method to get any resource (static mock data)
   async getResource(resourceName) {
-    try {
-      const restOperation = get({
-        apiName: this.apiName,
-        path: '/content',
-        options: {
-          queryStringParameters: {
-            type: resourceName
-          }
-        }
-      });
-      const { body } = await restOperation.response;
-      return await body.json();
-    } catch (error) {
-      console.warn(`Failed to fetch ${resourceName}:`, error);
-      return [];
-    }
+    console.log(`Static mode: Returning mock ${resourceName}`);
+    return [];
   }
 
-  // Method to get single item by ID
+  // Method to get single item by ID (static mock data)
   async getById(resourceName, id) {
-    try {
-      const restOperation = get({
-        apiName: this.apiName,
-        path: `/content/${id}`
-      });
-      const { body } = await restOperation.response;
-      return await body.json();
-    } catch (error) {
-      console.warn(`Failed to fetch ${resourceName} with id ${id}:`, error);
-      return null;
-    }
+    console.log(`Static mode: Returning mock ${resourceName} with id ${id}`);
+    return null;
   }
 
-  // Admin CRUD operations
+  // Admin CRUD operations (static mode - no-op)
   async createItem(type, data) {
-    try {
-      const restOperation = post({
-        apiName: this.apiName,
-        path: '/content',
-        options: {
-          body: {
-            type: type,
-            ...data,
-            created_at: new Date().toISOString()
-          }
-        }
-      });
-      const { body } = await restOperation.response;
-      return await body.json();
-    } catch (error) {
-      console.error(`Failed to create ${type}:`, error);
-      throw error;
-    }
+    console.log(`Static mode: Create ${type} requested but not persisted:`, data);
+    return data;
   }
 
   async updateItem(id, type, data) {
-    try {
-      const restOperation = put({
-        apiName: this.apiName,
-        path: `/content/${id}`,
-        options: {
-          body: {
-            type: type,
-            ...data,
-            updated_at: new Date().toISOString()
-          }
-        }
-      });
-      const { body } = await restOperation.response;
-      return await body.json();
-    } catch (error) {
-      console.error(`Failed to update ${type} with id ${id}:`, error);
-      throw error;
-    }
+    console.log(`Static mode: Update ${type} with id ${id} requested but not persisted:`, data);
+    return data;
   }
 
-  // Update entire homepage content (hero and counters)
+  // Update entire homepage content (hero and counters) - Use new RESTful API
   async updateHomepageContent(data) {
-    try {
-      console.log('Calling homepage update endpoint with data:', JSON.stringify(data, null, 2));
-      const restOperation = put({
-        apiName: this.apiName,
-        path: `/homepage`,
-        options: {
-          body: {
-            hero: data.hero || {},
-            counters: data.counters || [],
-            updated_at: new Date().toISOString()
-          }
-        }
-      });
-      const { body } = await restOperation.response;
-      const result = await body.json();
-      console.log('Homepage update endpoint response:', JSON.stringify(result, null, 2));
-      return result;
-    } catch (error) {
-      console.error('Error updating homepage content:', error);
-      throw error;
-    }
+    return await homepageService.updateHomepage(data);
   }
 
   // Update only hero content
@@ -382,17 +162,8 @@ class ContentService {
   }
 
   async deleteItem(id) {
-    try {
-      const restOperation = del({
-        apiName: this.apiName,
-        path: `/content/${id}`
-      });
-      const { body } = await restOperation.response;
-      return await body.json();
-    } catch (error) {
-      console.error(`Failed to delete item with id ${id}:`, error);
-      throw error;
-    }
+    console.log(`Static mode: Delete item with id ${id} requested but not persisted`);
+    return { success: true };
   }
 }
 

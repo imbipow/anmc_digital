@@ -12,7 +12,8 @@
       "Bash(npm run:*)",
       "Bash(amplify add:*)",
       "Bash(claude init)",
-      "Bash(claude --version)"
+      "Bash(claude --version)",
+      "Bash(npx serve:*)"
     ],
     "deny": [],
     "ask": []

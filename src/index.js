@@ -7,10 +7,7 @@ import './css/themify-icons.css';
 import './css/flaticon.css';
 import './css/responsive.css';
 
-import { Amplify } from 'aws-amplify';
-import awsconfig from './aws-exports';
-
-Amplify.configure(awsconfig);
+// AWS Amplify configuration removed for static deployment
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
