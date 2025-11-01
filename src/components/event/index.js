@@ -1,39 +1,66 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {Link} from 'react-router-dom'
+import contentService from '../../services/contentService'
 
 import './style.css'
 
 const EventSection = (props) => {
+    const [eventList, setEventList] = useState([
+        {
+           eventImg:props.eventImg1,
+           date:"25",
+           month:"NOV",
+           title:"Community Picnic 2025",
+           time:"10:00 - 16:00",
+           location:"Riverside Park",
+           des:"Annual community picnic with games, food, and entertainment for all ages.",
+           btn:"Learn More...",
+           link:"/event-single",
+        },
+        {
+           eventImg:props.eventImg2,
+           date:"10",
+           month:"FEB",
+           title:"Cultural Dance Workshop",
+           time:"14:00 - 17:00",
+           location:"ANMC Community Center",
+           des:"Learn traditional Nepalese dances with experienced instructors.",
+           btn:"Learn More...",
+           link:"/event-single",
+        },
+    ]);
 
     const ClickHandler = () =>{
         window.scrollTo(10, 0);
      }
 
-
-     const eventList = [
-         {
-           eventImg:props.eventImg1,
-           date:"25",
-           month:"NOV",
-           title:"Learn About Hajj",
-           time:"8.00 - 5.00",
-           location:"Newyork City",
-           des:"Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-           btn:"Learn More...",
-           link:"/event-single",
-         },
-         {
-           eventImg:props.eventImg2,
-           date:"28",
-           month:"NOV",
-           title:"Islamic Teaching Event",
-           time:"8.00 - 5.00",
-           location:"Newyork City",
-           des:"Lorem ipsum dolor sit amet, consectetur adipiscing elit",
-           btn:"Learn More...",
-           link:"/event-single",
-         },
-     ]
+    useEffect(() => {
+        const loadEvents = async () => {
+            try {
+                const events = await contentService.getEvents(true); // Get featured events
+                if (events && events.length > 0) {
+                    const formattedEvents = events.slice(0, 2).map((event, index) => {
+                        const startDate = new Date(event.startDate);
+                        return {
+                            eventImg: event.featuredImage || (index === 0 ? props.eventImg1 : props.eventImg2),
+                            date: startDate.getDate().toString(),
+                            month: startDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
+                            title: event.title,
+                            time: `${event.startTime} - ${event.endTime}`,
+                            location: event.location,
+                            des: event.description,
+                            btn: "Learn More...",
+                            link: `/event/${event.slug || event.id}`,
+                        };
+                    });
+                    setEventList(formattedEvents);
+                }
+            } catch (error) {
+                console.error('Error loading events:', error);
+            }
+        };
+        loadEvents();
+    }, [props.eventImg1, props.eventImg2]);
 
     return(
         <div className={`wpo-event-area section-padding  ${props.EventClass}`}>

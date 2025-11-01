@@ -43,6 +43,10 @@
 
 .wpo-cta-text .theme-btn {
     margin-right: 15px;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
 }
 
 @media(max-width: 992px) {

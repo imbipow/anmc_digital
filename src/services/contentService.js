@@ -1,5 +1,6 @@
 import homepageService from './homepageService';
 import aboutUsService from './aboutUsService';
+import API_CONFIG from '../config/api';
 
 class ContentService {
   constructor() {
@@ -33,34 +34,76 @@ class ContentService {
     }
   }
 
-  // Blog posts (static mock data)
+  // Blog posts from API
   async getBlogPosts() {
-    console.log('Static mode: Returning mock blog posts');
-    return [];
+    try {
+      const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.news));
+      const news = await response.json();
+      return news;
+    } catch (error) {
+      console.error('Error fetching blog posts:', error);
+      return [];
+    }
   }
 
-  // Blog section content (static mock data)
+  // Blog section content
   async getBlogSectionContent() {
-    console.log('Static mode: Returning mock blog section content');
-    return {};
+    try {
+      const news = await this.getBlogPosts();
+      return {
+        sectionTitle: "Latest News & Updates",
+        sectionSubtitle: "Stay updated with our community news and announcements",
+        posts: news.slice(0, 3)
+      };
+    } catch (error) {
+      console.error('Error fetching blog section content:', error);
+      return {};
+    }
   }
 
-  // News articles (static mock data)
+  // News articles from API
   async getNews(featured = false) {
-    console.log('Static mode: Returning mock news');
-    return [];
+    try {
+      const endpoint = featured
+        ? API_CONFIG.endpoints.newsFeatured
+        : API_CONFIG.endpoints.news;
+      const response = await fetch(API_CONFIG.getURL(endpoint));
+      const news = await response.json();
+      return news;
+    } catch (error) {
+      console.error('Error fetching news:', error);
+      return [];
+    }
   }
 
-  // Events (static mock data)
+  // Events from API
   async getEvents(featured = false) {
-    console.log('Static mode: Returning mock events');
-    return [];
+    try {
+      const endpoint = featured
+        ? API_CONFIG.endpoints.eventsFeatured
+        : API_CONFIG.endpoints.events;
+      const response = await fetch(API_CONFIG.getURL(endpoint));
+      const events = await response.json();
+      return events;
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      return [];
+    }
   }
 
-  // Projects (static mock data)
+  // Projects from API
   async getProjects(featured = false) {
-    console.log('Static mode: Returning mock projects');
-    return [];
+    try {
+      const endpoint = featured
+        ? API_CONFIG.endpoints.projectsFeatured
+        : API_CONFIG.endpoints.projects;
+      const response = await fetch(API_CONFIG.getURL(endpoint));
+      const projects = await response.json();
+      return projects;
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      return [];
+    }
   }
 
   // About Us content - Use new RESTful API
@@ -73,16 +116,28 @@ class ContentService {
     console.log('Static mode: About Us default record creation skipped');
   }
 
-  // Facilities (static mock data)
+  // Facilities from API
   async getFacilities() {
-    console.log('Static mode: Returning mock facilities');
-    return [];
+    try {
+      const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.facilities));
+      const facilities = await response.json();
+      return facilities;
+    } catch (error) {
+      console.error('Error fetching facilities:', error);
+      return [];
+    }
   }
 
-  // Contact information (static mock data)
+  // Contact information from API
   async getContact() {
-    console.log('Static mode: Returning mock contact info');
-    return {};
+    try {
+      const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.contact));
+      const contact = await response.json();
+      return Array.isArray(contact) ? contact[0] : contact;
+    } catch (error) {
+      console.error('Error fetching contact info:', error);
+      return {};
+    }
   }
 
   // Get featured content for homepage
@@ -93,11 +148,11 @@ class ContentService {
         this.getEvents(true),
         this.getProjects(true)
       ]);
-      
+
       return {
-        news: news.filter(item => item.featured),
-        events: events.filter(item => item.featured),
-        projects: projects.filter(item => item.featured)
+        news: news,
+        events: events,
+        projects: projects
       };
     } catch (error) {
       console.warn('Failed to fetch featured content:', error);

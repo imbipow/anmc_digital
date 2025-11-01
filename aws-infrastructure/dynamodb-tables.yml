@@ -1,0 +1,266 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'DynamoDB tables for ANMC Digital Application'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: 'dev'
+    AllowedValues: ['dev', 'staging', 'prod']
+    Description: Environment name for resource naming
+
+Resources:
+  # Blog Articles Table
+  BlogArticlesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-blog-articles-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: N
+        - AttributeName: category
+          AttributeType: S
+        - AttributeName: featured
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: CategoryIndex
+          KeySchema:
+            - AttributeName: category
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: FeaturedIndex
+          KeySchema:
+            - AttributeName: featured
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Events Table
+  EventsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-events-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: N
+        - AttributeName: eventType
+          AttributeType: S
+        - AttributeName: category
+          AttributeType: S
+        - AttributeName: date
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+        - AttributeName: eventType
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: CategoryDateIndex
+          KeySchema:
+            - AttributeName: category
+              KeyType: HASH
+            - AttributeName: date
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Members Table
+  MembersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-members-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: memberId
+          AttributeType: S
+        - AttributeName: membershipTier
+          AttributeType: S
+        - AttributeName: expiryDate
+          AttributeType: S
+      KeySchema:
+        - AttributeName: memberId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: MembershipTierIndex
+          KeySchema:
+            - AttributeName: membershipTier
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: ExpiryDateIndex
+          KeySchema:
+            - AttributeName: expiryDate
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Donations Table
+  DonationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-donations-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: donationId
+          AttributeType: S
+        - AttributeName: timestamp
+          AttributeType: S
+        - AttributeName: donationType
+          AttributeType: S
+      KeySchema:
+        - AttributeName: donationId
+          KeyType: HASH
+        - AttributeName: timestamp
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: DonationTypeIndex
+          KeySchema:
+            - AttributeName: donationType
+              KeyType: HASH
+            - AttributeName: timestamp
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Facilities Table
+  FacilitiesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-facilities-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: facilityId
+          AttributeType: S
+        - AttributeName: bookingDate
+          AttributeType: S
+      KeySchema:
+        - AttributeName: facilityId
+          KeyType: HASH
+        - AttributeName: bookingDate
+          KeyType: RANGE
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Shop Products Table
+  ShopProductsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-shop-products-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: productId
+          AttributeType: S
+        - AttributeName: category
+          AttributeType: S
+        - AttributeName: isFeatured
+          AttributeType: S
+      KeySchema:
+        - AttributeName: productId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: CategoryIndex
+          KeySchema:
+            - AttributeName: category
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: FeaturedIndex
+          KeySchema:
+            - AttributeName: isFeatured
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Organization Info Table
+  OrganizationInfoTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-organization-info-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: infoType
+          AttributeType: S
+      KeySchema:
+        - AttributeName: infoType
+          KeyType: HASH
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+Outputs:
+  BlogArticlesTableName:
+    Description: 'Blog Articles DynamoDB Table Name'
+    Value: !Ref BlogArticlesTable
+    Export:
+      Name: !Sub '${AWS::StackName}-BlogArticlesTable'
+
+  EventsTableName:
+    Description: 'Events DynamoDB Table Name'
+    Value: !Ref EventsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-EventsTable'
+
+  MembersTableName:
+    Description: 'Members DynamoDB Table Name'
+    Value: !Ref MembersTable
+    Export:
+      Name: !Sub '${AWS::StackName}-MembersTable'
+
+  DonationsTableName:
+    Description: 'Donations DynamoDB Table Name'
+    Value: !Ref DonationsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-DonationsTable'
+
+  FacilitiesTableName:
+    Description: 'Facilities DynamoDB Table Name'
+    Value: !Ref FacilitiesTable
+    Export:
+      Name: !Sub '${AWS::StackName}-FacilitiesTable'
+
+  ShopProductsTableName:
+    Description: 'Shop Products DynamoDB Table Name'
+    Value: !Ref ShopProductsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-ShopProductsTable'
+
+  OrganizationInfoTableName:
+    Description: 'Organization Info DynamoDB Table Name'
+    Value: !Ref OrganizationInfoTable
+    Export:
+      Name: !Sub '${AWS::StackName}-OrganizationInfoTable'

@@ -9,17 +9,31 @@ import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useMemberAuth } from '../../components/MemberAuth';
+import { toast } from 'react-toastify';
 
 import logo from '../../images/logo.png';
 import './style.css';
 
 const MemberPortal = () => {
+    const navigate = useNavigate();
+    const { currentUser, logout } = useMemberAuth();
+
+    // Get user data from authentication context
     const memberData = {
-        name: "John Doe",
-        email: "user@gmail.com",
-        membershipId: "ANMC-2024-001",
-        joinDate: "January 2024"
+        name: currentUser?.attributes?.given_name && currentUser?.attributes?.family_name
+            ? `${currentUser.attributes.given_name} ${currentUser.attributes.family_name}`
+            : currentUser?.email?.split('@')[0] || "Member",
+        email: currentUser?.email || currentUser?.attributes?.email || "N/A",
+        membershipId: currentUser?.attributes?.['custom:member_id'] || "N/A",
+        joinDate: currentUser?.attributes?.['custom:join_date'] || "2024"
+    };
+
+    const handleLogout = async () => {
+        await logout();
+        toast.success('Successfully logged out');
+        navigate('/login');
     };
 
     const features = [
@@ -36,13 +50,6 @@ const MemberPortal = () => {
             description: "Book Car Puja, Marriage, Bartabhanda",
             link: "/member/book-services",
             color: "#2a5298"
-        },
-        {
-            icon: "💳",
-            title: "Make Donation",
-            description: "Secure donations via Stripe",
-            link: "/member/donate",
-            color: "#1e3c72"
         },
         {
             icon: "📋",
@@ -94,11 +101,10 @@ const MemberPortal = () => {
                         >
                             🏠 Home
                         </Button>
-                        <Button 
-                            component={Link} 
-                            to="/login"
+                        <Button
+                            onClick={handleLogout}
                             variant="outlined"
-                            sx={{ 
+                            sx={{
                                 color: 'white',
                                 borderColor: 'rgba(255,255,255,0.3)',
                                 '&:hover': {
@@ -193,10 +199,10 @@ const MemberPortal = () => {
                                     <Grid item xs={12} sm={4}>
                                         <Box className="stat-item">
                                             <Typography variant="h4" component="div" color="primary">
-                                                ₹15,000
+                                                8
                                             </Typography>
                                             <Typography variant="body2" color="text.secondary">
-                                                Total Donations
+                                                Events Attended
                                             </Typography>
                                         </Box>
                                     </Grid>

@@ -1,0 +1,77 @@
+.custom-admin-menu {
+  padding: 0;
+}
+
+.custom-admin-menu .menu-item {
+  padding: 12px 16px;
+  margin: 4px 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.custom-admin-menu .menu-item:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.custom-admin-menu .menu-item.Mui-selected {
+  background-color: rgba(25, 118, 210, 0.12);
+  color: #1976d2;
+}
+
+.custom-admin-menu .menu-item.Mui-selected .MuiListItemIcon-root {
+  color: #1976d2;
+}
+
+.custom-admin-menu .submenu-trigger {
+  font-weight: 600;
+}
+
+.custom-admin-menu .submenu-list {
+  background-color: rgba(0, 0, 0, 0.02);
+  margin: 0 8px 8px 8px;
+  border-radius: 8px;
+}
+
+.custom-admin-menu .submenu-item {
+  padding: 10px 16px 10px 48px;
+  margin: 2px 0;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.custom-admin-menu .submenu-item:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.custom-admin-menu .submenu-item.Mui-selected {
+  background-color: rgba(25, 118, 210, 0.12);
+  color: #1976d2;
+}
+
+.custom-admin-menu .submenu-item.Mui-selected .MuiListItemIcon-root {
+  color: #1976d2;
+}
+
+.custom-admin-menu .submenu-item .MuiListItemIcon-root {
+  min-width: 40px;
+}
+
+.custom-admin-menu .menu-item-disabled {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+}
+
+.custom-admin-menu .menu-item-disabled .MuiListItemText-secondary {
+  font-size: 11px;
+  color: #999;
+}
+
+.custom-admin-menu .MuiListItemIcon-root {
+  min-width: 48px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.custom-admin-menu .MuiListItemText-primary {
+  font-size: 15px;
+  font-weight: 500;
+}

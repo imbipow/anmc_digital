@@ -13,7 +13,15 @@
       "Bash(amplify add:*)",
       "Bash(claude init)",
       "Bash(claude --version)",
-      "Bash(npx serve:*)"
+      "Bash(npx serve:*)",
+      "Bash(find:*)",
+      "Bash(dir:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(node:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(powershell -Command \"Get-Content server/db.json | Select-Object -Last 50\")",
+      "Bash(copy /Y \"D:\\my-projects\\anmcDigital\\api\\services\\faqsService.js\" \"D:\\my-projects\\anmcDigital\\api\\services\\faqsService.js.bak\")"
     ],
     "deny": [],
     "ask": []

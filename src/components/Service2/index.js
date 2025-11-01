@@ -1,13 +1,36 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import contentService from '../../services/contentService'
+import API_CONFIG from '../../config/api'
 import './style.css'
 
 const Service2 = (props) => {
+    const [masterPlan, setMasterPlan] = useState({});
+    const [projects, setProjects] = useState([]);
 
     const ClickHandler = () => {
         window.scrollTo(10, 0);
     }
 
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                // Load master plan data
+                const masterPlanResponse = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.masterPlan));
+                const masterPlanData = await masterPlanResponse.json();
+                setMasterPlan(masterPlanData);
+
+                // Load projects data
+                const projectsData = await contentService.getProjects();
+                setProjects(projectsData);
+            } catch (error) {
+                console.error('Error loading project data:', error);
+            }
+        };
+        loadData();
+    }, []);
+
+    // Default fallback data
     const masterPlanPhases = [
         {
             phase: "Phase 1",
@@ -17,7 +40,7 @@ const Service2 = (props) => {
             timeline: "2024-2025"
         },
         {
-            phase: "Phase 2", 
+            phase: "Phase 2",
             title: "Infrastructure Development",
             description: "Begin construction of main community hall, cultural centre, and essential infrastructure",
             status: "Planned",
@@ -34,12 +57,21 @@ const Service2 = (props) => {
             phase: "Phase 4",
             title: "Community Programs Launch",
             description: "Launch full range of cultural, educational, and community support programs",
-            status: "Future", 
+            status: "Future",
             timeline: "2027-2028"
         }
-    ]
+    ];
 
-    const currentProjects = [
+    const currentProjects = projects.length > 0 ? projects.filter(p => p.status === 'active').slice(0, 3).map(project => ({
+        icon: project.category === 'sustainability' ? 'fa fa-leaf' :
+              project.category === 'youth' ? 'fa fa-users' :
+              project.category === 'culture' ? 'fa fa-building' :
+              project.category === 'health' ? 'fa fa-heart' : 'fa fa-star',
+        title: project.title,
+        description: project.description,
+        progress: project.progress || 0,
+        details: [`Budget: $${project.budget?.toLocaleString()}`, `Manager: ${project.projectManager}`, `Status: ${project.status}`]
+    })) : [
         {
             icon: "fa fa-building",
             title: "Site Development",
@@ -49,7 +81,7 @@ const Service2 = (props) => {
         },
         {
             icon: "fa fa-dollar-sign",
-            title: "Funding Initiatives", 
+            title: "Funding Initiatives",
             description: "Comprehensive fundraising campaign combining community donations, government grants, and strategic partnerships to secure project funding.",
             progress: 62,
             details: ["$2.5M raised from community", "$1.8M government funding secured", "Corporate partnerships active"]
@@ -61,7 +93,7 @@ const Service2 = (props) => {
             progress: 78,
             details: ["500+ active members", "Monthly cultural events", "Educational program partnerships"]
         }
-    ]
+    ];
 
     const projectMetrics = [
         {
@@ -99,13 +131,13 @@ const Service2 = (props) => {
                         <div className="col-12">
                             <div className="wpo-section-title text-center">
                                 <span>Our Vision</span>
-                                <h2>ANMC Development Master Plan</h2>
-                                <p>A comprehensive four-phase development plan to create Australia's premier multicultural community centre, fostering cultural diversity, community integration, and providing essential services to the Australian-Nepalese and broader multicultural community.</p>
+                                <h2>{masterPlan.title || 'ANMC Development Master Plan'}</h2>
+                                <p>{masterPlan.description || 'A comprehensive four-phase development plan to create Australia\'s premier multicultural community centre, fostering cultural diversity, community integration, and providing essential services to the Australian-Nepalese and broader multicultural community.'}</p>
                             </div>
                         </div>
                     </div>
                     <div className="master-plan-phases">
-                        {masterPlanPhases.map((phase, index) => (
+                        {(masterPlan.key_areas || masterPlanPhases).map((phase, index) => (
                             <div key={index} className="phase-item">
                                 <div className="phase-number">
                                     <span>{String(index + 1).padStart(2, '0')}</span>
@@ -114,10 +146,10 @@ const Service2 = (props) => {
                                     <div className="phase-header">
                                         <h3>{phase.title}</h3>
                                         <div className="phase-meta">
-                                            <span className={`status-badge ${phase.status.toLowerCase().replace(' ', '-')}`}>
-                                                {phase.status}
+                                            <span className={`status-badge ${(phase.status || 'planned').toLowerCase().replace(' ', '-')}`}>
+                                                {phase.status || 'Planned'}
                                             </span>
-                                            <span className="timeline">{phase.timeline}</span>
+                                            <span className="timeline">{phase.timeline || phase.budget}</span>
                                         </div>
                                     </div>
                                     <p>{phase.description}</p>

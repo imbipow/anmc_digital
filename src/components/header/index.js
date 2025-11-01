@@ -28,15 +28,16 @@ const Header = () => {
                                 <Link onClick={ClickHandler} to="/home" title=""><img src={Logo} alt=""/></Link>
                             </div>
                         </div>
-                        <div className="col-lg-8 d-lg-block d-none">
+                        <div className="col-lg-9 d-lg-block d-none">
                             <nav>
                                 <ul>
                                     <li><Link onClick={ClickHandler} className="active" to="/home" title="">Home</Link></li>
                                     <li><Link onClick={ClickHandler} to="/about" title="">About</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/blog" title="">News</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/service" title="">Projects</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news" title="">News</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/projects" title="">Projects</Link></li>
                                     <li><Link onClick={ClickHandler} to="/event" title="">Events</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/shop" title="">Facilities</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/facilities" title="">Facilities</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/faq" title="">FAQ</Link></li>
                                     <li><Link onClick={ClickHandler} to="/contact" title="">Contact</Link></li>
                                 </ul>
                             </nav>

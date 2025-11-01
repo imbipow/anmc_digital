@@ -19,7 +19,7 @@ const BlogSection = (props) => {
           title: "ANMC Annual Dashain Celebration 2024",
           authorName: 'ANMC Admin',
           date: '15 Oct 2024',
-          link: "/blog-details"
+          link: "/news-details"
         },
         {
           id: 2,
@@ -27,7 +27,7 @@ const BlogSection = (props) => {
           title: "New Community Center Opening Soon",
           authorName: 'ANMC Admin',
           date: '8 Dec 2024',
-          link: "/blog-details"
+          link: "/news-details"
         },
         {
           id: 3,
@@ -35,7 +35,7 @@ const BlogSection = (props) => {
           title: "Youth Program Registration Now Open",
           authorName: 'ANMC Admin',
           date: '3 Jan 2025',
-          link: "/blog-details"
+          link: "/news-details"
         },
     ]);
     

@@ -1,3 +1,5 @@
+import API_CONFIG from '../config/api';
+
 class AboutUsService {
   constructor() {
     this.dataCache = null;
@@ -6,11 +8,16 @@ class AboutUsService {
   // Get about us content
   async getAboutUs() {
     try {
-      if (!this.dataCache) {
-        const response = await fetch('/data/about-us.json');
-        this.dataCache = await response.json();
-      }
-      return this.dataCache;
+      // Always fetch fresh data from new API
+      const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.aboutUs));
+      const aboutUsData = await response.json();
+
+      // Extract the main about us data (DynamoDB returns single item with id)
+      const data = Array.isArray(aboutUsData) && aboutUsData.length > 0
+        ? aboutUsData[0]
+        : aboutUsData;
+
+      return data;
     } catch (error) {
       console.warn('Failed to fetch about us content:', error);
       return this.getDefaultData();

@@ -232,3 +232,374 @@
 .wpo-payment-select ul li input{
     margin-right: 5px;
 }
+
+/* Enhanced Donation Form Styles */
+.wpo-donate-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.wpo-donate-header h2 {
+    color: #1e3c72;
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.wpo-donate-header p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 0;
+}
+
+/* Donation Purposes Section */
+.donation-purposes-section {
+    margin-bottom: 40px;
+}
+
+.donation-purposes-section h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.purpose-card {
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 25px;
+    height: 100%;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.purpose-card:hover {
+    border-color: #1e3c72;
+    box-shadow: 0 5px 15px rgba(30, 60, 114, 0.1);
+}
+
+.purpose-card.selected {
+    border-color: #1e3c72;
+    background: rgba(30, 60, 114, 0.05);
+    box-shadow: 0 5px 15px rgba(30, 60, 114, 0.2);
+}
+
+.purpose-icon {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.purpose-icon i {
+    font-size: 2.5rem;
+    color: #1e3c72;
+}
+
+.purpose-content h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.purpose-content p {
+    color: #666;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.progress-info {
+    margin-top: 15px;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1e3c72, #2a5298);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-info small {
+    color: #666;
+    font-size: 0.85rem;
+}
+
+/* Amount Selection */
+.wpo-donations-amount h3,
+.wpo-donations-details h3,
+.wpo-doanation-payment h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+.amount-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.amount-btn {
+    padding: 15px 20px;
+    border: 2px solid #e0e0e0;
+    background: #fff;
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.amount-btn:hover {
+    border-color: #1e3c72;
+    color: #1e3c72;
+}
+
+.amount-btn.selected {
+    border-color: #1e3c72;
+    background: #1e3c72;
+    color: #fff;
+}
+
+.custom-amount input {
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    width: 100%;
+    transition: border-color 0.3s ease;
+}
+
+.custom-amount input:focus {
+    border-color: #1e3c72;
+    outline: none;
+}
+
+
+/* Donation Summary */
+.donation-summary {
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 25px;
+    margin: 30px 0;
+}
+
+.donation-summary h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1e3c72;
+    margin-bottom: 15px;
+}
+
+.summary-details p {
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.donation-summary-sidebar {
+    background: #f8f9fa;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 25px;
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+}
+
+.donation-summary-sidebar h4 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1e3c72;
+    margin-bottom: 20px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.tax-info {
+    background: rgba(76, 175, 80, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.tax-info p {
+    margin: 0;
+    color: #388e3c;
+}
+
+/* Stripe Payment Section */
+.stripe-payment-info {
+    background: #f8f9ff;
+    border: 2px solid #e8ecf4;
+    border-radius: 10px;
+    padding: 25px;
+}
+
+.payment-security {
+    margin-bottom: 20px;
+}
+
+.security-badges {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.security-badge {
+    background: #1e3c72;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.security-badge i {
+    font-size: 0.9rem;
+}
+
+.payment-note {
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.accepted-cards {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.accepted-cards span {
+    font-weight: 600;
+    color: #333;
+}
+
+.card-icons {
+    display: flex;
+    gap: 10px;
+}
+
+.card-icons i {
+    font-size: 2rem;
+    color: #1e3c72;
+    transition: color 0.3s ease;
+}
+
+.card-icons i:hover {
+    color: #2a5298;
+}
+
+/* Checkbox styles */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.checkbox-label input[type="checkbox"] {
+    transform: scale(1.2);
+    accent-color: #1e3c72;
+}
+
+/* Submit area */
+.submit-area {
+    margin-top: 40px;
+    text-align: center;
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.theme-btn-2.back-btn {
+    background: #6c757d;
+    color: #fff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-btn-2.back-btn:hover {
+    background: #5a6268;
+}
+
+.theme-btn.submit-btn {
+    background: #1e3c72;
+    color: #fff;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.theme-btn.submit-btn:hover {
+    background: #2a5298;
+}
+
+.theme-btn.submit-btn:disabled,
+.theme-btn-2.back-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .amount-buttons {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    
+    .submit-area {
+        flex-direction: column;
+    }
+    
+    .purpose-card {
+        margin-bottom: 20px;
+    }
+    
+    .donation-summary-sidebar {
+        position: static;
+        margin-top: 30px;
+    }
+}

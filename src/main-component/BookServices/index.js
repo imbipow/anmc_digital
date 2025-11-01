@@ -39,7 +39,7 @@ const BookServices = () => {
             icon: '🚗',
             description: 'Vehicle blessing ceremony for new cars and bikes',
             duration: '1-2 hours',
-            price: '₹2,100',
+            price: '$50',
             includes: ['Puja materials', 'Priest service', 'Prasadam', 'Certificate']
         },
         {
@@ -48,7 +48,7 @@ const BookServices = () => {
             icon: '💒',
             description: 'Complete wedding ceremony as per traditions',
             duration: '3-4 hours',
-            price: '₹15,000',
+            price: '$200',
             includes: ['Complete puja setup', 'Priest service', 'Marriage certificate', 'Photography coordination']
         },
         {
@@ -57,8 +57,17 @@ const BookServices = () => {
             icon: '👨‍👦',
             description: 'Sacred thread ceremony for young men',
             duration: '4-5 hours',
-            price: '₹8,500',
+            price: '$150',
             includes: ['Sacred thread', 'Puja materials', 'Priest service', 'Feast coordination', 'Certificate']
+        },
+        {
+            id: 'community-hall',
+            title: 'Community Hall Rental',
+            icon: '🏛️',
+            description: 'Spacious hall for events, celebrations, and gatherings',
+            duration: 'Flexible hours',
+            price: '$100/hour',
+            includes: ['Sound system', 'Stage lighting', 'Kitchen facilities', 'Tables & chairs', 'Parking']
         }
     ];
 

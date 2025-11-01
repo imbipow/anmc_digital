@@ -15,11 +15,11 @@ class Comment extends Component{
                 <h4><span>Your email address will not be published.</span>Required fields are marked*</h4>
                 <h5>Your Rating :</h5>
                 <ul className="rating">
-                    <li><Link to="/shop-single" title=""><i className="fa fa-star-o"></i></Link></li>
-                    <li><Link to="/shop-single" title=""><i className="fa fa-star-o"></i></Link></li>
-                    <li><Link to="/shop-single" title=""><i className="fa fa-star-o"></i></Link></li>
-                    <li><Link to="/shop-single" title=""><i className="fa fa-star-o"></i></Link></li>
-                    <li><Link to="/shop-single" title=""><i className="fa fa-star-o"></i></Link></li>
+                    <li><Link to="/facilities-single" title=""><i className="fa fa-star-o"></i></Link></li>
+                    <li><Link to="/facilities-single" title=""><i className="fa fa-star-o"></i></Link></li>
+                    <li><Link to="/facilities-single" title=""><i className="fa fa-star-o"></i></Link></li>
+                    <li><Link to="/facilities-single" title=""><i className="fa fa-star-o"></i></Link></li>
+                    <li><Link to="/facilities-single" title=""><i className="fa fa-star-o"></i></Link></li>
                 </ul>
                 <div className="clearfix"></div>
                 <form onSubmit={this.sumitHandler} className="review-form">

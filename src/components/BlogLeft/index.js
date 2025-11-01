@@ -27,13 +27,13 @@ const BlogLeft = () => {
                                    <img src={blog1} alt="" />
                                 </div>
                                 <ul className="entry-meta">
-                                    <li><Link onClick={ClickHandler} to="/blog-details"> By Robert harry</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/blog-details"> 25 Feb 2021</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details"> By Robert harry</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details"> 25 Feb 2021</Link></li>
                                 </ul>
-                                <h3><Link onClick={ClickHandler} to="/blog-details">The Importance of Marriage in Islam.</Link></h3>
+                                <h3><Link onClick={ClickHandler} to="/news-details">The Importance of Marriage in Islam.</Link></h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt of the graduate ut labore et dolore magna aliqua.</p>
                                 <div className="entry-bottom">
-                                    <Link onClick={ClickHandler} to="/blog-details" className="read-more">View More...</Link>
+                                    <Link onClick={ClickHandler} to="/news-details" className="read-more">View More...</Link>
                                     <ul>
                                         <li><i className="fi flaticon-like"></i>80</li>
                                         <li><i className="fi flaticon-share"></i></li>
@@ -50,13 +50,13 @@ const BlogLeft = () => {
                                     <span>Marriage</span>
                                 </div>
                                 <ul className="entry-meta">
-                                    <li><Link onClick={ClickHandler} to="/blog-details"> By Robert harry</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/blog-details"> 25 Feb 2021</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details"> By Robert harry</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details"> 25 Feb 2021</Link></li>
                                 </ul>
-                                <h3><Link onClick={ClickHandler} to="/blog-details">The Importance of Marriage in Islam.</Link></h3>
+                                <h3><Link onClick={ClickHandler} to="/news-details">The Importance of Marriage in Islam.</Link></h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt of the graduate ut labore et dolore magna aliqua.</p>
                                 <div className="entry-bottom">
-                                    <Link onClick={ClickHandler} to="/blog-details" className="read-more">View More...</Link>
+                                    <Link onClick={ClickHandler} to="/news-details" className="read-more">View More...</Link>
                                     <ul>
                                         <li><i className="fi flaticon-like"></i>80</li>
                                         <li><i className="fi flaticon-share"></i></li>
@@ -68,13 +68,13 @@ const BlogLeft = () => {
                                     <img src={blog3} alt="" />
                                 </div>
                                 <ul className="entry-meta">
-                                    <li><Link onClick={ClickHandler} to="/blog-details"> By Robert harry</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/blog-details"> 25 Feb 2021</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details"> By Robert harry</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details"> 25 Feb 2021</Link></li>
                                 </ul>
-                                <h3><Link onClick={ClickHandler} to="/blog-details">Compleate Hajj guide for your Hajj.</Link></h3>
+                                <h3><Link onClick={ClickHandler} to="/news-details">Compleate Hajj guide for your Hajj.</Link></h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt of the graduate ut labore et dolore magna aliqua.</p>
                                 <div className="entry-bottom">
-                                    <Link onClick={ClickHandler} to="/blog-details" className="read-more">View More...</Link>
+                                    <Link onClick={ClickHandler} to="/news-details" className="read-more">View More...</Link>
                                     <ul>
                                         <li><i className="fi flaticon-like"></i>80</li>
                                         <li><i className="fi flaticon-share"></i></li>
@@ -95,13 +95,13 @@ const BlogLeft = () => {
                                     <span>Salat</span>
                                 </div>
                                 <ul className="entry-meta">
-                                    <li><Link onClick={ClickHandler} to="/blog-details"> By Robert harry</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/blog-details"> 25 Feb 2021</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details"> By Robert harry</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details"> 25 Feb 2021</Link></li>
                                 </ul>
-                                <h3><Link onClick={ClickHandler} to="/blog-details">Salat is the best exercise for body fitness</Link></h3>
+                                <h3><Link onClick={ClickHandler} to="/news-details">Salat is the best exercise for body fitness</Link></h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt of the graduate ut labore et dolore magna aliqua.</p>
                                 <div className="entry-bottom">
-                                    <Link onClick={ClickHandler} to="/blog-details" className="read-more">View More...</Link>
+                                    <Link onClick={ClickHandler} to="/news-details" className="read-more">View More...</Link>
                                     <ul>
                                         <li><i className="fi flaticon-like"></i>80</li>
                                         <li><i className="fi flaticon-share"></i></li>
@@ -121,13 +121,13 @@ const BlogLeft = () => {
                                     </div>
                                 </div>
                                 <ul className="entry-meta">
-                                    <li><Link onClick={ClickHandler} to="/blog-details"> By Robert harry</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/blog-details"> 25 Feb 2021</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details"> By Robert harry</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details"> 25 Feb 2021</Link></li>
                                 </ul>
-                                <h3><Link onClick={ClickHandler} to="/blog-details">Salat is the best exercise for body fitness</Link></h3>
+                                <h3><Link onClick={ClickHandler} to="/news-details">Salat is the best exercise for body fitness</Link></h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt of the graduate ut labore et dolore magna aliqua.</p>
                                 <div className="entry-bottom">
-                                    <Link onClick={ClickHandler} to="/blog-details" className="read-more">View More...</Link>
+                                    <Link onClick={ClickHandler} to="/news-details" className="read-more">View More...</Link>
                                     <ul>
                                         <li><i className="fi flaticon-like"></i>80</li>
                                         <li><i className="fi flaticon-share"></i></li>
@@ -140,13 +140,13 @@ const BlogLeft = () => {
                                     <span>Salat</span>
                                 </div>
                                 <ul className="entry-meta">
-                                    <li><Link onClick={ClickHandler} to="/blog-details"> By Robert harry</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/blog-details"> 25 Feb 2021</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details"> By Robert harry</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details"> 25 Feb 2021</Link></li>
                                 </ul>
-                                <h3><Link onClick={ClickHandler} to="/blog-details">Salat is the best exercise for body fitness</Link></h3>
+                                <h3><Link onClick={ClickHandler} to="/news-details">Salat is the best exercise for body fitness</Link></h3>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt of the graduate ut labore et dolore magna aliqua.</p>
                                 <div className="entry-bottom">
-                                    <Link onClick={ClickHandler} to="/blog-details" className="read-more">View More...</Link>
+                                    <Link onClick={ClickHandler} to="/news-details" className="read-more">View More...</Link>
                                     <ul>
                                         <li><i className="fi flaticon-like"></i>80</li>
                                         <li><i className="fi flaticon-share"></i></li>
@@ -156,15 +156,15 @@ const BlogLeft = () => {
                             <div className="pagination-wrapper pagination-wrapper-left">
                                 <ul className="pg-pagination">
                                     <li>
-                                        <Link onClick={ClickHandler} to="/blog-details" aria-label="Previous">
+                                        <Link onClick={ClickHandler} to="/news-details" aria-label="Previous">
                                             <i className="fi ti-angle-left"></i>
                                         </Link>
                                     </li>
-                                    <li className="active"><Link onClick={ClickHandler} to="/blog-details">1</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/blog-details">2</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/blog-details">3</Link></li>
+                                    <li className="active"><Link onClick={ClickHandler} to="/news-details">1</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details">2</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news-details">3</Link></li>
                                     <li>
-                                        <Link onClick={ClickHandler} to="/blog-details" aria-label="Next">
+                                        <Link onClick={ClickHandler} to="/news-details" aria-label="Next">
                                             <i className="fi ti-angle-right"></i>
                                         </Link>
                                     </li>

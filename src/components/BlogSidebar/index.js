@@ -25,10 +25,10 @@ const BlogSidebar = () => {
                     </div>
                     <div className="pro-social">
                         <ul>
-                            <li><Link to="/blog-details"><i className="ti-facebook"></i></Link></li>
-                            <li><Link to="/blog-details"><i className="ti-twitter-alt"></i></Link></li>
-                            <li><Link to="/blog-details"><i className="ti-instagram"></i></Link></li>
-                            <li><Link to="/blog-details"><i className="ti-google"></i></Link></li>
+                            <li><Link to="/news-details"><i className="ti-facebook"></i></Link></li>
+                            <li><Link to="/news-details"><i className="ti-twitter-alt"></i></Link></li>
+                            <li><Link to="/news-details"><i className="ti-instagram"></i></Link></li>
+                            <li><Link to="/news-details"><i className="ti-google"></i></Link></li>
                         </ul>
                     </div>
                 </div>
@@ -43,12 +43,12 @@ const BlogSidebar = () => {
                 <div className="widget category-widget">
                     <h3>Categories</h3>
                     <ul>
-                        <li><Link to="/blog-details">Islamic Rules<span>(8)</span></Link></li>
-                        <li><Link to="/blog-details">Importance of Marriage<span>(5)</span></Link></li>
-                        <li><Link to="/blog-details">Hajj Guide <span>(7)</span></Link></li>
-                        <li><Link to="/blog-details">Helping Poor<span>(3)</span></Link></li>
-                        <li><Link to="/blog-details">Travelling <span>(6)</span></Link></li>
-                        <li><Link to="/blog-details">Learning Quran <span>(2)</span></Link></li>
+                        <li><Link to="/news-details">Islamic Rules<span>(8)</span></Link></li>
+                        <li><Link to="/news-details">Importance of Marriage<span>(5)</span></Link></li>
+                        <li><Link to="/news-details">Hajj Guide <span>(7)</span></Link></li>
+                        <li><Link to="/news-details">Helping Poor<span>(3)</span></Link></li>
+                        <li><Link to="/news-details">Travelling <span>(6)</span></Link></li>
+                        <li><Link to="/news-details">Learning Quran <span>(2)</span></Link></li>
                     </ul>
                 </div>
                 <div className="widget recent-post-widget">
@@ -59,7 +59,7 @@ const BlogSidebar = () => {
                                 <img src={ins1} alt=""/>
                             </div>
                             <div className="details">
-                                <h4><Link to="/blog-details">Many Children are suffering a lot for food.</Link></h4>
+                                <h4><Link to="/news-details">Many Children are suffering a lot for food.</Link></h4>
                                 <span className="date">22 Sep 2021</span>
                             </div>
                         </div>
@@ -68,7 +68,7 @@ const BlogSidebar = () => {
                                 <img src={ins2} alt=""/>
                             </div>
                             <div className="details">
-                                <h4><Link to="/blog-details">Be kind for the poor people and the kids.</Link></h4>
+                                <h4><Link to="/news-details">Be kind for the poor people and the kids.</Link></h4>
                                 <span className="date">22 Sep 2021</span>
                             </div>
                         </div>
@@ -77,7 +77,7 @@ const BlogSidebar = () => {
                                 <img src={ins3} alt=""/>
                             </div>
                             <div className="details">
-                                <h4><Link to="/blog-details">Be soft and kind for the poor people.</Link></h4>
+                                <h4><Link to="/news-details">Be soft and kind for the poor people.</Link></h4>
                                 <span className="date">22 Sep 2021</span>
                             </div>
                         </div>
@@ -86,14 +86,14 @@ const BlogSidebar = () => {
                 <div className="widget tag-widget">
                     <h3>Tags</h3>
                     <ul>
-                        <li><Link to="/blog-details">Salat</Link></li>
-                        <li><Link to="/blog-details">Quran</Link></li>
-                        <li><Link to="/blog-details">Books</Link></li>
-                        <li><Link to="/blog-details">Education</Link></li>
-                        <li><Link to="/blog-details">World Wide</Link></li>
-                        <li><Link to="/blog-details">Marriage</Link></li>
-                        <li><Link to="/blog-details">Hajj</Link></li>
-                        <li><Link to="/blog-details">Health</Link></li>
+                        <li><Link to="/news-details">Salat</Link></li>
+                        <li><Link to="/news-details">Quran</Link></li>
+                        <li><Link to="/news-details">Books</Link></li>
+                        <li><Link to="/news-details">Education</Link></li>
+                        <li><Link to="/news-details">World Wide</Link></li>
+                        <li><Link to="/news-details">Marriage</Link></li>
+                        <li><Link to="/news-details">Hajj</Link></li>
+                        <li><Link to="/news-details">Health</Link></li>
                     </ul>
                 </div>
             </div>

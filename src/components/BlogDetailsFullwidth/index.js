@@ -24,9 +24,9 @@ const BlogDetailsFullwidth = () => {
                                 <img src={blog1} alt=""/>
                             </div>
                             <ul className="entry-meta">
-                                <li><Link to="/blog-details"><img src={blog6} alt=""/>  By Admin</Link></li>
-                                <li><Link to="/blog-details"><i className="ti-calendar"></i> Sep 25,2021</Link></li>
-                                <li><Link to="/blog-details"><i className="ti-heart"></i> 35</Link></li>
+                                <li><Link to="/news-details"><img src={blog6} alt=""/>  By Admin</Link></li>
+                                <li><Link to="/news-details"><i className="ti-calendar"></i> Sep 25,2021</Link></li>
+                                <li><Link to="/news-details"><i className="ti-heart"></i> 35</Link></li>
                             </ul>
                             <h2>The Importance of Marriage in Islam.</h2>
                             <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now.</p>
@@ -38,39 +38,39 @@ const BlogDetailsFullwidth = () => {
                         <div className="tag-share clearfix">
                             <div className="tag">
                                 <ul>
-                                    <li><Link to="/blog-details">Marriage</Link></li>
-                                    <li><Link to="/blog-details">Islamic</Link></li>
-                                    <li><Link to="/blog-details">Quran</Link></li>
+                                    <li><Link to="/news-details">Marriage</Link></li>
+                                    <li><Link to="/news-details">Islamic</Link></li>
+                                    <li><Link to="/news-details">Quran</Link></li>
                                 </ul>
                             </div>
                             <div className="share">
                                 <ul>
-                                    <li><Link to="/blog-details"><i className="ti-facebook"></i></Link></li>
-                                    <li><Link to="/blog-details"><i className="ti-twitter-alt"></i></Link></li>
-                                    <li><Link to="/blog-details"><i className="ti-instagram"></i></Link></li>
+                                    <li><Link to="/news-details"><i className="ti-facebook"></i></Link></li>
+                                    <li><Link to="/news-details"><i className="ti-twitter-alt"></i></Link></li>
+                                    <li><Link to="/news-details"><i className="ti-instagram"></i></Link></li>
                                 </ul>
                             </div>
                         </div> 
                         <div className="author-box">
                             <div className="author-avatar">
-                                <Link to="/blog-details" target="_blank"><img src={blog2} alt=""/>  </Link>
+                                <Link to="/news-details" target="_blank"><img src={blog2} alt=""/>  </Link>
                             </div>
                             <div className="author-content">
-                                <Link to="/blog-details" className="author-name">Henry Joyes</Link>
+                                <Link to="/news-details" className="author-name">Henry Joyes</Link>
                                 <p>Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised</p>
                                 <div className="author-btn">
-                                    <Link to="/blog-details">All Post From Author</Link>
+                                    <Link to="/news-details">All Post From Author</Link>
                                 </div>
                             </div>
                         </div> 
                         <div className="more-posts clearfix">
                             <div className="previous-post">
-                                <Link to="/blog-details">
+                                <Link to="/news-details">
                                     <span className="post-control-link">Previous</span>
                                 </Link>
                             </div>
                             <div className="next-post">
-                                <Link to="/blog-details">
+                                <Link to="/news-details">
                                     <span className="post-control-link">Next post</span>
                                 </Link>
                             </div>
@@ -93,7 +93,7 @@ const BlogDetailsFullwidth = () => {
                                                 <div className="comment-area">
                                                     <p>I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, </p>
                                                     <div className="comments-reply">
-                                                        <Link className="comment-reply-link" to="/blog-details"><i className="fa fa-reply" aria-hidden="true"></i><span>Reply</span></Link>
+                                                        <Link className="comment-reply-link" to="/news-details"><i className="fa fa-reply" aria-hidden="true"></i><span>Reply</span></Link>
                                                     </div>
                                                 </div>
                                             </div>
@@ -113,7 +113,7 @@ const BlogDetailsFullwidth = () => {
                                                         <div className="comment-area">
                                                             <p>I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, </p>
                                                             <div className="comments-reply">
-                                                                <Link className="comment-reply-link" to="/blog-details"><span><i className="fa fa-reply" aria-hidden="true"></i> Reply</span></Link>
+                                                                <Link className="comment-reply-link" to="/news-details"><span><i className="fa fa-reply" aria-hidden="true"></i> Reply</span></Link>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -133,7 +133,7 @@ const BlogDetailsFullwidth = () => {
                                                                 <div className="comment-area">
                                                                     <p>I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, </p>
                                                                     <div className="comments-reply">
-                                                                        <Link className="comment-reply-link" to="/blog-details"><span><i className="fa fa-reply" aria-hidden="true"></i> Reply</span></Link>
+                                                                        <Link className="comment-reply-link" to="/news-details"><span><i className="fa fa-reply" aria-hidden="true"></i> Reply</span></Link>
                                                                     </div>
                                                                 </div>
                                                             </div>

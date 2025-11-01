@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import API_CONFIG from '../../config/api';
 import './style.css';
 
 const ProjectAchievements = (props) => {
-    const projectMetrics = [
+    const [projectMetrics, setProjectMetrics] = useState([
         {
             icon: "fa fa-dollar-sign",
             number: "$4.3M",
@@ -12,7 +13,7 @@ const ProjectAchievements = (props) => {
         {
             icon: "fa fa-map",
             number: "52",
-            label: "Acres Acquired", 
+            label: "Acres Acquired",
             description: "Land secured for the multicultural centre"
         },
         {
@@ -27,7 +28,33 @@ const ProjectAchievements = (props) => {
             label: "Government Funding",
             description: "Secured funding from government initiatives"
         }
-    ];
+    ]);
+
+    useEffect(() => {
+        const loadAchievements = async () => {
+            try {
+                const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.achievements));
+                const achievements = await response.json();
+
+                if (achievements && achievements.length > 0) {
+                    // Take the latest 4 achievements and format them as metrics
+                    const formattedMetrics = achievements.slice(-4).map((achievement, index) => {
+                        const icons = ["fa fa-calendar", "fa fa-building", "fa fa-trophy", "fa fa-award"];
+                        return {
+                            icon: icons[index] || "fa fa-star",
+                            number: achievement.year,
+                            label: achievement.title,
+                            description: achievement.description
+                        };
+                    });
+                    setProjectMetrics(formattedMetrics);
+                }
+            } catch (error) {
+                console.error('Error loading project achievements:', error);
+            }
+        };
+        loadAchievements();
+    }, []);
 
     return (
         <div className={`project-achievements-section section-padding ${props.className || ''}`}>

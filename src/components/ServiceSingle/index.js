@@ -38,8 +38,8 @@ const ServiceSingle = (props) => {
                             </div>
                         </div>
                         <div className="prv-nx">
-                            <div className="pre-btn"><Link onClick={ClickHandler} to="/service-single">Previous</Link></div>
-                            <div className="nex-btn"><Link onClick={ClickHandler} to="/service-single">Next</Link></div>
+                            <div className="pre-btn"><Link onClick={ClickHandler} to="/projects-single">Previous</Link></div>
+                            <div className="nex-btn"><Link onClick={ClickHandler} to="/projects-single">Next</Link></div>
                         </div>
                     </div>
                     <div className="col col-lg-4 col-md-12 col-12">
@@ -47,11 +47,11 @@ const ServiceSingle = (props) => {
                             <div className="widget service-list-widget">
                                 <h3>All Services</h3>
                                 <ul>
-                                    <li className="current"><Link to="/service-single">Special Child Care</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/service-single">Mosque Development</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/service-single">Matrimonial</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/service-single">Funerals</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/service-single">Help Poor</Link></li>
+                                    <li className="current"><Link to="/projects-single">Special Child Care</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/projects-single">Mosque Development</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/projects-single">Matrimonial</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/projects-single">Funerals</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/projects-single">Help Poor</Link></li>
                                 </ul>
                             </div>
                             <div className="widget contact-widget">

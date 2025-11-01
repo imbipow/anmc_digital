@@ -1,148 +1,876 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
 import Grid from "@mui/material/Grid";
-import SimpleReactValidator from "simple-react-validator";
-import {toast} from "react-toastify";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import {Link, useNavigate} from "react-router-dom";
-
-
+import IconButton from "@mui/material/IconButton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import Checkbox from "@mui/material/Checkbox";
+import MenuItem from "@mui/material/MenuItem";
+import Select from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import API_CONFIG from '../../config/api';
+import MembershipPayment from './MembershipPayment';
 import './style.scss';
 
-const SignUpPage = (props) => {
+const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
-    const push = useNavigate()
+const SignUpPage = () => {
+    const navigate = useNavigate();
 
-    const [value, setValue] = useState({
+    // Form state
+    const [formData, setFormData] = useState({
+        // Personal Information
+        firstName: '',
+        lastName: '',
         email: '',
-        full_name: '',
+        mobile: '',
+        gender: '',
+        age: '',
+
+        // Membership Selection
+        membershipCategory: '', // general or life
+        membershipType: '', // single or family
+
+        // Address
+        residentialAddress: {
+            street: '',
+            suburb: '',
+            state: '',
+            postcode: '',
+            country: 'Australia'
+        },
+        postalAddress: {
+            street: '',
+            suburb: '',
+            state: '',
+            postcode: '',
+            country: 'Australia'
+        },
+        sameAsResidential: true,
+
+        // Family Members (for family membership)
+        familyMembers: [],
+
+        // Password
         password: '',
-        confirm_password: '',
+        confirmPassword: '',
+
+        // Payment
+        paymentType: 'upfront', // upfront or installments
+
+        // Declaration
+        acceptDeclaration: false,
+
+        // Comments
+        comments: ''
     });
 
-    const changeHandler = (e) => {
-        setValue({...value, [e.target.name]: e.target.value});
-        validator.showMessages();
+    const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
+    const [showPayment, setShowPayment] = useState(false);
+    const [clientSecret, setClientSecret] = useState('');
+    const [membershipFee, setMembershipFee] = useState(0);
+    const [memberId, setMemberId] = useState(null);
+
+    // Calculate membership fee based on category and type
+    const calculateFee = (category, type) => {
+        const fees = {
+            'general': { 'single': 100, 'family': 200 },
+            'life': { 'single': 1000, 'family': 1500 }
+        };
+        return fees[category]?.[type] || 0;
     };
 
-    const [validator] = React.useState(new SimpleReactValidator({
-        className: 'errorMessage'
-    }));
+    // Update membership fee when category or type changes
+    React.useEffect(() => {
+        if (formData.membershipCategory && formData.membershipType) {
+            const fee = calculateFee(formData.membershipCategory, formData.membershipType);
+            setMembershipFee(fee);
+        }
+    }, [formData.membershipCategory, formData.membershipType]);
 
+    // Handle input changes
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
 
-    const submitForm = (e) => {
-        e.preventDefault();
-        if (validator.allValid()) {
-            setValue({
-                email: '',
-                full_name: '',
-                password: '',
-                confirm_password: '',
-            });
-            validator.hideMessages();
-            toast.success('Registration Complete successfully!');
-            push('/login');
+        if (name.includes('.')) {
+            const [parent, child] = name.split('.');
+            setFormData(prev => ({
+                ...prev,
+                [parent]: {
+                    ...prev[parent],
+                    [child]: value
+                }
+            }));
         } else {
-            validator.showMessages();
-            toast.error('Empty field is not allowed!');
+            setFormData(prev => ({
+                ...prev,
+                [name]: type === 'checkbox' ? checked : value
+            }));
+        }
+
+        // Clear error when user starts typing
+        if (errors[name]) {
+            setErrors(prev => ({ ...prev, [name]: '' }));
         }
     };
+
+    // Handle same as residential checkbox
+    const handleSameAsResidential = (e) => {
+        const checked = e.target.checked;
+        setFormData(prev => ({
+            ...prev,
+            sameAsResidential: checked,
+            postalAddress: checked ? { ...prev.residentialAddress } : {
+                street: '',
+                suburb: '',
+                state: '',
+                postcode: '',
+                country: 'Australia'
+            }
+        }));
+    };
+
+    // Add family member
+    const addFamilyMember = () => {
+        if (formData.familyMembers.length >= 3) {
+            toast.warning('Maximum 3 family members allowed');
+            return;
+        }
+
+        setFormData(prev => ({
+            ...prev,
+            familyMembers: [
+                ...prev.familyMembers,
+                {
+                    firstName: '',
+                    lastName: '',
+                    relationship: '',
+                    age: ''
+                }
+            ]
+        }));
+    };
+
+    // Remove family member
+    const removeFamilyMember = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            familyMembers: prev.familyMembers.filter((_, i) => i !== index)
+        }));
+    };
+
+    // Handle family member change
+    const handleFamilyMemberChange = (index, field, value) => {
+        setFormData(prev => ({
+            ...prev,
+            familyMembers: prev.familyMembers.map((member, i) =>
+                i === index ? { ...member, [field]: value } : member
+            )
+        }));
+    };
+
+    // Validate form
+    const validateForm = () => {
+        const newErrors = {};
+
+        // Personal Information
+        if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
+        if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+        if (!formData.email.trim()) newErrors.email = 'Email is required';
+        else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format';
+        if (!formData.mobile.trim()) newErrors.mobile = 'Mobile number is required';
+        if (!formData.gender) newErrors.gender = 'Gender is required';
+
+        // Membership
+        if (!formData.membershipCategory) newErrors.membershipCategory = 'Please select membership category';
+        if (!formData.membershipType) newErrors.membershipType = 'Please select membership type';
+
+        // Address
+        if (!formData.residentialAddress.street.trim()) newErrors.residentialStreet = 'Street address is required';
+        if (!formData.residentialAddress.suburb.trim()) newErrors.residentialSuburb = 'Suburb is required';
+        if (!formData.residentialAddress.state.trim()) newErrors.residentialState = 'State is required';
+        if (!formData.residentialAddress.postcode.trim()) newErrors.residentialPostcode = 'Postcode is required';
+
+        // Family members validation
+        if (formData.membershipType === 'family') {
+            if (formData.familyMembers.length === 0) {
+                newErrors.familyMembers = 'At least one family member is required for family membership';
+            } else {
+                formData.familyMembers.forEach((member, index) => {
+                    if (!member.firstName.trim()) newErrors[`family${index}FirstName`] = 'First name required';
+                    if (!member.lastName.trim()) newErrors[`family${index}LastName`] = 'Last name required';
+                    if (!member.relationship) newErrors[`family${index}Relationship`] = 'Relationship required';
+                });
+            }
+        }
+
+        // Password
+        if (!formData.password) newErrors.password = 'Password is required';
+        else if (formData.password.length < 8) newErrors.password = 'Password must be at least 8 characters';
+        else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(formData.password)) {
+            newErrors.password = 'Password must contain uppercase, lowercase, number and special character';
+        }
+        if (formData.password !== formData.confirmPassword) {
+            newErrors.confirmPassword = 'Passwords do not match';
+        }
+
+        // Declaration
+        if (!formData.acceptDeclaration) {
+            newErrors.acceptDeclaration = 'You must accept the declaration';
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    // Handle form submission
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!validateForm()) {
+            toast.error('Please fix the errors in the form');
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            // For upfront payment, create payment intent first
+            if (formData.paymentType === 'upfront') {
+                const paymentResponse = await fetch(API_CONFIG.getURL('/stripe/create-payment-intent'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        amount: membershipFee,
+                        currency: 'aud',
+                        metadata: {
+                            firstName: formData.firstName,
+                            lastName: formData.lastName,
+                            email: formData.email,
+                            mobile: formData.mobile,
+                            membershipCategory: formData.membershipCategory,
+                            membershipType: formData.membershipType
+                        }
+                    })
+                });
+
+                const paymentData = await paymentResponse.json();
+
+                if (!paymentResponse.ok) {
+                    if (paymentData.error && paymentData.error.includes('Stripe is not configured')) {
+                        toast.error('Payment system is being configured. Please contact administrator.');
+                    } else {
+                        throw new Error(paymentData.error || 'Failed to create payment intent');
+                    }
+                    setLoading(false);
+                    return;
+                }
+
+                setClientSecret(paymentData.clientSecret);
+                setShowPayment(true);
+            } else {
+                // For installments, register member without payment
+                await registerMember();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            toast.error(error.message || 'Registration failed. Please try again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Register member in database
+    const registerMember = async (paymentIntentId = null) => {
+        try {
+            const memberData = {
+                ...formData,
+                membershipFee,
+                paymentIntentId,
+                paymentStatus: paymentIntentId ? 'succeeded' : 'pending'
+            };
+
+            const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.memberRegister), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(memberData)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Registration failed');
+            }
+
+            setMemberId(data.member.id);
+            toast.success('Registration successful!');
+
+            // Redirect to member portal or login
+            setTimeout(() => {
+                navigate('/member-portal');
+            }, 2000);
+
+            return data.member;
+        } catch (error) {
+            console.error('Error registering member:', error);
+            throw error;
+        }
+    };
+
+    // Handle successful payment
+    const handlePaymentSuccess = async (paymentIntent) => {
+        try {
+            await registerMember(paymentIntent.id);
+        } catch (error) {
+            toast.error('Payment succeeded but registration failed. Please contact support.');
+        }
+    };
+
+    if (showPayment && clientSecret) {
+        return (
+            <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <MembershipPayment
+                    clientSecret={clientSecret}
+                    formData={formData}
+                    membershipFee={membershipFee}
+                    onSuccess={handlePaymentSuccess}
+                    onCancel={() => {
+                        setShowPayment(false);
+                        setClientSecret('');
+                    }}
+                />
+            </Elements>
+        );
+    }
+
     return (
         <Grid className="loginWrapper">
+            <Grid className="loginForm membershipForm">
+                <div className="form-header">
+                    <IconButton
+                        onClick={() => navigate(-1)}
+                        className="back-button"
+                        aria-label="Go back"
+                    >
+                        <ArrowBackIcon />
+                    </IconButton>
+                    <div className="header-text">
+                        <h2>ANMC Membership Registration</h2>
+                        <p>Join the Australian Nepalese Muslim Community</p>
+                    </div>
+                </div>
 
-            <Grid className="loginForm">
-                <h2>Signup</h2>
-                <p>Signup your account</p>
-                <form onSubmit={submitForm}>
+                <form onSubmit={handleSubmit}>
                     <Grid container spacing={3}>
+                        {/* Personal Information */}
                         <Grid item xs={12}>
-                            <TextField
-                                className="inputOutline"
-                                fullWidth
-                                placeholder="Full Name"
-                                value={value.full_name}
-                                variant="outlined"
-                                name="full_name"
-                                label="Name"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                onBlur={(e) => changeHandler(e)}
-                                onChange={(e) => changeHandler(e)}
-                            />
-                            {validator.message('full name', value.full_name, 'required|alpha')}
+                            <h3 className="section-title">Personal Information</h3>
                         </Grid>
-                        <Grid item xs={12}>
+
+                        <Grid item xs={12} sm={6}>
                             <TextField
-                                className="inputOutline"
                                 fullWidth
-                                placeholder="E-mail"
-                                value={value.email}
+                                label="First Name *"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                error={!!errors.firstName}
+                                helperText={errors.firstName}
                                 variant="outlined"
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label="Last Name *"
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                error={!!errors.lastName}
+                                helperText={errors.lastName}
+                                variant="outlined"
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label="Email *"
                                 name="email"
-                                label="E-mail"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                onBlur={(e) => changeHandler(e)}
-                                onChange={(e) => changeHandler(e)}
+                                type="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                error={!!errors.email}
+                                helperText={errors.email}
+                                variant="outlined"
                             />
-                            {validator.message('email', value.email, 'required|email')}
                         </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label="Mobile *"
+                                name="mobile"
+                                value={formData.mobile}
+                                onChange={handleChange}
+                                error={!!errors.mobile}
+                                helperText={errors.mobile}
+                                variant="outlined"
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <FormControl component="fieldset" error={!!errors.gender}>
+                                <FormLabel component="legend">Gender *</FormLabel>
+                                <RadioGroup
+                                    row
+                                    name="gender"
+                                    value={formData.gender}
+                                    onChange={handleChange}
+                                >
+                                    <FormControlLabel value="male" control={<Radio />} label="Male" />
+                                    <FormControlLabel value="female" control={<Radio />} label="Female" />
+                                </RadioGroup>
+                                {errors.gender && <span className="error-text">{errors.gender}</span>}
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label="Age (Optional)"
+                                name="age"
+                                type="number"
+                                value={formData.age}
+                                onChange={handleChange}
+                                variant="outlined"
+                                helperText="For statistical purposes only"
+                            />
+                        </Grid>
+
+                        {/* Membership Selection */}
+                        <Grid item xs={12}>
+                            <h3 className="section-title">Membership Selection</h3>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <FormControl component="fieldset" error={!!errors.membershipCategory}>
+                                <FormLabel component="legend">Membership Category *</FormLabel>
+                                <RadioGroup
+                                    name="membershipCategory"
+                                    value={formData.membershipCategory}
+                                    onChange={handleChange}
+                                >
+                                    <FormControlLabel
+                                        value="general"
+                                        control={<Radio />}
+                                        label="General Membership"
+                                    />
+                                    <FormControlLabel
+                                        value="life"
+                                        control={<Radio />}
+                                        label="Life Membership"
+                                    />
+                                </RadioGroup>
+                                {errors.membershipCategory && <span className="error-text">{errors.membershipCategory}</span>}
+                            </FormControl>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <FormControl component="fieldset" error={!!errors.membershipType}>
+                                <FormLabel component="legend">Membership Type *</FormLabel>
+                                <RadioGroup
+                                    name="membershipType"
+                                    value={formData.membershipType}
+                                    onChange={handleChange}
+                                >
+                                    <FormControlLabel
+                                        value="single"
+                                        control={<Radio />}
+                                        label={`Single ${membershipFee > 0 && formData.membershipType === 'single' ? `($${membershipFee})` : ''}`}
+                                    />
+                                    <FormControlLabel
+                                        value="family"
+                                        control={<Radio />}
+                                        label={`Family ${membershipFee > 0 && formData.membershipType === 'family' ? `($${membershipFee})` : ''}`}
+                                    />
+                                </RadioGroup>
+                                {errors.membershipType && <span className="error-text">{errors.membershipType}</span>}
+                            </FormControl>
+                        </Grid>
+
+                        {/* Family Members Section */}
+                        {formData.membershipType === 'family' && (
+                            <>
+                                <Grid item xs={12}>
+                                    <h3 className="section-title">Family Members</h3>
+                                    <p className="helper-text">Add up to 3 family members</p>
+                                    {errors.familyMembers && <span className="error-text">{errors.familyMembers}</span>}
+                                </Grid>
+
+                                {formData.familyMembers.map((member, index) => (
+                                    <Grid item xs={12} key={index}>
+                                        <div className="family-member-card">
+                                            <h4>Family Member {index + 1}</h4>
+                                            <Grid container spacing={2}>
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        fullWidth
+                                                        label="First Name *"
+                                                        value={member.firstName}
+                                                        onChange={(e) => handleFamilyMemberChange(index, 'firstName', e.target.value)}
+                                                        error={!!errors[`family${index}FirstName`]}
+                                                        helperText={errors[`family${index}FirstName`]}
+                                                        variant="outlined"
+                                                        size="small"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        fullWidth
+                                                        label="Last Name *"
+                                                        value={member.lastName}
+                                                        onChange={(e) => handleFamilyMemberChange(index, 'lastName', e.target.value)}
+                                                        error={!!errors[`family${index}LastName`]}
+                                                        helperText={errors[`family${index}LastName`]}
+                                                        variant="outlined"
+                                                        size="small"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}>
+                                                    <FormControl fullWidth size="small" error={!!errors[`family${index}Relationship`]}>
+                                                        <InputLabel>Relationship *</InputLabel>
+                                                        <Select
+                                                            value={member.relationship}
+                                                            onChange={(e) => handleFamilyMemberChange(index, 'relationship', e.target.value)}
+                                                            label="Relationship *"
+                                                        >
+                                                            <MenuItem value="spouse">Spouse</MenuItem>
+                                                            <MenuItem value="child">Child</MenuItem>
+                                                            <MenuItem value="parent">Parent</MenuItem>
+                                                            <MenuItem value="sibling">Sibling</MenuItem>
+                                                        </Select>
+                                                        {errors[`family${index}Relationship`] &&
+                                                            <span className="error-text">{errors[`family${index}Relationship`]}</span>
+                                                        }
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={12} sm={4}>
+                                                    <TextField
+                                                        fullWidth
+                                                        label="Age"
+                                                        type="number"
+                                                        value={member.age}
+                                                        onChange={(e) => handleFamilyMemberChange(index, 'age', e.target.value)}
+                                                        variant="outlined"
+                                                        size="small"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={2}>
+                                                    <Button
+                                                        variant="outlined"
+                                                        color="error"
+                                                        onClick={() => removeFamilyMember(index)}
+                                                        fullWidth
+                                                    >
+                                                        Remove
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
+                                        </div>
+                                    </Grid>
+                                ))}
+
+                                {formData.familyMembers.length < 3 && (
+                                    <Grid item xs={12}>
+                                        <Button
+                                            variant="outlined"
+                                            onClick={addFamilyMember}
+                                            className="add-family-btn"
+                                        >
+                                            + Add Family Member
+                                        </Button>
+                                    </Grid>
+                                )}
+                            </>
+                        )}
+
+                        {/* Address Information */}
+                        <Grid item xs={12}>
+                            <h3 className="section-title">Residential Address</h3>
+                        </Grid>
+
                         <Grid item xs={12}>
                             <TextField
-                                className="inputOutline"
                                 fullWidth
-                                placeholder="Password"
-                                value={value.password}
+                                label="Street Address *"
+                                name="residentialAddress.street"
+                                value={formData.residentialAddress.street}
+                                onChange={handleChange}
+                                error={!!errors.residentialStreet}
+                                helperText={errors.residentialStreet}
                                 variant="outlined"
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label="Suburb *"
+                                name="residentialAddress.suburb"
+                                value={formData.residentialAddress.suburb}
+                                onChange={handleChange}
+                                error={!!errors.residentialSuburb}
+                                helperText={errors.residentialSuburb}
+                                variant="outlined"
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                fullWidth
+                                label="State *"
+                                name="residentialAddress.state"
+                                value={formData.residentialAddress.state}
+                                onChange={handleChange}
+                                error={!!errors.residentialState}
+                                helperText={errors.residentialState}
+                                variant="outlined"
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} sm={3}>
+                            <TextField
+                                fullWidth
+                                label="Postcode *"
+                                name="residentialAddress.postcode"
+                                value={formData.residentialAddress.postcode}
+                                onChange={handleChange}
+                                error={!!errors.residentialPostcode}
+                                helperText={errors.residentialPostcode}
+                                variant="outlined"
+                            />
+                        </Grid>
+
+                        {/* Postal Address */}
+                        <Grid item xs={12}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={formData.sameAsResidential}
+                                        onChange={handleSameAsResidential}
+                                    />
+                                }
+                                label="Postal address same as residential address"
+                            />
+                        </Grid>
+
+                        {!formData.sameAsResidential && (
+                            <>
+                                <Grid item xs={12}>
+                                    <h3 className="section-title">Postal Address</h3>
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        label="Street Address"
+                                        name="postalAddress.street"
+                                        value={formData.postalAddress.street}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={6}>
+                                    <TextField
+                                        fullWidth
+                                        label="Suburb"
+                                        name="postalAddress.suburb"
+                                        value={formData.postalAddress.suburb}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={3}>
+                                    <TextField
+                                        fullWidth
+                                        label="State"
+                                        name="postalAddress.state"
+                                        value={formData.postalAddress.state}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                    />
+                                </Grid>
+
+                                <Grid item xs={12} sm={3}>
+                                    <TextField
+                                        fullWidth
+                                        label="Postcode"
+                                        name="postalAddress.postcode"
+                                        value={formData.postalAddress.postcode}
+                                        onChange={handleChange}
+                                        variant="outlined"
+                                    />
+                                </Grid>
+                            </>
+                        )}
+
+                        {/* Password */}
+                        <Grid item xs={12}>
+                            <h3 className="section-title">Account Security</h3>
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label="Password *"
                                 name="password"
-                                label="Password"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                onBlur={(e) => changeHandler(e)}
-                                onChange={(e) => changeHandler(e)}
+                                type="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                error={!!errors.password}
+                                helperText={errors.password || 'Min 8 characters with uppercase, lowercase, number & special character'}
+                                variant="outlined"
                             />
-                            {validator.message('password', value.password, 'required')}
                         </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                label="Confirm Password *"
+                                name="confirmPassword"
+                                type="password"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                                error={!!errors.confirmPassword}
+                                helperText={errors.confirmPassword}
+                                variant="outlined"
+                            />
+                        </Grid>
+
+                        {/* Payment Type (only for Life Membership) */}
+                        {formData.membershipCategory === 'life' && (
+                            <>
+                                <Grid item xs={12}>
+                                    <h3 className="section-title">Payment Options</h3>
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <FormControl component="fieldset">
+                                        <FormLabel component="legend">Payment Type</FormLabel>
+                                        <RadioGroup
+                                            row
+                                            name="paymentType"
+                                            value={formData.paymentType}
+                                            onChange={handleChange}
+                                        >
+                                            <FormControlLabel
+                                                value="upfront"
+                                                control={<Radio />}
+                                                label="Upfront Payment"
+                                            />
+                                            <FormControlLabel
+                                                value="installments"
+                                                control={<Radio />}
+                                                label="Installments (Contact Admin)"
+                                            />
+                                        </RadioGroup>
+                                    </FormControl>
+                                </Grid>
+                            </>
+                        )}
+
+                        {/* Comments */}
                         <Grid item xs={12}>
                             <TextField
-                                className="inputOutline"
                                 fullWidth
-                                placeholder="Confirm Password"
-                                value={value.password}
+                                label="Comments (Optional)"
+                                name="comments"
+                                value={formData.comments}
+                                onChange={handleChange}
                                 variant="outlined"
-                                name="confirm_password"
-                                label="Confirm Password"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                onBlur={(e) => changeHandler(e)}
-                                onChange={(e) => changeHandler(e)}
+                                multiline
+                                rows={3}
                             />
-                            {validator.message('confirm password', value.confirm_password, `in:${value.password}`)}
                         </Grid>
+
+                        {/* Declaration */}
                         <Grid item xs={12}>
-                            <Grid className="formFooter">
-                                <Button fullWidth className="cBtn cBtnLarge cBtnTheme" type="submit">Sign Up</Button>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={formData.acceptDeclaration}
+                                        onChange={handleChange}
+                                        name="acceptDeclaration"
+                                    />
+                                }
+                                label={
+                                    <span>
+                                        I declare that the information provided is true and correct.
+                                        I agree to abide by the ANMC constitution and rules. *
+                                    </span>
+                                }
+                            />
+                            {errors.acceptDeclaration &&
+                                <div className="error-text">{errors.acceptDeclaration}</div>
+                            }
+                        </Grid>
+
+                        {/* Membership Fee Display */}
+                        {membershipFee > 0 && (
+                            <Grid item xs={12}>
+                                <div className="fee-display">
+                                    <h4>Membership Fee: ${membershipFee} AUD</h4>
+                                    {formData.paymentType === 'installments' && (
+                                        <p className="helper-text">
+                                            You selected installments. Admin will contact you for payment arrangements.
+                                        </p>
+                                    )}
+                                </div>
                             </Grid>
-                            <Grid className="loginWithSocial">
-                                <Button className="facebook"><i className="fa fa-facebook"></i></Button>
-                                <Button className="twitter"><i className="fa fa-twitter"></i></Button>
-                                <Button className="linkedin"><i className="fa fa-linkedin"></i></Button>
-                            </Grid>
-                            <p className="noteHelp">Already have an account? <Link to="/login">Return to Sign In</Link>
+                        )}
+
+                        {/* Submit Button */}
+                        <Grid item xs={12}>
+                            <Button
+                                fullWidth
+                                className="cBtn cBtnLarge cBtnTheme"
+                                type="submit"
+                                disabled={loading}
+                            >
+                                {loading ? 'Processing...' :
+                                 formData.paymentType === 'upfront' ? 'Proceed to Payment' : 'Complete Registration'}
+                            </Button>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <p className="noteHelp">
+                                Already have an account? <Link to="/login">Sign In</Link>
                             </p>
                         </Grid>
                     </Grid>
                 </form>
+
                 <div className="shape-img">
                     <i className="fi flaticon-honeycomb"></i>
                 </div>
             </Grid>
         </Grid>
-    )
+    );
 };
 
 export default SignUpPage;

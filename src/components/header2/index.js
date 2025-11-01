@@ -40,10 +40,10 @@ const Header2 = () => {
                                         </ul>
                                     </li>
                                     <li><Link onClick={ClickHandler} to="/about" title="">About</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/service" title="">Service</Link>
+                                    <li><Link onClick={ClickHandler} to="/projects" title="">Projects</Link>
                                         <ul>
-                                            <li><Link onClick={ClickHandler} to="/service" title="">Service</Link></li>
-                                            <li><Link onClick={ClickHandler} to="/service-single" title="">Service Single</Link></li>
+                                            <li><Link onClick={ClickHandler} to="/projects" title="">Projects</Link></li>
+                                            <li><Link onClick={ClickHandler} to="/projects-single" title="">Project Single</Link></li>
                                         </ul>
                                     </li>
                                     <li><Link onClick={ClickHandler} to="/event" title="">Event</Link>
@@ -55,22 +55,22 @@ const Header2 = () => {
                                     <li><Link onClick={ClickHandler} to="/home" title="">Pages</Link>
                                         <ul>
                                             <li><Link onClick={ClickHandler} to="/about" title="">About</Link></li>
-                                            <li><Link onClick={ClickHandler} to="/shop" title="">Shop</Link></li>
-                                            <li><Link onClick={ClickHandler} to="/shop-single" title="">Shop Single</Link></li>
+                                            <li><Link onClick={ClickHandler} to="/facilities" title="">Facilities</Link></li>
+                                            <li><Link onClick={ClickHandler} to="/facilities-single" title="">Facility Details</Link></li>
                                             <li><Link onClick={ClickHandler} to="/donate" title="">Donate</Link></li>
                                             <li><Link onClick={ClickHandler} to="/404" title="">Error 404</Link></li>
                                         </ul>
                                     </li>
-                                    <li><Link onClick={ClickHandler} to="/blog">Blog</Link>
+                                    <li><Link onClick={ClickHandler} to="/news">News</Link>
                                         <ul>
-                                            <li><Link onClick={ClickHandler} to="/blog">Blog</Link></li>
-                                            <li><Link onClick={ClickHandler} to="/blog-left">Blog Left sidebar</Link></li>
-                                            <li><Link onClick={ClickHandler} to="/blog-fullwidth">Blog full width</Link></li>
-                                            <li><i className="fa fa-angle-right"></i><Link onClick={ClickHandler} to="/blog-details" title="">Blog Details</Link>
+                                            <li><Link onClick={ClickHandler} to="/news">News</Link></li>
+                                            <li><Link onClick={ClickHandler} to="/news-left">News Left sidebar</Link></li>
+                                            <li><Link onClick={ClickHandler} to="/news-fullwidth">News full width</Link></li>
+                                            <li><i className="fa fa-angle-right"></i><Link onClick={ClickHandler} to="/news-details" title="">News Details</Link>
                                                 <ul>
-                                                    <li><Link onClick={ClickHandler} to="/blog-details" title="">Blog single</Link></li>
-                                                    <li><Link onClick={ClickHandler} to="/blog-details-left" title="">Blog single Left sidebar</Link></li>
-                                                    <li><Link onClick={ClickHandler} to="/blog-details-fullwidth" title="">Blog single full width</Link></li>
+                                                    <li><Link onClick={ClickHandler} to="/news-details" title="">News single</Link></li>
+                                                    <li><Link onClick={ClickHandler} to="/news-details-left" title="">News single Left sidebar</Link></li>
+                                                    <li><Link onClick={ClickHandler} to="/news-details-fullwidth" title="">News single full width</Link></li>
                                                 </ul>
                                             </li>
                                         </ul>
@@ -99,20 +99,20 @@ const Header2 = () => {
                                             <div className="mini-cart-items">
                                                 <div className="mini-cart-item clearfix">
                                                     <div className="mini-cart-item-image">
-                                                        <Link onClick={ClickHandler} to="/shop"><img src={min1} alt=""/></Link>
+                                                        <Link onClick={ClickHandler} to="/facilities"><img src={min1} alt=""/></Link>
                                                     </div>
                                                     <div className="mini-cart-item-des">
-                                                        <Link onClick={ClickHandler} to="/shop">Hoodi with zipper</Link>
+                                                        <Link onClick={ClickHandler} to="/facilities">Hoodi with zipper</Link>
                                                         <span className="mini-cart-item-price">$20.15</span>
                                                         <span className="mini-cart-item-quantity">x 1</span>
                                                     </div>
                                                 </div>
                                                 <div className="mini-cart-item clearfix">
                                                     <div className="mini-cart-item-image">
-                                                        <Link onClick={ClickHandler} to="/shop"><img src={min2} alt=""/></Link>
+                                                        <Link onClick={ClickHandler} to="/facilities"><img src={min2} alt=""/></Link>
                                                     </div>
                                                     <div className="mini-cart-item-des">
-                                                        <Link onClick={ClickHandler} to="/shop">Ninja T-shirt</Link>
+                                                        <Link onClick={ClickHandler} to="/facilities">Ninja T-shirt</Link>
                                                         <span className="mini-cart-item-price">$13.25</span>
                                                         <span className="mini-cart-item-quantity">x 2</span>
                                                     </div>
@@ -120,7 +120,7 @@ const Header2 = () => {
                                             </div>
                                             <div className="mini-cart-action clearfix">
                                                 <span className="mini-checkout-price">$215.14</span>
-                                                <Link onClick={ClickHandler} to="/shop" className="view-cart-btn theme-btn">View Cart</Link>
+                                                <Link onClick={ClickHandler} to="/facilities" className="view-cart-btn theme-btn">View Facilities</Link>
                                             </div>
                                         </div>
                                     </div>

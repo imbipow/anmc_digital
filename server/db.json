@@ -9,7 +9,7 @@
         "subtitle": "The Australian Nepalese Multicultural Centre is dedicated to fostering cultural diversity, community engagement, and supporting our members through various programs and initiatives.",
         "learnMoreText": "Learn More",
         "memberButtonText": "Become a Member",
-        "heroImage": "/src/images/slider/img-3.png"
+        "heroImage": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1920&h=1080&fit=crop"
       }
     }
   ],
@@ -45,12 +45,12 @@
       "id": 1,
       "title": "ANMC Annual Dashain Celebration 2024",
       "slug": "dashain-celebration-2024",
-      "content": "Join us for our annual Dashain celebration with traditional music, dance, and authentic Nepalese cuisine.",
+      "content": "Join us for our annual Dashain celebration with traditional music, dance, and authentic Nepalese cuisine. Over 300 community members gathered at our community center to celebrate Nepal's most significant festival with traditional rituals, cultural performances, and delicious authentic food prepared by our volunteers.",
       "excerpt": "Annual Dashain celebration with traditional activities and community gathering.",
-      "authorName": "ANMC Admin",
+      "authorName": "Cultural Affairs Team",
       "date": "2024-10-15",
       "publishedAt": "2024-10-15T10:00:00Z",
-      "featuredImage": "/src/images/blog/img-1.jpg",
+      "featuredImage": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=600&fit=crop",
       "featured": true,
       "status": "published",
       "category": "community-events",
@@ -60,16 +60,256 @@
       "id": 2,
       "title": "New Community Programs Launched",
       "slug": "new-community-programs",
-      "content": "ANMC is excited to announce new community programs including language classes, cultural workshops, and youth activities.",
+      "content": "ANMC is excited to announce new community programs including language classes, cultural workshops, and youth activities. These programs are designed to preserve our cultural heritage while helping community members integrate into Australian society.",
       "excerpt": "Discover our new range of community programs designed to strengthen cultural connections.",
-      "authorName": "ANMC Admin",
+      "authorName": "Program Director",
       "date": "2024-11-20",
       "publishedAt": "2024-11-20T14:30:00Z",
-      "featuredImage": "/src/images/blog/img-2.jpg",
+      "featuredImage": "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&h=600&fit=crop",
       "featured": true,
       "status": "published",
       "category": "programs",
       "tags": ["programs", "community", "education"]
+    },
+    {
+      "id": 3,
+      "title": "ANMC Youth Leadership Program Success",
+      "slug": "youth-leadership-program-success",
+      "content": "Our inaugural Youth Leadership Program has successfully graduated 25 young community leaders. The 6-month program focused on developing leadership skills, cultural awareness, and community engagement among Australian-Nepalese youth aged 16-25.",
+      "excerpt": "25 young leaders graduate from our comprehensive leadership development program.",
+      "authorName": "Mira Rai",
+      "date": "2024-12-01",
+      "publishedAt": "2024-12-01T15:00:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "youth",
+      "tags": ["youth", "leadership", "education"]
+    },
+    {
+      "id": 4,
+      "title": "Community Garden Project Milestone",
+      "slug": "community-garden-milestone",
+      "content": "Our Community Garden Initiative has reached a significant milestone with the completion of Phase 1 infrastructure. The garden now features 50 individual plots, a greenhouse, composting area, and community gathering space where families can grow traditional vegetables and herbs.",
+      "excerpt": "Phase 1 of our community garden project completed with 50 family plots ready for cultivation.",
+      "authorName": "Sarah Johnson",
+      "date": "2024-11-15",
+      "publishedAt": "2024-11-15T12:30:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "sustainability",
+      "tags": ["garden", "sustainability", "community"]
+    },
+    {
+      "id": 5,
+      "title": "Partnership with Local Schools Expands",
+      "slug": "school-partnership-expansion",
+      "content": "ANMC has signed agreements with five additional schools across Melbourne to provide cultural awareness programs and support services for Nepalese-Australian students. This brings our total school partnerships to 12, reaching over 200 students annually.",
+      "excerpt": "New school partnerships help us reach 200+ students with cultural programs and support.",
+      "authorName": "Education Team",
+      "date": "2024-10-30",
+      "publishedAt": "2024-10-30T11:00:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "education",
+      "tags": ["education", "partnership", "youth"]
+    },
+    {
+      "id": 6,
+      "title": "Tihar Festival of Lights Celebration",
+      "slug": "tihar-festival-2024",
+      "content": "The festival of lights was celebrated with great enthusiasm as families came together to honor the sacred bond between humans and animals. Traditional dances, prayers, and the lighting of oil lamps created a magical atmosphere that connected our community to ancient traditions.",
+      "excerpt": "Community celebrates Tihar festival with traditional lights, prayers, and cultural performances.",
+      "authorName": "Dr. Binod Shrestha",
+      "date": "2024-11-10",
+      "publishedAt": "2024-11-10T16:00:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "festival",
+      "tags": ["tihar", "festival", "tradition"]
+    },
+    {
+      "id": 7,
+      "title": "Nepali Language Classes Expanding",
+      "slug": "nepali-language-classes-expansion",
+      "content": "Due to overwhelming demand, ANMC is expanding its Nepali language program to include three new skill levels. Classes will now cater to beginners, intermediate learners, and advanced students looking to perfect their reading and writing skills. The program aims to help preserve language skills among younger generations.",
+      "excerpt": "New language classes help preserve Nepali language for future generations.",
+      "authorName": "Language Committee",
+      "date": "2024-09-25",
+      "publishedAt": "2024-09-25T09:00:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "education",
+      "tags": ["language", "education", "culture"]
+    },
+    {
+      "id": 8,
+      "title": "Sports Tournament Brings Community Together",
+      "slug": "community-sports-tournament-2024",
+      "content": "The annual ANMC sports tournament featured cricket, football, and badminton competitions with over 150 participants from across Victoria. The event promoted health, fitness, and community bonding while showcasing athletic talent within our community.",
+      "excerpt": "150+ athletes participate in annual sports tournament with cricket, football, and badminton.",
+      "authorName": "Sports Committee",
+      "date": "2024-08-20",
+      "publishedAt": "2024-08-20T13:00:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "sports",
+      "tags": ["sports", "tournament", "community"]
+    },
+    {
+      "id": 9,
+      "title": "Elderly Care Program Launched",
+      "slug": "elderly-care-program-launch",
+      "content": "ANMC introduces a comprehensive elderly care program providing social activities, health checkups, and companionship services for senior community members. The program includes weekly gatherings, cultural activities, and health monitoring services.",
+      "excerpt": "New program provides comprehensive support and activities for senior community members.",
+      "authorName": "Social Services Team",
+      "date": "2024-07-15",
+      "publishedAt": "2024-07-15T10:30:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1581579438747-1dc8d17bbce4?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "social-services",
+      "tags": ["elderly", "care", "social-services"]
+    },
+    {
+      "id": 10,
+      "title": "Cultural Exchange Program with Nepal",
+      "slug": "cultural-exchange-program-nepal",
+      "content": "ANMC has partnered with cultural organizations in Nepal to facilitate cultural exchange programs. The initiative will allow youth members to visit Nepal and learn about their heritage while Nepali artists will visit Australia to share traditional arts and crafts.",
+      "excerpt": "New exchange program connects Australian-Nepali youth with their cultural roots.",
+      "authorName": "Prakash Thapa",
+      "date": "2024-06-10",
+      "publishedAt": "2024-06-10T14:00:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "culture",
+      "tags": ["exchange", "culture", "international"]
+    },
+    {
+      "id": 11,
+      "title": "Cooking Classes Celebrate Nepali Cuisine",
+      "slug": "nepali-cooking-classes",
+      "content": "Learn to cook authentic Nepali dishes with our monthly cooking classes. Experienced cooks teach traditional recipes passed down through generations, including momos, dal bhat, sel roti, and other beloved dishes. Classes are open to all skill levels.",
+      "excerpt": "Monthly cooking classes teach authentic Nepali recipes and culinary traditions.",
+      "authorName": "Culinary Team",
+      "date": "2024-05-22",
+      "publishedAt": "2024-05-22T11:00:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "culture",
+      "tags": ["cooking", "food", "culture"]
+    },
+    {
+      "id": 12,
+      "title": "Mental Health Support Services Available",
+      "slug": "mental-health-support-services",
+      "content": "ANMC now offers free mental health support services in partnership with local healthcare providers. Confidential counseling sessions are available in Nepali and English, addressing stress, anxiety, depression, and other mental health concerns affecting community members.",
+      "excerpt": "Free confidential mental health counseling now available in Nepali and English.",
+      "authorName": "Health Services Team",
+      "date": "2024-04-18",
+      "publishedAt": "2024-04-18T09:30:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1544027993-37dbfe43562a?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "health",
+      "tags": ["mental-health", "support", "wellness"]
+    },
+    {
+      "id": 13,
+      "title": "Traditional Music Academy Opens",
+      "slug": "traditional-music-academy-opens",
+      "content": "The newly established Traditional Music Academy offers classes in sarangi, madal, bansuri, and classical Nepali vocals. Expert musicians from Nepal teach students of all ages, preserving traditional musical heritage while fostering appreciation for Nepali classical arts.",
+      "excerpt": "New academy teaches traditional Nepali instruments and classical music to all ages.",
+      "authorName": "Dr. Binod Shrestha",
+      "date": "2024-03-12",
+      "publishedAt": "2024-03-12T15:00:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "culture",
+      "tags": ["music", "tradition", "education"]
+    },
+    {
+      "id": 14,
+      "title": "Women's Empowerment Workshop Series",
+      "slug": "womens-empowerment-workshops",
+      "content": "A series of workshops focusing on women's leadership, financial literacy, career development, and entrepreneurship. The program provides skills training, mentorship, and networking opportunities to empower women in our community to achieve their professional and personal goals.",
+      "excerpt": "Workshop series empowers women with skills in leadership, finance, and entrepreneurship.",
+      "authorName": "Women's Committee",
+      "date": "2024-02-08",
+      "publishedAt": "2024-02-08T10:00:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "empowerment",
+      "tags": ["women", "empowerment", "education"]
+    },
+    {
+      "id": 15,
+      "title": "Environmental Sustainability Initiative",
+      "slug": "environmental-sustainability-initiative",
+      "content": "ANMC launches a comprehensive environmental program focusing on waste reduction, recycling, composting, and sustainable practices. The initiative includes tree planting drives, clean-up campaigns, and education workshops on environmental conservation.",
+      "excerpt": "New environmental program promotes sustainability and conservation in our community.",
+      "authorName": "Environment Committee",
+      "date": "2024-01-25",
+      "publishedAt": "2024-01-25T12:00:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "environment",
+      "tags": ["environment", "sustainability", "green"]
+    },
+    {
+      "id": 16,
+      "title": "Volunteer Recognition Ceremony",
+      "slug": "volunteer-recognition-ceremony-2024",
+      "content": "ANMC honored 50 dedicated volunteers who contributed thousands of hours to community service throughout the year. The ceremony celebrated their selfless dedication and recognized outstanding contributions to various programs and initiatives.",
+      "excerpt": "50 volunteers honored for their outstanding service and dedication to the community.",
+      "authorName": "Volunteer Coordinator",
+      "date": "2023-12-15",
+      "publishedAt": "2023-12-15T16:30:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "recognition",
+      "tags": ["volunteers", "recognition", "community"]
+    },
+    {
+      "id": 17,
+      "title": "Emergency Relief Fund Established",
+      "slug": "emergency-relief-fund-established",
+      "content": "ANMC has established an emergency relief fund to provide immediate financial assistance to community members facing unexpected hardships such as medical emergencies, natural disasters, or sudden unemployment. The fund demonstrates our commitment to supporting members in times of need.",
+      "excerpt": "New relief fund provides immediate assistance to members facing unexpected hardships.",
+      "authorName": "Finance Committee",
+      "date": "2023-11-28",
+      "publishedAt": "2023-11-28T11:00:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "social-services",
+      "tags": ["relief", "support", "community"]
+    },
+    {
+      "id": 18,
+      "title": "Digital Literacy Program for Seniors",
+      "slug": "digital-literacy-program-seniors",
+      "content": "A new program helps senior community members navigate smartphones, computers, and online services. Classes cover video calling, online banking, social media, and digital safety, bridging the digital divide and keeping seniors connected with family and services.",
+      "excerpt": "New classes teach seniors essential digital skills and online safety.",
+      "authorName": "Technology Committee",
+      "date": "2023-10-20",
+      "publishedAt": "2023-10-20T13:30:00Z",
+      "featuredImage": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&h=600&fit=crop",
+      "featured": false,
+      "status": "published",
+      "category": "education",
+      "tags": ["digital", "seniors", "technology"]
     }
   ],
   "events": [
@@ -85,7 +325,7 @@
       "endTime": "16:00",
       "location": "Riverside Park, Melbourne",
       "address": "123 Riverside Drive, Melbourne VIC 3000",
-      "featuredImage": "/src/images/event/img-1.jpg",
+      "featuredImage": "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&h=600&fit=crop",
       "featured": true,
       "status": "upcoming",
       "category": "community",
@@ -106,7 +346,7 @@
       "endTime": "17:00",
       "location": "ANMC Community Center",
       "address": "456 Community Street, Melbourne VIC 3001",
-      "featuredImage": "/src/images/event/img-2.jpg",
+      "featuredImage": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=800&h=600&fit=crop",
       "featured": false,
       "status": "upcoming",
       "category": "culture",
@@ -129,7 +369,7 @@
       "budget": 15000,
       "fundingSource": "Community Grants",
       "projectManager": "Sarah Johnson",
-      "featuredImage": "/src/images/service/img-1.png",
+      "featuredImage": "https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?w=800&h=600&fit=crop",
       "featured": true,
       "category": "sustainability",
       "progress": 75,
@@ -147,11 +387,153 @@
       "budget": 25000,
       "fundingSource": "Government Grant",
       "projectManager": "Raj Patel",
-      "featuredImage": "/src/images/service/img-2.png",
+      "featuredImage": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&h=600&fit=crop",
       "featured": true,
       "category": "youth",
       "progress": 40,
       "tags": ["youth", "leadership", "mentorship"]
+    },
+    {
+      "id": 3,
+      "title": "Cultural Heritage Center",
+      "slug": "cultural-heritage-center",
+      "description": "Developing a comprehensive cultural heritage center to preserve and showcase Nepalese traditions.",
+      "content": "A state-of-the-art facility that will serve as a cultural hub, featuring exhibition spaces, traditional craft workshops, language learning centers, and a comprehensive library of Nepalese culture and history.",
+      "status": "planning",
+      "startDate": "2025-06-01",
+      "endDate": "2027-12-31",
+      "budget": 500000,
+      "fundingSource": "Multiple Sources",
+      "projectManager": "Dr. Binod Shrestha",
+      "featuredImage": "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=800&h=600&fit=crop",
+      "featured": true,
+      "category": "culture",
+      "progress": 15,
+      "tags": ["culture", "heritage", "education", "infrastructure"]
+    },
+    {
+      "id": 4,
+      "title": "Community Wellness and Sports Complex",
+      "slug": "wellness-sports-complex",
+      "description": "Building modern wellness and sports facilities to promote health and community engagement.",
+      "content": "A comprehensive wellness complex featuring gymnasium, swimming pool, meditation center, fitness facilities, and multipurpose sports courts to serve all age groups in our community.",
+      "status": "fundraising",
+      "startDate": "2025-01-01",
+      "endDate": "2026-08-31",
+      "budget": 750000,
+      "fundingSource": "Community Fundraising & Grants",
+      "projectManager": "Prakash Thapa",
+      "featuredImage": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800&h=600&fit=crop",
+      "featured": true,
+      "category": "health",
+      "progress": 8,
+      "tags": ["health", "sports", "wellness", "community"]
+    }
+  ],
+  "master_plan": {
+    "title": "ANMC Master Plan 2025-2030",
+    "description": "Building the future of our community through strategic development",
+    "period": "2025-2030",
+    "total_budget": "$2.5M",
+    "key_areas": [
+      {
+        "title": "Cultural Heritage Center",
+        "description": "Preserve and showcase Nepalese traditions",
+        "budget": "$600K",
+        "timeline": "2025-2027"
+      },
+      {
+        "title": "Community Wellness Complex",
+        "description": "Modern health and fitness facilities",
+        "budget": "$750K",
+        "timeline": "2025-2026"
+      },
+      {
+        "title": "Youth Leadership Programs",
+        "description": "Developing next generation leaders",
+        "budget": "$300K",
+        "timeline": "2025-2030"
+      },
+      {
+        "title": "Infrastructure Upgrades",
+        "description": "Technology and facility improvements",
+        "budget": "$500K",
+        "timeline": "2025-2028"
+      },
+      {
+        "title": "Sustainability Fund",
+        "description": "Long-term financial security",
+        "budget": "$350K",
+        "timeline": "2026-2030"
+      }
+    ],
+    "goals": [
+      "Expand membership to 1,200+ families",
+      "Serve 8,000+ annual program participants",
+      "Organize 36+ cultural events yearly",
+      "Achieve 85% financial sustainability"
+    ]
+  },
+  "project_achievements": [
+    {
+      "year": "1998",
+      "title": "Organization Founded",
+      "description": "Established ANMC with 25 founding families",
+      "category": "Foundation"
+    },
+    {
+      "year": "2003",
+      "title": "First Community Center",
+      "description": "Purchased 5,000 sq ft community facility",
+      "category": "Infrastructure"
+    },
+    {
+      "year": "2005",
+      "title": "Cultural Dance Academy",
+      "description": "Founded traditional arts academy",
+      "category": "Culture"
+    },
+    {
+      "year": "2010",
+      "title": "25 Acres Land Acquired",
+      "description": "Secured community land worth $2.5M+",
+      "category": "Infrastructure"
+    },
+    {
+      "year": "2012",
+      "title": "Multicultural Excellence Award",
+      "description": "Received Victoria state recognition",
+      "category": "Recognition"
+    },
+    {
+      "year": "2015",
+      "title": "Cultural Center Completed",
+      "description": "Built traditional architecture facility",
+      "category": "Infrastructure"
+    },
+    {
+      "year": "2018",
+      "title": "300+ Member Families",
+      "description": "Became largest Nepalese organization in Victoria",
+      "category": "Growth"
+    },
+    {
+      "year": "2020",
+      "title": "Digital Infrastructure",
+      "description": "Enabled virtual programs during COVID-19",
+      "category": "Technology"
+    },
+    {
+      "year": "2022",
+      "title": "Life Membership Program",
+      "description": "Launched sustainable funding model",
+      "category": "Sustainability"
+    },
+    {
+      "year": "2024",
+      "title": "500+ Families & $2M+ Raised",
+      "description": "Record membership and fundraising milestone",
+      "category": "Growth"
     }
   ],
   "about_us": [
@@ -159,9 +541,21 @@
       "id": "main",
       "title": "About ANMC",
       "subtitle": "Building Bridges, Strengthening Communities",
-      "mission": "To foster cultural diversity, promote community engagement, and support the social, cultural, and economic wellbeing of the Australian Nepalese community.",
-      "vision": "A vibrant, inclusive community where cultural heritage is celebrated and preserved while embracing Australian values and opportunities.",
-      "history": "Established in 1998, the Australian Nepalese Multicultural Centre has been serving the community for over 25 years, growing from a small group of families to a thriving organization representing thousands of community members.",
+      "mission": {
+        "title": "Our Mission",
+        "content": "To foster cultural diversity, promote community engagement, and support the social, cultural, and economic wellbeing of the Australian Nepalese community.",
+        "icon": "fa fa-bullseye"
+      },
+      "vision": {
+        "title": "Our Vision",
+        "content": "A vibrant, inclusive community where cultural heritage is celebrated and preserved while embracing Australian values and opportunities.",
+        "icon": "fa fa-eye"
+      },
+      "history": {
+        "title": "Our History",
+        "content": "Established in 1998, the Australian Nepalese Multicultural Centre has been serving the community for over 25 years, growing from a small group of families to a thriving organization representing thousands of community members.",
+        "icon": "fa fa-history"
+      },
       "values": ["Cultural Preservation", "Community Unity", "Inclusivity", "Excellence", "Integrity"],
       "achievements": [
         "Over 500 life members",
@@ -169,39 +563,293 @@
         "$2M+ funds raised for community projects",
         "Multiple award-winning cultural programs"
       ],
-      "featuredImage": "/src/images/about.png"
+      "featuredImage": "https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=1200&h=800&fit=crop",
+      "executiveCommittee": {
+        "title": "Executive Committee",
+        "subtitle": "Meet our dedicated leadership team committed to serving our community",
+        "members": [
+          {
+            "id": 1,
+            "name": "Rajesh Sharma",
+            "title": "President",
+            "position": "Executive Leadership",
+            "email": "president@anmc.org.au",
+            "phone": "+61 400 123 456",
+            "description": "Leading the organization's strategic direction and community outreach initiatives while fostering partnerships and growth opportunities. Rajesh brings over 15 years of community leadership experience.",
+            "image": "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop",
+            "tenure": "2022-2024",
+            "responsibilities": [
+              "Strategic planning and vision setting",
+              "Community representation and advocacy",
+              "Partnership development with government and organizations",
+              "Oversight of organizational operations"
+            ]
+          },
+          {
+            "id": 2,
+            "name": "Sita Patel",
+            "title": "Vice President",
+            "position": "Operations Management",
+            "email": "vicepresident@anmc.org.au",
+            "phone": "+61 400 234 567",
+            "description": "Supporting organizational operations and coordinating community programs to ensure effective service delivery and member engagement. Sita specializes in program development and community outreach.",
+            "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop",
+            "tenure": "2022-2024",
+            "responsibilities": [
+              "Program coordination and management",
+              "Member engagement and support",
+              "Event planning and execution",
+              "Community liaison activities"
+            ]
+          },
+          {
+            "id": 3,
+            "name": "Prakash Thapa",
+            "title": "Secretary",
+            "position": "Administrative Affairs",
+            "email": "secretary@anmc.org.au",
+            "phone": "+61 400 345 678",
+            "description": "Managing organizational documentation, communications, and ensuring compliance with governance requirements and community standards. Prakash maintains all official records and correspondence.",
+            "image": "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=400&h=400&fit=crop",
+            "tenure": "2022-2024",
+            "responsibilities": [
+              "Meeting minutes and documentation",
+              "Official correspondence management",
+              "Compliance and regulatory affairs",
+              "Record keeping and archiving"
+            ]
+          },
+          {
+            "id": 4,
+            "name": "Kamala Gurung",
+            "title": "Treasurer",
+            "position": "Financial Management",
+            "email": "treasurer@anmc.org.au",
+            "phone": "+61 400 456 789",
+            "description": "Overseeing financial planning, budget management, and ensuring transparent financial practices for sustainable organizational growth. Kamala is a qualified accountant with expertise in non-profit financial management.",
+            "image": "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop",
+            "tenure": "2022-2024",
+            "responsibilities": [
+              "Financial planning and budgeting",
+              "Expense tracking and reporting",
+              "Audit coordination and compliance",
+              "Investment and funding oversight"
+            ]
+          },
+          {
+            "id": 5,
+            "name": "Dr. Binod Shrestha",
+            "title": "Cultural Affairs Coordinator",
+            "position": "Cultural Programs",
+            "email": "culture@anmc.org.au",
+            "phone": "+61 400 567 890",
+            "description": "Coordinating cultural events, festivals, and educational programs that preserve and promote Nepalese heritage while fostering multicultural understanding in the broader Australian community.",
+            "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+            "tenure": "2022-2024",
+            "responsibilities": [
+              "Cultural event planning and execution",
+              "Heritage preservation initiatives",
+              "Educational program development",
+              "Community cultural engagement"
+            ]
+          },
+          {
+            "id": 6,
+            "name": "Mira Rai",
+            "title": "Youth Coordinator",
+            "position": "Youth Development",
+            "email": "youth@anmc.org.au",
+            "phone": "+61 400 678 901",
+            "description": "Developing and implementing youth programs that engage second-generation Australian-Nepalese, providing leadership opportunities and cultural connection for young community members.",
+            "image": "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop",
+            "tenure": "2022-2024",
+            "responsibilities": [
+              "Youth program development",
+              "Leadership training initiatives",
+              "Mentorship program coordination",
+              "Youth community engagement"
+            ]
+          }
+        ]
+      },
+      "governance": {
+        "title": "Governance Structure",
+        "subtitle": "Our organizational leadership framework ensures transparency, accountability, and effective community representation",
+        "structure": [
+          {
+            "id": 1,
+            "title": "Presidential Council",
+            "description": "The Presidential Council provides strategic guidance and oversight, ensuring organizational alignment with community needs and long-term sustainability goals. The council meets quarterly to review progress and set strategic direction.",
+            "icon": "fa fa-gavel",
+            "members": ["Current President", "Immediate Past President", "Senior Advisor"],
+            "responsibilities": [
+              "Strategic planning and oversight",
+              "Policy development and review",
+              "Organizational governance",
+              "Community representation"
+            ]
+          },
+          {
+            "id": 2,
+            "title": "Board of Patrons",
+            "description": "Distinguished community leaders who lend their expertise and support, helping to advance our mission and strengthen community partnerships. Patrons provide guidance and advocacy for the organization.",
+            "icon": "fa fa-shield",
+            "members": [
+              "Hon. John Smith MP - Community Relations",
+              "Dr. Pushpa Adhikari - Cultural Affairs",
+              "Businessman Ram Bahadur - Community Development",
+              "Prof. Sushila Karki - Educational Initiatives"
+            ],
+            "responsibilities": [
+              "Advocacy and representation",
+              "Community partnership development",
+              "Strategic guidance and mentorship",
+              "Resource mobilization support"
+            ]
+          },
+          {
+            "id": 3,
+            "title": "Advisory Committee",
+            "description": "Experienced professionals providing specialized knowledge and guidance across various domains to enhance our programs and community impact. The committee includes experts from different fields.",
+            "icon": "fa fa-users",
+            "members": [
+              "Legal Advisor - Ram Krishna Shrestha",
+              "Financial Advisor - Sita Devi Poudel",
+              "Cultural Advisor - Dr. Narayan Prasad",
+              "Community Relations - Maya Tamang"
+            ],
+            "responsibilities": [
+              "Professional expertise and guidance",
+              "Program review and recommendations",
+              "Risk assessment and management",
+              "Quality assurance and standards"
+            ]
+          },
+          {
+            "id": 4,
+            "title": "General Assembly",
+            "description": "The highest decision-making body consisting of all life members and registered community members. The General Assembly meets annually to elect officers and approve major organizational decisions.",
+            "icon": "fa fa-group",
+            "composition": "All life members and registered community members",
+            "meetingFrequency": "Annual General Meeting + Special meetings as required",
+            "responsibilities": [
+              "Election of executive committee",
+              "Approval of annual reports and budgets",
+              "Constitutional amendments",
+              "Major policy decisions"
+            ]
+          }
+        ]
+      },
+      "committees": [
+        {
+          "id": 1,
+          "name": "Cultural Committee",
+          "purpose": "Organizing cultural events and preserving Nepalese traditions",
+          "chairperson": "Dr. Binod Shrestha",
+          "members": 8,
+          "meetingFrequency": "Monthly"
+        },
+        {
+          "id": 2,
+          "name": "Finance Committee",
+          "purpose": "Financial oversight and budget management",
+          "chairperson": "Kamala Gurung",
+          "members": 5,
+          "meetingFrequency": "Quarterly"
+        },
+        {
+          "id": 3,
+          "name": "Youth Committee",
+          "purpose": "Youth engagement and development programs",
+          "chairperson": "Mira Rai",
+          "members": 12,
+          "meetingFrequency": "Bi-weekly"
+        },
+        {
+          "id": 4,
+          "name": "Infrastructure Committee",
+          "purpose": "Facility management and development projects",
+          "chairperson": "Prakash Thapa",
+          "members": 6,
+          "meetingFrequency": "Monthly"
+        }
+      ]
     }
   ],
   "facilities": [
     {
-      "id": 1,
-      "name": "Main Community Hall",
-      "description": "Large multipurpose hall suitable for events, meetings, and celebrations.",
-      "capacity": 300,
-      "amenities": ["Audio/Visual Equipment", "Kitchen Facilities", "Parking", "Wheelchair Access"],
-      "bookingRate": 150,
-      "featuredImage": "/src/images/service/img-3.png",
-      "available": true
+      "id": "car-puja",
+      "name": "Car Puja (Vehicle Blessing)",
+      "capacity": "5-15 people",
+      "description": "Traditional blessing ceremony for new vehicles with Puja rituals performed by our experienced priests.",
+      "features": [
+        "Traditional Puja rituals",
+        "Experienced Hindu priests",
+        "All Puja materials included",
+        "Blessing ceremony documentation",
+        "Sacred thread (Kalash) provided",
+        "Photography area available"
+      ],
+      "pricing": "$50",
+      "icon": "fa-car",
+      "image": "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=800&h=600&fit=crop"
     },
     {
-      "id": 2,
-      "name": "Meeting Rooms",
-      "description": "Smaller meeting rooms perfect for committee meetings and workshops.",
-      "capacity": 25,
-      "amenities": ["Projector", "WiFi", "Air Conditioning", "Parking"],
-      "bookingRate": 50,
-      "featuredImage": "/src/images/service/img-4.png",
-      "available": true
+      "id": "marriage-ceremony",
+      "name": "Marriage Ceremony",
+      "capacity": "50-200 people",
+      "description": "Complete traditional Nepali wedding ceremony with all rituals conducted according to Hindu traditions.",
+      "features": [
+        "Full traditional wedding rituals",
+        "Qualified Hindu priest",
+        "Wedding mandap setup",
+        "Sacred fire ceremony (Havan)",
+        "All ceremonial materials",
+        "Photography/videography space",
+        "Bridal preparation area",
+        "Guest seating arrangements"
+      ],
+      "pricing": "$200",
+      "icon": "fa-heart",
+      "image": "https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=600&fit=crop"
     },
     {
-      "id": 3,
-      "name": "Cultural Center",
-      "description": "Dedicated space for cultural activities, classes, and workshops.",
-      "capacity": 50,
-      "amenities": ["Audio System", "Dance Floor", "Storage", "Cultural Artifacts"],
-      "bookingRate": 80,
-      "featuredImage": "/src/images/service/img-5.png",
-      "available": true
+      "id": "bartabhanda-ceremony",
+      "name": "Bartabhanda Ceremony",
+      "capacity": "30-100 people",
+      "description": "Sacred thread ceremony for young men, marking their spiritual initiation into Hindu traditions.",
+      "features": [
+        "Complete Bartabhanda rituals",
+        "Sacred thread ceremony",
+        "Hindu priest services",
+        "All ceremonial items provided",
+        "Traditional setup",
+        "Family gathering space",
+        "Documentation of ceremony"
+      ],
+      "pricing": "$150",
+      "icon": "fa-male",
+      "image": "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&h=600&fit=crop"
+    },
+    {
+      "id": "community-hall-rental",
+      "name": "Community Hall Rental",
+      "capacity": "200-300 people",
+      "description": "Spacious community hall available for private events, celebrations, and gatherings.",
+      "features": [
+        "Professional sound system",
+        "Stage with lighting",
+        "Full kitchen facilities",
+        "Tables and chairs included",
+        "Air conditioning",
+        "Parking for 150+ vehicles",
+        "Flexible hourly rental",
+        "Event setup assistance"
+      ],
+      "pricing": "$100/hour",
+      "icon": "fa-building",
+      "image": "https://images.unsplash.com/photo-1505236858219-8359eb29e329?w=800&h=600&fit=crop"
     }
   ],
   "contact": [
@@ -224,11 +872,102 @@
       }
     }
   ],
-  "blog_section": [
+  "faqs": [
     {
-      "id": "blog_section_content",
-      "sectionTitle": "Featured News & Events",
-      "sectionHeading": "Stay Connected with Our Community"
+      "id": 1,
+      "question": "Why do we need a Nepali Community Centre?",
+      "answer": "To provide services specific to the Nepali community and offer amenities for life events and festivals not readily available elsewhere.",
+      "category": "General",
+      "order": 1,
+      "status": "published"
+    },
+    {
+      "id": 2,
+      "question": "Why do I need to be a member?",
+      "answer": "Members fund and manage the center. Higher membership numbers enable access to government grants. Members will get membership benefits such as discounted hall hiring fee, rights to set the policies.",
+      "category": "Membership",
+      "order": 2,
+      "status": "published"
+    },
+    {
+      "id": 3,
+      "question": "What is the timeline?",
+      "answer": "The project has five phases: Initial (2014), Second (2015/2016), Third (2017-2019) when 15 acres were purchased at Diggers Rest, Fourth (2020-2022) for planning permission, and Final (ongoing) for infrastructure development.",
+      "category": "Project",
+      "order": 3,
+      "status": "published"
+    },
+    {
+      "id": 4,
+      "question": "Can we do it? Have we done a feasibility study?",
+      "answer": "Yes, a high-level feasibility study has been completed. Success depends on community support for volunteer efforts.",
+      "category": "Project",
+      "order": 4,
+      "status": "published"
+    },
+    {
+      "id": 5,
+      "question": "What is the budget?",
+      "answer": "Detailed cash flow is available from the treasurer or volunteers.",
+      "category": "Financial",
+      "order": 5,
+      "status": "published"
+    },
+    {
+      "id": 6,
+      "question": "Where is the site?",
+      "answer": "100 Duncan's Lane, Diggers Rest, VIC 3427.",
+      "category": "Location",
+      "order": 6,
+      "status": "published"
+    },
+    {
+      "id": 7,
+      "question": "What are the types of membership?",
+      "answer": "Life (Family) $1500, Life (Individual) $1100, General/Yearly Family $180, General/Yearly Individual $100.",
+      "category": "Membership",
+      "order": 7,
+      "status": "published"
+    },
+    {
+      "id": 8,
+      "question": "How many members are we targeting?",
+      "answer": "As many members as possible.",
+      "category": "Membership",
+      "order": 8,
+      "status": "published"
+    },
+    {
+      "id": 9,
+      "question": "What are the membership criteria?",
+      "answer": "This is open to all.",
+      "category": "Membership",
+      "order": 9,
+      "status": "published"
+    },
+    {
+      "id": 10,
+      "question": "Can we get grants and collaboration with state/local bodies?",
+      "answer": "Government and local councils support appears contingent on community contribution.",
+      "category": "Financial",
+      "order": 10,
+      "status": "published"
+    },
+    {
+      "id": 11,
+      "question": "How do we ensure transparency and accountability?",
+      "answer": "Through policies, regular regulatory reporting, internal audits, and a team including accountants with strong transparency expertise.",
+      "category": "Governance",
+      "order": 11,
+      "status": "published"
+    },
+    {
+      "id": 12,
+      "question": "Will regular updates be provided?",
+      "answer": "Yes, via website, newsletters, information sessions, annual assemblies, and social media.",
+      "category": "General",
+      "order": 12,
+      "status": "published"
     }
   ]
 }

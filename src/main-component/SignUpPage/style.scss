@@ -13,6 +13,49 @@
     border-radius: 10px;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
 
+    &.membershipForm {
+      width: 900px;
+      max-width: 95%;
+    }
+
+    &.paymentForm {
+      width: 600px;
+    }
+
+    .form-header {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 30px;
+      gap: 15px;
+
+      .back-button {
+        margin-top: 5px;
+        color: #246fea;
+
+        &:hover {
+          background: rgba(36, 111, 234, 0.1);
+        }
+      }
+
+      .header-text {
+        flex: 1;
+
+        h2 {
+          text-align: center;
+          margin-bottom: 10px;
+          margin-top: 0;
+        }
+
+        p {
+          font-size: 13px;
+          margin-bottom: 0;
+          text-align: center;
+          font-weight: 500;
+          color: #666666;
+        }
+      }
+    }
+
     > h2 {
       text-align: center;
       margin-bottom: 20px;
@@ -141,6 +184,158 @@
         font-size: 13px;
         font-weight: 500;
         cursor: pointer;
+      }
+    }
+
+    // Membership form specific styles
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .helper-text {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .error-text {
+      color: #f44336;
+      font-size: 12px;
+      display: block;
+      margin-top: 5px;
+    }
+
+    .family-member-card {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #e0e0e0;
+
+      h4 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 15px;
+      }
+    }
+
+    .add-family-btn {
+      border-color: #246fea;
+      color: #246fea;
+
+      &:hover {
+        background: #246fea;
+        color: #fff;
+      }
+    }
+
+    .fee-display {
+      background: #e3f2fd;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      border: 2px solid #2196f3;
+
+      h4 {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1976d2;
+        margin-bottom: 10px;
+      }
+
+      .helper-text {
+        font-size: 14px;
+        color: #555;
+        margin: 0;
+      }
+    }
+
+    // Payment form specific styles
+    .payment-summary {
+      background: #f9f9f9;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      border: 1px solid #e0e0e0;
+
+      h3 {
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .summary-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 14px;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        &.total {
+          margin-top: 10px;
+          padding-top: 15px;
+          border-top: 2px solid #333;
+          font-weight: 600;
+          font-size: 16px;
+
+          .amount {
+            color: #246fea;
+            font-size: 20px;
+          }
+        }
+
+        span:first-child {
+          color: #666;
+        }
+
+        span:last-child {
+          color: #333;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .payment-element-container {
+      padding: 15px 0;
+    }
+
+    .error-message {
+      background: #ffebee;
+      color: #c62828;
+      padding: 12px 15px;
+      border-radius: 4px;
+      font-size: 14px;
+      border-left: 4px solid #c62828;
+    }
+
+    .payment-security-notice {
+      text-align: center;
+      padding: 15px;
+      background: #f5f5f5;
+      border-radius: 4px;
+
+      i {
+        color: #4caf50;
+        font-size: 20px;
+        margin-right: 10px;
+      }
+
+      p {
+        display: inline;
+        font-size: 13px;
+        color: #666;
+        margin: 0;
       }
     }
   }

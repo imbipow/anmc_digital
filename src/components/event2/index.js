@@ -1,90 +1,93 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import {Link} from 'react-router-dom'
+import contentService from '../../services/contentService'
 import './style.css'
 
 const EventSection2 = (props) => {
+    const [upcomingEvents, setUpcomingEvents] = useState([]);
+    const [recentEvents, setRecentEvents] = useState([]);
 
     const ClickHandler = () => {
         window.scrollTo(10, 0);
     }
 
-    const upcomingEvents = [
-        {
-            id: 1,
-            date: "15",
-            month: "APR",
-            year: "2024",
-            title: "Dashain Festival Celebration",
-            description: "Join us for the grand celebration of Nepal's biggest festival with traditional music, dance, cultural performances, and authentic Nepalese cuisine.",
-            time: "10:00 AM - 8:00 PM",
-            venue: "ANMC Community Centre, Sydney",
-            category: "Festival",
-            status: "registration-open"
-        },
-        {
-            id: 2,
-            date: "28",
-            month: "APR", 
-            year: "2024",
-            title: "Cultural Heritage Workshop",
-            description: "Interactive workshop focusing on preserving Nepalese cultural traditions for future generations through art, music, and storytelling.",
-            time: "2:00 PM - 6:00 PM",
-            venue: "Cultural Centre Hall, Melbourne",
-            category: "Workshop",
-            status: "registration-open"
-        },
-        {
-            id: 3,
-            date: "12",
-            month: "MAY",
-            year: "2024", 
-            title: "Youth Leadership Program",
-            description: "Empowering young Australian-Nepalese community members through leadership training, mentorship, and community engagement activities.",
-            time: "9:00 AM - 4:00 PM",
-            venue: "ANMC Training Centre, Brisbane",
-            category: "Education",
-            status: "coming-soon"
-        },
-        {
-            id: 4,
-            date: "25",
-            month: "MAY",
-            year: "2024",
-            title: "Community Fundraising Gala",
-            description: "Annual fundraising event supporting ANMC development projects with dinner, entertainment, and silent auction.",
-            time: "6:00 PM - 11:00 PM", 
-            venue: "Grand Ballroom, Perth Convention Centre",
-            category: "Fundraising",
-            status: "tickets-available"
-        }
-    ]
+    useEffect(() => {
+        const loadEvents = async () => {
+            try {
+                const events = await contentService.getEvents();
+                if (events && events.length > 0) {
+                    // Format events for upcoming section
+                    const formattedUpcoming = events.map(event => {
+                        const startDate = new Date(event.startDate);
+                        return {
+                            id: event.id,
+                            date: startDate.getDate().toString(),
+                            month: startDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
+                            year: startDate.getFullYear().toString(),
+                            title: event.title,
+                            description: event.description,
+                            time: `${event.startTime} - ${event.endTime}`,
+                            venue: event.location,
+                            category: event.category || 'Event',
+                            status: event.status === 'upcoming' ? 'registration-open' : 'coming-soon'
+                        };
+                    });
+                    setUpcomingEvents(formattedUpcoming);
 
-    const recentEvents = [
-        {
-            id: 1,
-            title: "Tihar Light Festival 2023",
-            date: "November 2023",
-            summary: "Over 500 community members celebrated the festival of lights with traditional ceremonies and cultural performances.",
-            image: props.eventImg1,
-            highlights: ["500+ attendees", "Traditional ceremonies", "Cultural performances"]
-        },
-        {
-            id: 2,
-            title: "Annual General Meeting 2023", 
-            date: "October 2023",
-            summary: "Community members gathered to review annual progress and plan future initiatives for ANMC development.",
-            image: props.eventImg2,
-            highlights: ["Strategic planning", "Community feedback", "Future roadmap"]
-        },
-        {
-            id: 3,
-            title: "Language & Culture Classes Launch",
-            date: "September 2023", 
-            summary: "New educational programs launched to teach Nepalese language and culture to second-generation youth.",
-            image: props.eventImg3,
-            highlights: ["50+ students enrolled", "Cultural education", "Language preservation"]
-        }
-    ]
+                    // Format events for recent section
+                    const formattedRecent = events.slice(0, 3).map((event, index) => {
+                        const images = [props.eventImg1, props.eventImg2, props.eventImg3];
+                        return {
+                            id: event.id,
+                            title: event.title,
+                            date: new Date(event.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }),
+                            summary: event.description,
+                            image: event.featuredImage || images[index % images.length],
+                            highlights: [`${event.maxAttendees || '100+'} attendees`, event.category || 'Community event', 'Cultural activities']
+                        };
+                    });
+                    setRecentEvents(formattedRecent);
+                }
+            } catch (error) {
+                console.error('Error loading events:', error);
+                // Set fallback data if API fails
+                setUpcomingEventsDefault();
+                setRecentEventsDefault();
+            }
+        };
+        loadEvents();
+    }, [props.eventImg1, props.eventImg2, props.eventImg3]);
+
+    const setUpcomingEventsDefault = () => {
+        setUpcomingEvents([
+            {
+                id: 1,
+                date: "15",
+                month: "MAR",
+                year: "2025",
+                title: "Community Picnic 2025",
+                description: "Annual community picnic at Riverside Park with games, food, and entertainment for all ages.",
+                time: "10:00 - 16:00",
+                venue: "Riverside Park, Melbourne",
+                category: "Community",
+                status: "registration-open"
+            }
+        ]);
+    };
+
+    const setRecentEventsDefault = () => {
+        setRecentEvents([
+            {
+                id: 1,
+                title: "Dashain Celebration 2024",
+                date: "October 2024",
+                summary: "Over 200 community members celebrated Nepal's biggest festival with traditional activities.",
+                image: props.eventImg1,
+                highlights: ["200+ attendees", "Traditional ceremonies", "Cultural performances"]
+            }
+        ]);
+    };
+
 
     return(
         <div className={`wpo-event-area event-page-layout section-padding ${props.EventClass}`}>

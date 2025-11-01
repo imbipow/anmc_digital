@@ -137,9 +137,7 @@ img {
     margin: 0;
 }
 
-.section-padding {
-    padding: 120px 0;
-}
+
 
 @media (max-width: 991px) {
     .section-padding {

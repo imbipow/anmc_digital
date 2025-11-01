@@ -128,6 +128,17 @@
     margin-bottom: 25px;
 }
 
+.member-photo img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto;
+    display: block;
+    border: 4px solid #f0f0f0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
 .avatar-placeholder {
     width: 120px;
     height: 120px;
@@ -141,10 +152,14 @@
     color: white;
 }
 
+.member-info {
+    padding-top: 10px;
+}
+
 .member-info h4 {
     font-size: 22px;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     color: #333;
 }
 
@@ -155,13 +170,14 @@
     font-weight: 500;
     letter-spacing: 1px;
     display: block;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .member-info p {
     font-size: 15px;
-    line-height: 1.6;
+    line-height: 1.8;
     color: #666;
+    margin-top: 10px;
 }
 
 /* Governance Structure Section */
@@ -253,6 +269,7 @@
         padding: 25px;
     }
 
+    .member-photo img,
     .avatar-placeholder {
         width: 100px;
         height: 100px;
@@ -287,6 +304,7 @@
         font-size: 30px;
     }
 
+    .member-photo img,
     .avatar-placeholder {
         width: 80px;
         height: 80px;

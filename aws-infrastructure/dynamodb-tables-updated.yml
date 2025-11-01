@@ -1,0 +1,366 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'DynamoDB tables for ANMC Digital Application - Updated Schema'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: 'dev'
+    AllowedValues: ['dev', 'staging', 'prod']
+    Description: Environment name for resource naming
+
+Resources:
+  # News/Blog Articles Table
+  NewsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-news-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: N
+        - AttributeName: slug
+          AttributeType: S
+        - AttributeName: category
+          AttributeType: S
+        - AttributeName: publishedAt
+          AttributeType: S
+        - AttributeName: featured
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: SlugIndex
+          KeySchema:
+            - AttributeName: slug
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: CategoryDateIndex
+          KeySchema:
+            - AttributeName: category
+              KeyType: HASH
+            - AttributeName: publishedAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: FeaturedIndex
+          KeySchema:
+            - AttributeName: featured
+              KeyType: HASH
+            - AttributeName: publishedAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Events Table
+  EventsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-events-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: N
+        - AttributeName: slug
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+        - AttributeName: startDate
+          AttributeType: S
+        - AttributeName: category
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: SlugIndex
+          KeySchema:
+            - AttributeName: slug
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: StatusDateIndex
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+            - AttributeName: startDate
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: CategoryDateIndex
+          KeySchema:
+            - AttributeName: category
+              KeyType: HASH
+            - AttributeName: startDate
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Projects Table
+  ProjectsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-projects-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: N
+        - AttributeName: slug
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+        - AttributeName: category
+          AttributeType: S
+        - AttributeName: featured
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: SlugIndex
+          KeySchema:
+            - AttributeName: slug
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: StatusIndex
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: CategoryIndex
+          KeySchema:
+            - AttributeName: category
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: FeaturedIndex
+          KeySchema:
+            - AttributeName: featured
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Facilities Table
+  FacilitiesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-facilities-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Homepage Content Table (Hero, Counters, etc.)
+  HomepageTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-homepage-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: component
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: ComponentIndex
+          KeySchema:
+            - AttributeName: component
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Counters Table
+  CountersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-counters-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: N
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # About Us Table
+  AboutUsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-about-us-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Contact Information Table
+  ContactTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-contact-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Master Plan Table
+  MasterPlanTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-master-plan-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+  # Project Achievements Table
+  ProjectAchievementsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-project-achievements-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: year
+          AttributeType: S
+        - AttributeName: category
+          AttributeType: S
+      KeySchema:
+        - AttributeName: year
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: CategoryIndex
+          KeySchema:
+            - AttributeName: category
+              KeyType: HASH
+            - AttributeName: year
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+
+Outputs:
+  NewsTableName:
+    Description: 'News/Blog Articles DynamoDB Table Name'
+    Value: !Ref NewsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-NewsTable'
+
+  EventsTableName:
+    Description: 'Events DynamoDB Table Name'
+    Value: !Ref EventsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-EventsTable'
+
+  ProjectsTableName:
+    Description: 'Projects DynamoDB Table Name'
+    Value: !Ref ProjectsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-ProjectsTable'
+
+  FacilitiesTableName:
+    Description: 'Facilities DynamoDB Table Name'
+    Value: !Ref FacilitiesTable
+    Export:
+      Name: !Sub '${AWS::StackName}-FacilitiesTable'
+
+  HomepageTableName:
+    Description: 'Homepage Content DynamoDB Table Name'
+    Value: !Ref HomepageTable
+    Export:
+      Name: !Sub '${AWS::StackName}-HomepageTable'
+
+  CountersTableName:
+    Description: 'Counters DynamoDB Table Name'
+    Value: !Ref CountersTable
+    Export:
+      Name: !Sub '${AWS::StackName}-CountersTable'
+
+  AboutUsTableName:
+    Description: 'About Us DynamoDB Table Name'
+    Value: !Ref AboutUsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-AboutUsTable'
+
+  ContactTableName:
+    Description: 'Contact Information DynamoDB Table Name'
+    Value: !Ref ContactTable
+    Export:
+      Name: !Sub '${AWS::StackName}-ContactTable'
+
+  MasterPlanTableName:
+    Description: 'Master Plan DynamoDB Table Name'
+    Value: !Ref MasterPlanTable
+    Export:
+      Name: !Sub '${AWS::StackName}-MasterPlanTable'
+
+  ProjectAchievementsTableName:
+    Description: 'Project Achievements DynamoDB Table Name'
+    Value: !Ref ProjectAchievementsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-ProjectAchievementsTable'

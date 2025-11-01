@@ -104,7 +104,7 @@ class PaymentInfo extends Component {
                         <div className="col-lg-6">
                             <div className="payment-text">
                                 <span>Donate Now</span>
-                                <h2>Donate Some Money & Save The Muslim Ummah.</h2>
+                                <h2>Donate Some Money & Save The Muslim Anmc.</h2>
                                 <p>How can we reject the faith in Allah? seeing that ye were without life, and He gave you life; then will He cause you to die, and will again bring you to life; and again to Him will ye return.</p>
                             </div>
                         </div>

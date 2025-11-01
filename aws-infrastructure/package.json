@@ -1,0 +1,39 @@
+{
+  "name": "anmc-aws-infrastructure",
+  "version": "1.0.0",
+  "description": "AWS infrastructure setup and data seeding for ANMC Digital application",
+  "main": "seed-data.js",
+  "scripts": {
+    "deploy": "bash deploy.sh",
+    "deploy:dev": "bash deploy.sh -e dev -r ap-southeast-2",
+    "deploy:staging": "bash deploy.sh -e staging -r ap-southeast-2",
+    "deploy:prod": "bash deploy.sh -e prod -r ap-southeast-2",
+    "seed": "node seed-data-updated.js",
+    "seed:dev": "cross-env ENVIRONMENT=dev node seed-data-updated.js",
+    "seed:staging": "cross-env ENVIRONMENT=staging node seed-data-updated.js",
+    "seed:prod": "cross-env ENVIRONMENT=prod node seed-data-updated.js",
+    "seed:clear": "node seed-data-updated.js --clear",
+    "seed:clear:dev": "cross-env ENVIRONMENT=dev node seed-data-updated.js --clear",
+    "seed:reset": "node seed-data-updated.js --clear --seed",
+    "seed:reset:dev": "cross-env ENVIRONMENT=dev node seed-data-updated.js --clear --seed",
+    "validate": "aws cloudformation validate-template --template-body file://dynamodb-tables-updated.yml --region ap-southeast-2",
+    "validate:old": "aws cloudformation validate-template --template-body file://dynamodb-tables.yml --region ap-southeast-2"
+  },
+  "keywords": [
+    "aws",
+    "dynamodb",
+    "cloudformation",
+    "anmc",
+    "infrastructure"
+  ],
+  "author": "ANMC Digital Team",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.1490.0",
+    "cross-env": "^7.0.3"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

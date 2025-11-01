@@ -323,8 +323,8 @@ const MyBookings = () => {
                                                     <Typography variant="h6" color="text.secondary">
                                                         No bookings found
                                                     </Typography>
-                                                    <Button 
-                                                        component={Link} 
+                                                    <Button
+                                                        component={Link}
                                                         to="/member/book-services"
                                                         variant="contained"
                                                         sx={{ mt: 2 }}

@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "question": "Why do we need a Nepali Community Centre test?",
+    "answer": "To provide services specific to the Nepali community and offer amenities for life events and festivals not readily available elsewhere.",
+    "category": "General",
+    "order": 1,
+    "status": "published"
+  },
+  {
+    "id": 2,
+    "question": "Why do I need to be a member?",
+    "answer": "Members fund and manage the center. Higher membership numbers enable access to government grants. Members will get membership benefits such as discounted hall hiring fee, rights to set the policies.",
+    "category": "Membership",
+    "order": 2,
+    "status": "published"
+  },
+  {
+    "id": 3,
+    "question": "What is the timeline?",
+    "answer": "The project has five phases: Initial (2014), Second (2015/2016), Third (2017-2019) when 15 acres were purchased at Diggers Rest, Fourth (2020-2022) for planning permission, and Final (ongoing) for infrastructure development.",
+    "category": "Project",
+    "order": 3,
+    "status": "published"
+  },
+  {
+    "id": 4,
+    "question": "Can we do it? Have we done a feasibility study?",
+    "answer": "Yes, a high-level feasibility study has been completed. Success depends on community support for volunteer efforts.",
+    "category": "Project",
+    "order": 4,
+    "status": "published"
+  },
+  {
+    "id": 5,
+    "question": "What is the budget?",
+    "answer": "Detailed cash flow is available from the treasurer or volunteers.",
+    "category": "Financial",
+    "order": 5,
+    "status": "published"
+  },
+  {
+    "id": 6,
+    "question": "Where is the site?",
+    "answer": "100 Duncan's Lane, Diggers Rest, VIC 3427.",
+    "category": "Location",
+    "order": 6,
+    "status": "published"
+  },
+  {
+    "id": 7,
+    "question": "What are the types of membership?",
+    "answer": "Life (Family) $1500, Life (Individual) $1100, General/Yearly Family $180, General/Yearly Individual $100.",
+    "category": "Membership",
+    "order": 7,
+    "status": "published"
+  },
+  {
+    "id": 8,
+    "question": "How many members are we targeting?",
+    "answer": "As many members as possible.",
+    "category": "Membership",
+    "order": 8,
+    "status": "published"
+  },
+  {
+    "id": 9,
+    "question": "What are the membership criteria?",
+    "answer": "This is open to all.",
+    "category": "Membership",
+    "order": 9,
+    "status": "published"
+  },
+  {
+    "id": 10,
+    "question": "Can we get grants and collaboration with state/local bodies?",
+    "answer": "Government and local councils support appears contingent on community contribution.",
+    "category": "Financial",
+    "order": 10,
+    "status": "published"
+  },
+  {
+    "id": 11,
+    "question": "How do we ensure transparency and accountability?",
+    "answer": "Through policies, regular regulatory reporting, internal audits, and a team including accountants with strong transparency expertise.",
+    "category": "Governance",
+    "order": 11,
+    "status": "published"
+  },
+  {
+    "id": 12,
+    "question": "Will regular updates be provided?",
+    "answer": "Yes, via website, newsletters, information sessions, annual assemblies, and social media.",
+    "category": "General",
+    "order": 12,
+    "status": "published"
+  }
+]

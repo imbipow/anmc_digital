@@ -1,3 +1,5 @@
+import API_CONFIG from '../config/api';
+
 class HomepageService {
   constructor() {
     this.dataCache = null;
@@ -7,8 +9,27 @@ class HomepageService {
   async getHomepage() {
     try {
       if (!this.dataCache) {
-        const response = await fetch('/data/homepage.json');
-        this.dataCache = await response.json();
+        // Fetch homepage data and counters from new API
+        const [homepageResponse, countersResponse] = await Promise.all([
+          fetch(API_CONFIG.getURL(API_CONFIG.endpoints.homepage)),
+          fetch(API_CONFIG.getURL(API_CONFIG.endpoints.counters))
+        ]);
+
+        const homepageData = await homepageResponse.json();
+        const countersData = await countersResponse.json();
+
+        // Extract hero data from homepage response
+        // The API returns items array, find the 'hero' component
+        const heroItem = Array.isArray(homepageData)
+          ? homepageData.find(item => item.component === 'hero')
+          : null;
+
+        const heroData = heroItem ? heroItem.data : this.getDefaultHero();
+
+        this.dataCache = {
+          hero: heroData,
+          counters: countersData
+        };
       }
       return this.dataCache;
     } catch (error) {

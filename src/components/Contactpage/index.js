@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import contentService from '../../services/contentService';
 import './style.css'
 
 const Contactpage = () => {
@@ -10,6 +11,8 @@ const Contactpage = () => {
         subject: '',
         message: ''
     });
+    const [contactInfo, setContactInfo] = useState({});
+    const [executiveMembers, setExecutiveMembers] = useState([]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -19,38 +22,64 @@ const Contactpage = () => {
         }));
     };
 
+    useEffect(() => {
+        const loadContactData = async () => {
+            try {
+                // Load contact information
+                const contact = await contentService.getContact();
+                setContactInfo(contact);
+
+                // Load executive committee from about us
+                const aboutData = await contentService.getAboutUs();
+                if (aboutData && aboutData.executiveCommittee && aboutData.executiveCommittee.members) {
+                    const formattedMembers = aboutData.executiveCommittee.members.map(member => ({
+                        name: member.name || member.title,
+                        position: member.title || member.position,
+                        email: member.email,
+                        phone: member.phone
+                    }));
+                    setExecutiveMembers(formattedMembers);
+                } else {
+                    // Fallback data
+                    setExecutiveMembers([
+                        {
+                            name: 'Rajesh Sharma',
+                            position: 'President',
+                            email: 'president@anmc.org.au',
+                            phone: '+61 400 123 456'
+                        },
+                        {
+                            name: 'Sita Patel',
+                            position: 'Vice President',
+                            email: 'vicepresident@anmc.org.au',
+                            phone: '+61 400 234 567'
+                        },
+                        {
+                            name: 'Prakash Thapa',
+                            position: 'Secretary',
+                            email: 'secretary@anmc.org.au',
+                            phone: '+61 400 345 678'
+                        },
+                        {
+                            name: 'Kamala Gurung',
+                            position: 'Treasurer',
+                            email: 'treasurer@anmc.org.au',
+                            phone: '+61 400 456 789'
+                        }
+                    ]);
+                }
+            } catch (error) {
+                console.error('Error loading contact data:', error);
+            }
+        };
+        loadContactData();
+    }, []);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('Contact form submitted:', formData);
         // Handle form submission logic here
     };
-
-    const executiveMembers = [
-        {
-            name: 'Ram Bahadur Shrestha',
-            position: 'President',
-            email: 'president@anmc.org.au',
-            phone: '+61 412 345 678'
-        },
-        {
-            name: 'Sita Kumari Gurung',
-            position: 'Vice President',
-            email: 'vicepresident@anmc.org.au',
-            phone: '+61 423 456 789'
-        },
-        {
-            name: 'Krishna Bahadur Tamang',
-            position: 'Secretary',
-            email: 'secretary@anmc.org.au',
-            phone: '+61 434 567 890'
-        },
-        {
-            name: 'Maya Devi Poudel',
-            position: 'Treasurer',
-            email: 'treasurer@anmc.org.au',
-            phone: '+61 445 678 901'
-        }
-    ];
 
     return(
         <div className="contact-page">
@@ -81,41 +110,36 @@ const Contactpage = () => {
                                         <div className="contact-item">
                                             <div className="contact-info">
                                                 <h4>Physical Address</h4>
-                                                <p>123 Multicultural Drive<br/>Community Hub, NSW 2000<br/>Sydney, Australia</p>
+                                                <p>{contactInfo.address || '123 Community Street, Melbourne VIC 3001'}</p>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="contact-item">
                                             <div className="contact-info">
                                                 <h4>Email & Phone</h4>
                                                 <p>
                                                     <strong>General Inquiries:</strong><br/>
-                                                    <a href="mailto:info@anmc.org.au">info@anmc.org.au</a><br/>
-                                                    <a href="tel:+61298765432">+61 2 9876 5432</a>
+                                                    <a href={`mailto:${contactInfo.email || 'info@anmc.org.au'}`}>{contactInfo.email || 'info@anmc.org.au'}</a><br/>
+                                                    <a href={`tel:${contactInfo.phone || '+61398765432'}`}>{contactInfo.phone || '+61 3 9876 5432'}</a>
                                                 </p>
                                                 <p>
-                                                    <strong>Events & Bookings:</strong><br/>
-                                                    <a href="mailto:bookings@anmc.org.au">bookings@anmc.org.au</a><br/>
-                                                    <a href="tel:+61298765433">+61 2 9876 5433</a>
+                                                    <strong>Emergency Contact:</strong><br/>
+                                                    <a href={`tel:${contactInfo.emergencyPhone || '+61400123456'}`}>{contactInfo.emergencyPhone || '+61 400 123 456'}</a>
                                                 </p>
                                             </div>
                                         </div>
-                                        
+
                                         <div className="contact-item">
                                             <div className="contact-info">
                                                 <h4>Office Hours</h4>
                                                 <div className="office-hours">
                                                     <div className="hours-row">
-                                                        <span>Monday - Friday:</span>
-                                                        <span>9:00 AM - 5:00 PM</span>
+                                                        <span>Weekdays:</span>
+                                                        <span>{contactInfo.officeHours || 'Monday to Friday: 9:00 AM - 5:00 PM'}</span>
                                                     </div>
                                                     <div className="hours-row">
-                                                        <span>Saturday:</span>
-                                                        <span>10:00 AM - 3:00 PM</span>
-                                                    </div>
-                                                    <div className="hours-row">
-                                                        <span>Sunday:</span>
-                                                        <span>Closed (Events Only)</span>
+                                                        <span>Weekend:</span>
+                                                        <span>{contactInfo.weekendHours || 'Saturday: 10:00 AM - 2:00 PM'}</span>
                                                     </div>
                                                 </div>
                                             </div>

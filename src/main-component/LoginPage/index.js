@@ -1,69 +1,99 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import Grid from "@mui/material/Grid";
-import SimpleReactValidator from "simple-react-validator";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import {Link, useNavigate} from "react-router-dom";
-
+import CircularProgress from "@mui/material/CircularProgress";
+import { Link, useNavigate } from "react-router-dom";
+import { useMemberAuth } from '../../components/MemberAuth';
 import './style.scss';
 
-
-
-const LoginPage = (props) => {
-
-    const push = useNavigate()
+const LoginPage = () => {
+    const navigate = useNavigate();
+    const { login } = useMemberAuth();
 
     const [value, setValue] = useState({
-        email: 'user@gmail.com',
-        password: '123456',
+        email: '',
+        password: '',
         remember: false,
     });
 
+    const [loading, setLoading] = useState(false);
+    const [errors, setErrors] = useState({});
+
     const changeHandler = (e) => {
-        setValue({...value, [e.target.name]: e.target.value});
-        validator.showMessages();
+        setValue({ ...value, [e.target.name]: e.target.value });
+        // Clear error when user starts typing
+        if (errors[e.target.name]) {
+            setErrors({ ...errors, [e.target.name]: '' });
+        }
     };
 
     const rememberHandler = () => {
-        setValue({...value, remember: !value.remember});
+        setValue({ ...value, remember: !value.remember });
     };
 
-    const [validator] = React.useState(new SimpleReactValidator({
-        className: 'errorMessage'
-    }));
+    const validateForm = () => {
+        const newErrors = {};
 
+        if (!value.email.trim()) {
+            newErrors.email = 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(value.email)) {
+            newErrors.email = 'Invalid email format';
+        }
 
+        if (!value.password) {
+            newErrors.password = 'Password is required';
+        }
 
-    const submitForm = (e) => {
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const submitForm = async (e) => {
         e.preventDefault();
-        if (validator.allValid()) {
-            setValue({
-                email: '',
-                password: '',
-                remember: false
-            });
-            validator.hideMessages();
 
-            const userRegex = /^user+.*/gm;
-            const email = value.email;
+        if (!validateForm()) {
+            toast.error('Please fix the errors in the form');
+            return;
+        }
 
-            if (email.match(userRegex)) {
+        setLoading(true);
+
+        try {
+            const result = await login(value.email, value.password);
+
+            if (result.success) {
                 toast.success('Successfully logged in! Redirecting to Member Portal...');
-                push('/member-portal');
+                setTimeout(() => {
+                    navigate('/member-portal');
+                }, 1000);
+            } else {
+                toast.error(result.error || 'Login failed. Please check your credentials.');
             }
-        } else {
-            validator.showMessages();
-            toast.error('Empty field is not allowed!');
+        } catch (error) {
+            console.error('Login error:', error);
+            toast.error('An error occurred during login. Please try again.');
+        } finally {
+            setLoading(false);
         }
     };
+
     return (
         <Grid className="loginWrapper">
             <Grid className="loginForm">
-                <h2>Sign In</h2>
-                <p>Sign in to your account</p>
+                <h2>Member Sign In</h2>
+                <p>Sign in to access your member portal</p>
+
+                {/* Test Credentials Info */}
+                <div className="test-credentials-info">
+                    <p><strong>Test Credentials:</strong></p>
+                    <p>Email: <code>member@anmc.org.au</code></p>
+                    <p>Password: <code>Member123!</code></p>
+                </div>
+
                 <form onSubmit={submitForm}>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
@@ -75,13 +105,14 @@ const LoginPage = (props) => {
                                 variant="outlined"
                                 name="email"
                                 label="E-mail"
+                                error={!!errors.email}
+                                helperText={errors.email}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
-                                onBlur={(e) => changeHandler(e)}
-                                onChange={(e) => changeHandler(e)}
+                                onChange={changeHandler}
+                                disabled={loading}
                             />
-                            {validator.message('email', value.email, 'required|email')}
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
@@ -93,31 +124,48 @@ const LoginPage = (props) => {
                                 name="password"
                                 type="password"
                                 label="Password"
+                                error={!!errors.password}
+                                helperText={errors.password}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
-                                onBlur={(e) => changeHandler(e)}
-                                onChange={(e) => changeHandler(e)}
+                                onChange={changeHandler}
+                                disabled={loading}
                             />
-                            {validator.message('password', value.password, 'required')}
                         </Grid>
                         <Grid item xs={12}>
                             <Grid className="formAction">
                                 <FormControlLabel
-                                    control={<Checkbox checked={value.remember} onChange={rememberHandler}/>}
+                                    control={
+                                        <Checkbox
+                                            checked={value.remember}
+                                            onChange={rememberHandler}
+                                            disabled={loading}
+                                        />
+                                    }
                                     label="Remember Me"
                                 />
                                 <Link to="/forgot-password">Forgot Password?</Link>
                             </Grid>
                             <Grid className="formFooter">
-                                <Button fullWidth className="cBtnTheme" type="submit">Login</Button>
+                                <Button
+                                    fullWidth
+                                    className="cBtnTheme"
+                                    type="submit"
+                                    disabled={loading}
+                                >
+                                    {loading ? (
+                                        <>
+                                            <CircularProgress size={20} style={{ marginRight: 10, color: '#fff' }} />
+                                            Signing in...
+                                        </>
+                                    ) : (
+                                        'Login'
+                                    )}
+                                </Button>
                             </Grid>
-                            <Grid className="loginWithSocial">
-                                <Button className="facebook"><i className="fa fa-facebook"></i></Button>
-                                <Button className="twitter"><i className="fa fa-twitter"></i></Button>
-                                <Button className="linkedin"><i className="fa fa-linkedin"></i></Button>
-                            </Grid>
-                            <p className="noteHelp">Don't have an account? <Link to="/register">Create free account</Link>
+                            <p className="noteHelp">
+                                Don't have an account? <Link to="/sign-up">Register for membership</Link>
                             </p>
                         </Grid>
                     </Grid>
@@ -127,7 +175,7 @@ const LoginPage = (props) => {
                 </div>
             </Grid>
         </Grid>
-    )
+    );
 };
 
 export default LoginPage;

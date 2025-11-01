@@ -23,7 +23,7 @@ const Shop = (props) => {
            off:"$20.00",
            title:"Ninja Hoodi",
            btn:"Add to cart",
-           link:"/shop-single",
+           link:"/facilities-single",
          },
          {
            shopImg:sp2,
@@ -31,7 +31,7 @@ const Shop = (props) => {
            off:"$20.00",
            title:"Wow Ninja T-shirt",
            btn:"Add to cart",
-           link:"/shop-single",
+           link:"/facilities-single",
          },
          {
            shopImg:sp3,
@@ -39,7 +39,7 @@ const Shop = (props) => {
            off:"$20.00",
            title:"Black Ninja Hoodi",
            btn:"Add to cart",
-           link:"/shop-single",
+           link:"/facilities-single",
          },
          {
            shopImg:sp4,
@@ -47,7 +47,7 @@ const Shop = (props) => {
            off:"$20.00",
            title:"Red Ninja Hoodi",
            btn:"Add to cart",
-           link:"/shop-single",
+           link:"/facilities-single",
          },
          {
            shopImg:sp5,
@@ -55,7 +55,7 @@ const Shop = (props) => {
            off:"$20.00",
            title:"Black Evil Hoodi",
            btn:"Add to cart",
-           link:"/shop-single",
+           link:"/facilities-single",
          },
          {
            shopImg:sp6,
@@ -63,7 +63,7 @@ const Shop = (props) => {
            off:"$20.00",
            title:"Blue Hoodi",
            btn:"Add to cart",
-           link:"/shop-single",
+           link:"/facilities-single",
          },
      ]
 
@@ -91,15 +91,15 @@ const Shop = (props) => {
                         <div className="pagination-wrapper pagination-wrapper-center">
                             <ul className="pg-pagination">
                                 <li>
-                                    <Link to="/shop" aria-label="Previous">
+                                    <Link to="/facilities" aria-label="Previous">
                                         <i className="fi ti-angle-left"></i>
                                     </Link>
                                 </li>
-                                <li className="active"><Link to="/shop">1</Link></li>
-                                <li><Link to="/shop">2</Link></li>
-                                <li><Link to="/shop">3</Link></li>
+                                <li className="active"><Link to="/facilities">1</Link></li>
+                                <li><Link to="/facilities">2</Link></li>
+                                <li><Link to="/facilities">3</Link></li>
                                 <li>
-                                    <Link to="/shop" aria-label="Next">
+                                    <Link to="/facilities" aria-label="Next">
                                         <i className="fi ti-angle-right"></i>
                                     </Link>
                                 </li>

@@ -126,7 +126,7 @@ const About = () => {
                     <div className="row">
                         {aboutData.executiveCommittee?.members?.length > 0 ? (
                             aboutData.executiveCommittee.members.map((member, index) => (
-                                <div key={index} className="col-lg-6 col-md-6 col-sm-12">
+                                <div key={index} className="col-lg-6 col-md-6 col-sm-12 card-item">
                                     <div className="team-member-card">
                                         <div className="member-photo">
                                             {member.image ? (
@@ -138,8 +138,8 @@ const About = () => {
                                             )}
                                         </div>
                                         <div className="member-info">
-                                            <h4>{member.title}</h4>
-                                            {member.position && <span className="position">{member.position}</span>}
+                                            <h4>{member.name || member.title}</h4>
+                                            <span className="position">{member.title || member.position}</span>
                                             <p>{member.description}</p>
                                         </div>
                                     </div>

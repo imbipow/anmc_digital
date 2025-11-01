@@ -19,27 +19,27 @@ const Pilars = (props) => {
         {
             pillarsImg:plr1,
             pillarsHeading:"Shahadah",
-            link:'/service-single'
+            link:'/projects-single'
         },
         {
             pillarsImg:plr2,
             pillarsHeading:"Salah",
-            link:'/service-single'
+            link:'/projects-single'
         },
         {
             pillarsImg:plr3,
             pillarsHeading:"Sawm",
-            link:'/service-single'
+            link:'/projects-single'
         },
         {
             pillarsImg:plr4,
             pillarsHeading:"Zakah",
-            link:'/service-single'
+            link:'/projects-single'
         },
         {
             pillarsImg:plr5,
             pillarsHeading:"Hajj",
-            link:'/service-single'
+            link:'/projects-single'
         },
 
     ]

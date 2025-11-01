@@ -26,11 +26,13 @@ import SignUpPage from '../SignUpPage'
 import ForgotPassword from '../ForgotPassword'
 import MemberPortal from '../MemberPortal'
 import UpdateDetails from '../UpdateDetails'
-import BookServices from '../BookServices'
-import MemberDonate from '../MemberDonate'
+// MemberDonate removed - donate functionality moved to main /donate page
 import MyBookings from '../MyBookings'
 import MemberDocuments from '../MemberDocuments'
-// Admin and test components removed for static deployment
+import BookServices from '../BookServices'
+import AdminPage from '../AdminPage'
+import FaqPage from '../FaqPage'
+import ProtectedRoute from '../../components/ProtectedRoute'
 
 
 const AllRoute = () => {
@@ -45,30 +47,33 @@ const AllRoute = () => {
           <Route path='home3' element={<Homepage3/>} />
           <Route path='home4' element={<Homepage4/>} />
           <Route path='about' element={<AboutPage/>} />
-          <Route path='service' element={<ServicePage/>} />
-          <Route path='shop' element={<ShopPage/>} />
-          <Route path='shop-single' element={<ShopSinglePage/>} />
-          <Route path='service-single' element={<ServiceSinglePage/>} />
+          <Route path='projects' element={<ServicePage/>} />
+          <Route path='facilities' element={<ShopPage/>} />
+          <Route path='facilities-single' element={<ShopSinglePage/>} />
+          <Route path='projects-single' element={<ServiceSinglePage/>} />
           <Route path='event' element={<EventPage/>} />
           <Route path='event-single' element={<EventPageSingle/>} />
           <Route path='donate' element={<DonatePage/>} />
-          <Route path='blog' element={<BlogPage/>} />
-          <Route path='blog-left' element={<BlogPageLeft/>} />
-          <Route path='blog-fullwidth' element={<BlogPageFullwidth/>} />
-          <Route path='blog-details' element={<BlogDetails/>} />
-          <Route path='blog-details-left' element={<BlogDetailsLeftSiide/>} />
-          <Route path='blog-details-fullwidth' element={<BlogDetailsFull/>} />
+          <Route path='news' element={<BlogPage/>} />
+          <Route path='news/:slug' element={<BlogDetails/>} />
+          <Route path='news-left' element={<BlogPageLeft/>} />
+          <Route path='news-fullwidth' element={<BlogPageFullwidth/>} />
+          <Route path='news-details' element={<BlogDetails/>} />
+          <Route path='news-details-left' element={<BlogDetailsLeftSiide/>} />
+          <Route path='news-details-fullwidth' element={<BlogDetailsFull/>} />
           <Route path='404' element={<ErrorPage/>} />
           <Route path='contact' element={<ContactPage/>} />
           <Route path='login' element={<LoginPage/>} />
           <Route path='signup' element={<SignUpPage/>} />
           <Route path='forgot-password' element={<ForgotPassword/>} />
-          <Route path='member-portal' element={<MemberPortal/>} />
-          <Route path='member/update-details' element={<UpdateDetails/>} />
-          <Route path='member/book-services' element={<BookServices/>} />
-          <Route path='member/donate' element={<MemberDonate/>} />
-          <Route path='member/bookings' element={<MyBookings/>} />
-          <Route path='member/documents' element={<MemberDocuments/>} />
+          <Route path='member-portal' element={<ProtectedRoute><MemberPortal/></ProtectedRoute>} />
+          <Route path='member/update-details' element={<ProtectedRoute><UpdateDetails/></ProtectedRoute>} />
+          <Route path='member/book-services' element={<ProtectedRoute><BookServices/></ProtectedRoute>} />
+          {/* Member donate route removed - donate functionality available at /donate */}
+          <Route path='member/bookings' element={<ProtectedRoute><MyBookings/></ProtectedRoute>} />
+          <Route path='member/documents' element={<ProtectedRoute><MemberDocuments/></ProtectedRoute>} />
+          <Route path='admin' element={<AdminPage/>} />
+          <Route path='faq' element={<FaqPage/>} />
         </Routes>
       </BrowserRouter>
     </div>

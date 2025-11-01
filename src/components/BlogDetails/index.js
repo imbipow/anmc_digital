@@ -1,176 +1,248 @@
-import React from 'react';
-import {Link} from 'react-router-dom'
-import BlogSidebar from '../BlogSidebar'
-import './style.css'
-import blog1 from '../../images/blog/img-7.jpg'
-import blog2 from '../../images/blog-details/author.jpg'
-import blog3 from '../../images/blog-details/comments-author/img-1.jpg'
-import blog4 from '../../images/blog-details/comments-author/img-2.jpg'
-import blog5 from '../../images/blog-details/comments-author/img-3.jpg'
-import blog6 from '../../images/blog/admin.jpg'
+import React, { useState, useEffect } from 'react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import contentService from '../../services/contentService';
+import API_CONFIG from '../../config/api';
+import './style.css';
+import blog1 from '../../images/blog/img-1.jpg';
+import blog2 from '../../images/blog/img-2.jpg';
+import blog3 from '../../images/blog/img-3.jpg';
 
 const BlogSingle = () => {
-    const submitHandler = (e) => {
-        e.preventDefault()
+    const { slug } = useParams();
+    const navigate = useNavigate();
+    const [article, setArticle] = useState(null);
+    const [relatedArticles, setRelatedArticles] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const ClickHandler = () => {
+        window.scrollTo(0, 0);
+    };
+
+    useEffect(() => {
+        const loadArticle = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+
+                if (!slug) {
+                    setError('Article not found');
+                    setLoading(false);
+                    return;
+                }
+
+                // Fetch article by slug
+                const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.newsBySlug(slug)));
+
+                if (!response.ok) {
+                    throw new Error('Article not found');
+                }
+
+                const articleData = await response.json();
+                setArticle(articleData);
+
+                // Fetch related articles (same category)
+                const allNews = await contentService.getNews();
+                const related = allNews
+                    .filter(item =>
+                        item.category === articleData.category &&
+                        item.slug !== articleData.slug &&
+                        item.status === 'published'
+                    )
+                    .slice(0, 3);
+                setRelatedArticles(related);
+
+                setLoading(false);
+            } catch (error) {
+                console.error('Error loading article:', error);
+                setError('Failed to load article. Please try again.');
+                setLoading(false);
+            }
+        };
+
+        loadArticle();
+    }, [slug]);
+
+    if (loading) {
+        return (
+            <section className="wpo-blog-single-section section-padding">
+                <div className="container">
+                    <div className="loading-state">
+                        <div className="spinner"></div>
+                        <p>Loading article...</p>
+                    </div>
+                </div>
+            </section>
+        );
     }
 
-    return(
+    if (error || !article) {
+        return (
+            <section className="wpo-blog-single-section section-padding">
+                <div className="container">
+                    <div className="error-state">
+                        <h2>Article Not Found</h2>
+                        <p>{error || 'The article you are looking for does not exist.'}</p>
+                        <Link to="/news" className="theme-btn" onClick={ClickHandler}>
+                            <i className="fa fa-arrow-left"></i> Back to News
+                        </Link>
+                    </div>
+                </div>
+            </section>
+        );
+    }
+
+    const formattedDate = new Date(article.date).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+    const shareUrl = window.location.href;
+    const shareTitle = encodeURIComponent(article.title);
+
+    return (
         <section className="wpo-blog-single-section section-padding">
             <div className="container">
                 <div className="row">
-                    <div className="col col-lg-8 col-12">
-                        <div className="wpo-wpo-blog-content clearfix">
-                            <div className="post">
-                                <div className="entry-media">
-                                    <img src={blog1} alt=""/>
-                                </div>
-                                <ul className="entry-meta">
-                                    <li><Link to="/blog-details"><img src={blog6} alt=""/>  By Admin</Link></li>
-                                    <li><Link to="/blog-details"><i className="ti-calendar"></i> Sep 25,2021</Link></li>
-                                    <li><Link to="/blog-details"><i className="ti-heart"></i> 35</Link></li>
-                                </ul>
-                                <h2>The Importance of Marriage in Islam.</h2>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now.</p>
-                                <p>The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now.</p>
-                                <blockquote>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. </blockquote>
-                                <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now.</p>
-                                <p>The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now.</p>
+                    <div className="col col-lg-10 offset-lg-1 col-12">
+                        <div className="wpo-blog-content">
+                            {/* Breadcrumb */}
+                            <div className="breadcrumb-section">
+                                <Link to="/news" onClick={ClickHandler}>
+                                    <i className="fa fa-arrow-left"></i> Back to News
+                                </Link>
                             </div>
-                            <div className="tag-share clearfix">
-                                <div className="tag">
-                                    <ul>
-                                        <li><Link to="/blog-details">Marriage</Link></li>
-                                        <li><Link to="/blog-details">Islamic</Link></li>
-                                        <li><Link to="/blog-details">Quran</Link></li>
-                                    </ul>
+
+                            {/* Article Header */}
+                            <div className="article-header">
+                                <div className="article-category">
+                                    <span className="category-badge">{article.category}</span>
                                 </div>
-                                <div className="share">
-                                    <ul>
-                                        <li><Link to="/blog-details"><i className="ti-facebook"></i></Link></li>
-                                        <li><Link to="/blog-details"><i className="ti-twitter-alt"></i></Link></li>
-                                        <li><Link to="/blog-details"><i className="ti-instagram"></i></Link></li>
-                                    </ul>
-                                </div>
-                            </div> 
-                            <div className="author-box">
-                                <div className="author-avatar">
-                                    <Link to="/blog-details" target="_blank"><img src={blog2} alt=""/>  </Link>
-                                </div>
-                                <div className="author-content">
-                                    <Link to="/blog-details" className="author-name">Henry Joyes</Link>
-                                    <p>Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised</p>
-                                    <div className="author-btn">
-                                        <Link to="/blog-details">All Post From Author</Link>
+                                <h1 className="article-title">{article.title}</h1>
+
+                                <div className="article-meta">
+                                    <div className="meta-item">
+                                        <i className="fa fa-user"></i>
+                                        <span>By {article.authorName}</span>
+                                    </div>
+                                    <div className="meta-item">
+                                        <i className="fa fa-calendar"></i>
+                                        <span>{formattedDate}</span>
                                     </div>
                                 </div>
-                            </div> 
-                            <div className="more-posts clearfix">
-                                <div className="previous-post">
-                                    <Link to="/blog-details">
-                                        <span className="post-control-link">Previous</span>
-                                    </Link>
+                            </div>
+
+                            {/* Featured Image */}
+                            <div className="article-featured-image">
+                                <img src={article.featuredImage} alt={article.title} />
+                            </div>
+
+                            {/* Article Content */}
+                            <div className="article-content">
+                                <div className="article-excerpt">
+                                    <p><strong>{article.excerpt}</strong></p>
                                 </div>
-                                <div className="next-post">
-                                    <Link to="/blog-details">
-                                        <span className="post-control-link">Next post</span>
-                                    </Link>
+
+                                <div className="article-body">
+                                    {article.content.split('\n\n').map((paragraph, index) => (
+                                        <p key={index}>{paragraph}</p>
+                                    ))}
                                 </div>
                             </div>
-                        </div>
-                        <div className="comments-area">
-                            <div className="comments-section">
-                                <h3 className="comments-title">Comments</h3>
-                                <ol className="comments">
-                                    <li className="comment even thread-even depth-1" id="comment-1">
-                                        <div id="div-comment-1">
-                                            <div className="comment-theme">
-                                                <div className="comment-image"> <img src={blog3} alt=""/> </div>
-                                            </div>
-                                            <div className="comment-main-area">
-                                                <div className="comment-wrapper">
-                                                    <div className="comments-meta">
-                                                        <h4>John Abraham <span className="comments-date">Octobor 28,2018 At 9.00am</span></h4>
-                                                    </div>
-                                                    <div className="comment-area">
-                                                        <p>I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, </p>
-                                                        <div className="comments-reply">
-                                                            <Link className="comment-reply-link" to="/blog-details"><i className="fa fa-reply" aria-hidden="true"></i><span>Reply</span></Link>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <ul className="children">
-                                            <li className="comment">
-                                                <div>
-                                                    <div className="comment-theme">
-                                                        <div className="comment-image"> <img src={blog4} alt=""/></div>
-                                                    </div>
-                                                    <div className="comment-main-area">
-                                                        <div className="comment-wrapper">
-                                                            <div className="comments-meta">
-                                                                <h4>Lily Watson <span className="comments-date">Octobor 28,2018 At 9.00am</span></h4>
-                                                            </div>
-                                                            <div className="comment-area">
-                                                                <p>I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, </p>
-                                                                <div className="comments-reply">
-                                                                    <Link className="comment-reply-link" to="/blog-details"><span><i className="fa fa-reply" aria-hidden="true"></i> Reply</span></Link>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <ul>
-                                                    <li className="comment">
-                                                        <div>
-                                                            <div className="comment-theme">
-                                                                <div className="comment-image"><img src={blog5} alt=""/> </div>
-                                                            </div>
-                                                            <div className="comment-main-area">
-                                                                <div className="comment-wrapper">
-                                                                    <div className="comments-meta">
-                                                                        <h4>John Abraham <span className="comments-date">Octobor 28,2018 At 9.00am</span></h4>
-                                                                    </div>
-                                                                    <div className="comment-area">
-                                                                        <p>I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, </p>
-                                                                        <div className="comments-reply">
-                                                                            <Link className="comment-reply-link" to="/blog-details"><span><i className="fa fa-reply" aria-hidden="true"></i> Reply</span></Link>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ol>
+
+                            {/* Tags */}
+                            {article.tags && article.tags.length > 0 && (
+                                <div className="article-tags">
+                                    <h4>Tags:</h4>
+                                    <div className="tags-list">
+                                        {article.tags.map((tag, index) => (
+                                            <span key={index} className="tag-item">#{tag}</span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Share Section */}
+                            <div className="article-share">
+                                <h4>Share this article:</h4>
+                                <div className="share-buttons">
+                                    <a
+                                        href={`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="share-btn facebook"
+                                    >
+                                        <i className="fa fa-facebook"></i>
+                                    </a>
+                                    <a
+                                        href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareTitle}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="share-btn twitter"
+                                    >
+                                        <i className="fa fa-twitter"></i>
+                                    </a>
+                                    <a
+                                        href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="share-btn linkedin"
+                                    >
+                                        <i className="fa fa-linkedin"></i>
+                                    </a>
+                                    <button
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(shareUrl);
+                                            alert('Link copied to clipboard!');
+                                        }}
+                                        className="share-btn copy"
+                                    >
+                                        <i className="fa fa-link"></i>
+                                    </button>
+                                </div>
                             </div>
-                        </div> 
-                        <div className="comment-respond">
-                            <h3 className="comment-reply-title">Leave a Comment</h3>
-                            <form method="post" id="commentform" className="comment-form" onSubmit={submitHandler}>
-                                <div className="form-inputs">
-                                    <input placeholder="Name" type="text"/>
-                                    <input placeholder="Email" type="email"/>
-                                    <input placeholder="Website" type="url"/>
+
+                            {/* Related Articles */}
+                            {relatedArticles.length > 0 && (
+                                <div className="related-articles">
+                                    <h3>Related Articles</h3>
+                                    <div className="row">
+                                        {relatedArticles.map((related) => (
+                                            <div key={related.id} className="col-lg-4 col-md-6 col-12">
+                                                <div className="related-article-card">
+                                                    <Link to={`/news/${related.slug}`} onClick={ClickHandler}>
+                                                        <div className="related-article-image">
+                                                            <img
+                                                                src={related.featuredImage || blog1}
+                                                                alt={related.title}
+                                                            />
+                                                            <div className="category-badge">{related.category}</div>
+                                                        </div>
+                                                        <div className="related-article-content">
+                                                            <h4>{related.title}</h4>
+                                                            <p className="article-date">
+                                                                <i className="fa fa-calendar"></i>
+                                                                {new Date(related.date).toLocaleDateString('en-US', {
+                                                                    year: 'numeric',
+                                                                    month: 'short',
+                                                                    day: 'numeric'
+                                                                })}
+                                                            </p>
+                                                        </div>
+                                                    </Link>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
                                 </div>
-                                <div className="form-textarea">
-                                    <textarea id="comment" placeholder="Write Your Comments..."></textarea>
-                                </div>
-                                <div className="form-submit">
-                                    <input id="submit" value="Reply" type="submit"/>
-                                </div>
-                            </form>
+                            )}
                         </div>
                     </div>
-                    <BlogSidebar/>
                 </div>
             </div>
         </section>
-     )
-        
-}
+    );
+};
 
 export default BlogSingle;

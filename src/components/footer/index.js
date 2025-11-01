@@ -38,9 +38,9 @@ const Footer = (props) =>{
                                 </div>
                                 <ul>
                                     <li><Link onClick={ClickHandler} to="/about">About ANMC</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/service">Our Projects</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/projects">Our Projects</Link></li>
                                     <li><Link onClick={ClickHandler} to="/donate">Become Member</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/shop">Book Facilities</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/facilities">Book Facilities</Link></li>
                                     <li><Link onClick={ClickHandler} to="/event">Events</Link></li>
                                 </ul>
                             </div>
@@ -51,8 +51,8 @@ const Footer = (props) =>{
                                     <h3>Community</h3>
                                 </div>
                                 <ul>
-                                    <li><Link onClick={ClickHandler} to="/blog">Latest News</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/blog">Newsletter</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news">Latest News</Link></li>
+                                    <li><Link onClick={ClickHandler} to="/news">Newsletter</Link></li>
                                     <li><Link onClick={ClickHandler} to="/donate">Volunteer</Link></li>
                                     <li><Link onClick={ClickHandler} to="/donate">Donations</Link></li>
                                     <li><Link onClick={ClickHandler} to="/contact">Contact Us</Link></li>

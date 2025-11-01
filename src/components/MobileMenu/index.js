@@ -40,18 +40,18 @@ const menus = [
 
 {
     id: 3,
-        title: 'Service',
-        link: '/service',
+        title: 'Projects',
+        link: '/projects',
         submenu: [
             {
                 id: 31,
-                title: 'Service',
-                link: '/service'
+                title: 'Projects',
+                link: '/projects'
             },
             {
                 id: 32,
-                title: 'Service Single',
-                link: '/service-single'
+                title: 'Project Single',
+                link: '/projects-single'
             }
         ]
     },
@@ -84,13 +84,13 @@ const menus = [
             },
             {
                 id: 72,
-                title: 'Shop',
-                link: '/shop'
+                title: 'Facilities',
+                link: '/facilities'
             },
             {
                 id: 73,
-                title: 'Shop Single',
-                link: '/shop-single'
+                title: 'Facility Details',
+                link: '/facilities-single'
             },
             {
                 id: 75,
@@ -108,40 +108,45 @@ const menus = [
 
     {
         id: 5,
-        title: 'Blog',
-        link: '/blog',
+        title: 'News',
+        link: '/news',
         submenu: [
             {
                 id: 51,
-                title: 'Blog',
-                link: '/blog'
+                title: 'News',
+                link: '/news'
             },
             {
                 id: 52,
-                title: 'Blog Left sidebar',
-                link: '/blog-left'
+                title: 'News Left sidebar',
+                link: '/news-left'
             },
             {
                 id: 53,
-                title: 'Blog full width',
-                link: '/blog-fullwidth'
+                title: 'News full width',
+                link: '/news-fullwidth'
             },
             {
                 id: 54,
-                title: 'Blog single',
-                link: '/blog-details'
+                title: 'News single',
+                link: '/news-details'
             },
             {
                 id: 55,
-                title: 'Blog single Left sidebar',
-                link: '/blog-details-left'
+                title: 'News single Left sidebar',
+                link: '/news-details-left'
             },
             {
                 id: 56,
-                title: 'Blog single Left sidebar',
-                link: '/blog-details-fullwidth'
+                title: 'News single full width',
+                link: '/news-details-fullwidth'
             },
         ]
+    },
+    {
+        id: 6,
+        title: 'FAQ',
+        link: '/faq',
     },
     {
         id: 88,
