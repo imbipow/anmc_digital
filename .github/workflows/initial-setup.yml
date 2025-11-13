@@ -1,0 +1,208 @@
+name: Initial AWS Setup (Run Once)
+
+on:
+  workflow_dispatch: # Manual trigger only
+
+env:
+  AWS_REGION: ap-southeast-2
+  NODE_VERSION: '18'
+  EB_APP_NAME: anmc-api
+  EB_ENV_NAME: anmc-api-prod
+  S3_BUCKET_NAME: anmc-frontend
+
+jobs:
+  setup-elastic-beanstalk:
+    name: Setup Elastic Beanstalk
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Install EB CLI
+        run: |
+          pip install awsebcli --upgrade
+
+      - name: Check if EB application exists
+        id: check-app
+        continue-on-error: true
+        run: |
+          aws elasticbeanstalk describe-applications --application-names ${{ env.EB_APP_NAME }}
+
+      - name: Create EB application
+        if: steps.check-app.outcome == 'failure'
+        run: |
+          aws elasticbeanstalk create-application \
+            --application-name ${{ env.EB_APP_NAME }} \
+            --description "ANMC Digital Backend API"
+
+      - name: Check if EB environment exists
+        id: check-env
+        continue-on-error: true
+        run: |
+          aws elasticbeanstalk describe-environments \
+            --application-name ${{ env.EB_APP_NAME }} \
+            --environment-names ${{ env.EB_ENV_NAME }}
+
+      - name: Create initial deployment package
+        if: steps.check-env.outcome == 'failure'
+        run: |
+          cd api
+          npm ci --only=production
+          zip -r ../deploy-backend-initial.zip . -x "*.git*" "*.log"
+
+      - name: Upload initial package to S3
+        if: steps.check-env.outcome == 'failure'
+        run: |
+          aws s3 mb s3://elasticbeanstalk-${{ env.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }} --region ${{ env.AWS_REGION }} || true
+          aws s3 cp deploy-backend-initial.zip s3://elasticbeanstalk-${{ env.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }}/anmc-api/
+
+      - name: Create initial application version
+        if: steps.check-env.outcome == 'failure'
+        run: |
+          aws elasticbeanstalk create-application-version \
+            --application-name ${{ env.EB_APP_NAME }} \
+            --version-label initial-${{ github.sha }} \
+            --source-bundle S3Bucket=elasticbeanstalk-${{ env.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }},S3Key=anmc-api/deploy-backend-initial.zip \
+            --description "Initial deployment"
+
+      - name: Create EB environment
+        if: steps.check-env.outcome == 'failure'
+        run: |
+          aws elasticbeanstalk create-environment \
+            --application-name ${{ env.EB_APP_NAME }} \
+            --environment-name ${{ env.EB_ENV_NAME }} \
+            --solution-stack-name "64bit Amazon Linux 2023 v6.0.1 running Node.js 18" \
+            --option-settings \
+              Namespace=aws:autoscaling:launchconfiguration,OptionName=InstanceType,Value=t3.small \
+              Namespace=aws:elasticbeanstalk:environment,OptionName=EnvironmentType,Value=SingleInstance \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=NODE_ENV,Value=production \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=AWS_REGION,Value=${{ env.AWS_REGION }} \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=PORT,Value=8080 \
+            --version-label initial-${{ github.sha }}
+
+      - name: Wait for environment creation
+        if: steps.check-env.outcome == 'failure'
+        run: |
+          echo "Waiting for environment to be ready (this may take 5-10 minutes)..."
+          aws elasticbeanstalk wait environment-exists \
+            --application-name ${{ env.EB_APP_NAME }} \
+            --environment-names ${{ env.EB_ENV_NAME }}
+
+      - name: Get EB environment URL
+        run: |
+          URL=$(aws elasticbeanstalk describe-environments \
+            --application-name ${{ env.EB_APP_NAME }} \
+            --environment-names ${{ env.EB_ENV_NAME }} \
+            --query "Environments[0].CNAME" \
+            --output text)
+          echo "🌐 Backend API URL: https://$URL"
+          echo "⚠️  Update GitHub Secret REACT_APP_API_URL to: https://$URL/api"
+
+  setup-frontend-bucket:
+    name: Setup S3 Frontend Bucket
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Check if S3 bucket exists
+        id: check-bucket
+        continue-on-error: true
+        run: |
+          aws s3 ls s3://${{ env.S3_BUCKET_NAME }}
+
+      - name: Create S3 bucket
+        if: steps.check-bucket.outcome == 'failure'
+        run: |
+          aws s3 mb s3://${{ env.S3_BUCKET_NAME }} --region ${{ env.AWS_REGION }}
+
+      - name: Enable static website hosting
+        run: |
+          aws s3 website s3://${{ env.S3_BUCKET_NAME }} \
+            --index-document index.html \
+            --error-document index.html
+
+      - name: Set bucket policy
+        run: |
+          cat > bucket-policy.json << 'EOF'
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "PublicReadGetObject",
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::${{ env.S3_BUCKET_NAME }}/*"
+              }
+            ]
+          }
+          EOF
+          aws s3api put-bucket-policy \
+            --bucket ${{ env.S3_BUCKET_NAME }} \
+            --policy file://bucket-policy.json
+
+      - name: Enable CORS
+        run: |
+          cat > cors.json << 'EOF'
+          {
+            "CORSRules": [
+              {
+                "AllowedOrigins": ["*"],
+                "AllowedHeaders": ["*"],
+                "AllowedMethods": ["GET", "HEAD"],
+                "MaxAgeSeconds": 3000
+              }
+            ]
+          }
+          EOF
+          aws s3api put-bucket-cors \
+            --bucket ${{ env.S3_BUCKET_NAME }} \
+            --cors-configuration file://cors.json
+
+      - name: Get frontend URL
+        run: |
+          echo "🌐 Frontend URL: http://${{ env.S3_BUCKET_NAME }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com"
+          echo "⚠️  Update GitHub Secret S3_FRONTEND_BUCKET to: ${{ env.S3_BUCKET_NAME }}"
+
+  summary:
+    name: Setup Summary
+    runs-on: ubuntu-latest
+    needs: [setup-elastic-beanstalk, setup-frontend-bucket]
+    if: always()
+
+    steps:
+      - name: Print setup summary
+        run: |
+          echo "✅ Initial AWS Setup Complete!"
+          echo "================================"
+          echo ""
+          echo "📋 Next Steps:"
+          echo "1. Get the Backend API URL from the logs above"
+          echo "2. Update GitHub Secret: REACT_APP_API_URL"
+          echo "3. Update GitHub Secret: S3_FRONTEND_BUCKET"
+          echo "4. Run the main 'Deploy to AWS' workflow"
+          echo ""
+          echo "🔧 Required GitHub Secrets:"
+          echo "- AWS_ACCESS_KEY_ID"
+          echo "- AWS_SECRET_ACCESS_KEY"
+          echo "- AWS_ACCOUNT_ID"
+          echo "- REACT_APP_API_URL (from EB output)"
+          echo "- REACT_APP_COGNITO_USER_POOL_ID"
+          echo "- REACT_APP_COGNITO_CLIENT_ID"
+          echo "- REACT_APP_STRIPE_PUBLISHABLE_KEY"
+          echo "- S3_FRONTEND_BUCKET"
+          echo "- CLOUDFRONT_DISTRIBUTION_ID (optional)"
