@@ -8,9 +8,6 @@ The member portal now uses AWS Cognito for secure user authentication. All membe
 
 When AWS Cognito is not configured, the system automatically falls back to test credentials for development purposes.
 
-**Test Account:**
-- **Email:** `member@anmc.org.au`
-- **Password:** `Member123!`
 
 ## Protected Routes
 
@@ -185,10 +182,6 @@ When Cognito is not configured, the system automatically uses fallback authentic
 - Validates against hardcoded test credentials
 - Simulates Cognito user object structure
 - Useful for local development and testing
-
-**Test Credentials:**
-- Email: `member@anmc.org.au`
-- Password: `Member123!`
 
 **Fallback User Object:**
 ```javascript

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom'
 import contentService from '../../services/contentService'
+import { stripAndTruncate } from '../../utils/htmlUtils'
 import './style.css'
 import blog1 from '../../images/blog/img-1.jpg'
 import blog2 from '../../images/blog/img-2.jpg'
@@ -22,20 +23,39 @@ const BlogList = () => {
         const loadNews = async () => {
             try {
                 const news = await contentService.getNews();
+                console.log('📰 Loaded news from API:', news?.length || 0, 'articles');
+
                 if (news && news.length > 0) {
                     const images = [blog1, blog2, blog3, blog4, blog5, blog6];
-                    const formattedNews = news.map((article, index) => ({
+
+                    // Filter only published news
+                    const publishedNews = news.filter(article =>
+                        article.status === 'published'
+                    );
+                    console.log('✅ Published news after filter:', publishedNews.length, 'articles');
+
+                    const formattedNews = publishedNews.map((article, index) => ({
                         id: article.id,
                         title: article.title,
-                        excerpt: article.excerpt,
+                        excerpt: stripAndTruncate(article.excerpt || article.content, 200),
                         image: article.featuredImage || images[index % images.length],
                         category: article.category || 'News',
-                        author: article.authorName,
+                        author: article.authorName || 'ANMC Admin',
                         date: new Date(article.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
                         featured: article.featured === true || article.featured === 'true',
                         slug: article.slug
                     }));
-                    setNewsArticles(formattedNews);
+
+                    // Sort by ID in descending order (newest first)
+                    const sortedNews = formattedNews.sort((a, b) => {
+                        const idA = parseInt(a.id) || 0;
+                        const idB = parseInt(b.id) || 0;
+                        return idB - idA;
+                    });
+                    console.log('🔢 Total sorted news:', sortedNews.length);
+                    console.log('🔢 First 5 IDs:', sortedNews.slice(0, 5).map(n => n.id));
+
+                    setNewsArticles(sortedNews);
                 } else {
                     // Fallback to default data if API fails
                     setNewsArticles([
@@ -58,19 +78,33 @@ const BlogList = () => {
         loadNews();
     }, []);
 
-    // Get the most recent featured article (if multiple are featured)
+    // Get the most recent featured article (if multiple are featured) for the hero section
     const featuredArticles = newsArticles.filter(article => article.featured);
     const featuredArticle = featuredArticles.length > 0
         ? featuredArticles.sort((a, b) => new Date(b.date) - new Date(a.date))[0]
         : null;
 
-    const regularArticles = newsArticles.filter(article => !article.featured);
+    // For pagination, exclude the featured article that's shown in the hero section
+    // to avoid displaying it twice
+    const articlesForPagination = featuredArticle
+        ? newsArticles.filter(article => article.id !== featuredArticle.id)
+        : newsArticles;
 
     const indexOfLastArticle = currentPage * articlesPerPage;
     const indexOfFirstArticle = indexOfLastArticle - articlesPerPage;
-    const currentArticles = regularArticles.slice(indexOfFirstArticle, indexOfLastArticle);
+    const currentArticles = articlesForPagination.slice(indexOfFirstArticle, indexOfLastArticle);
 
-    const totalPages = Math.ceil(regularArticles.length / articlesPerPage);
+    const totalPages = Math.ceil(articlesForPagination.length / articlesPerPage);
+
+    console.log('📊 Pagination info:', {
+        totalArticles: newsArticles.length,
+        featuredArticleId: featuredArticle?.id,
+        articlesInPagination: articlesForPagination.length,
+        currentPage,
+        articlesPerPage,
+        totalPages,
+        showingArticles: currentArticles.length
+    });
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);

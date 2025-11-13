@@ -1,1 +1,40 @@
-[]
+[
+  {
+    "id": "ANMC1762049742349735",
+    "firstName": "Bandana",
+    "lastName": "Parajuli",
+    "email": "bandanaparajuli22@gmail.com",
+    "mobile": "0434717963",
+    "gender": "female",
+    "age": "33",
+    "membershipCategory": "general",
+    "membershipType": "single",
+    "residentialAddress": {
+      "street": "1/8 Charlesworth St",
+      "suburb": "Laverton",
+      "state": "Victoria",
+      "postcode": "3028",
+      "country": "Australia"
+    },
+    "postalAddress": {
+      "street": "",
+      "suburb": "",
+      "state": "",
+      "postcode": "",
+      "country": "Australia"
+    },
+    "sameAsResidential": true,
+    "familyMembers": [],
+    "confirmPassword": "Pr@k@$123",
+    "paymentType": "upfront",
+    "acceptDeclaration": true,
+    "comments": "",
+    "membershipFee": 100,
+    "paymentIntentId": "pi_3SOqp079WikBwNd31QLZWyIb",
+    "paymentStatus": "processing",
+    "status": "active",
+    "createdAt": "2025-11-02T02:15:42.349Z",
+    "updatedAt": "2025-11-02T02:21:17.551Z",
+    "referenceNo": "ANMC-2025-0001"
+  }
+]

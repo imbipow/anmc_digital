@@ -28,8 +28,6 @@ const API_CONFIG = {
     projectsByStatus: (status) => `/projects/status/${status}`,
     projectsBySlug: (slug) => `/projects/slug/${slug}`,
 
-    facilities: '/facilities',
-
     // About & Contact
     aboutUs: '/about-us',
     contact: '/contact',
@@ -50,6 +48,39 @@ const API_CONFIG = {
     memberSearch: (query) => `/members/search?q=${query}`,
     membersByCategory: (category) => `/members/category/${category}`,
     membersByType: (type) => `/members/type/${type}`,
+
+    // Users (regular users, not members)
+    userRegister: '/users/register',
+
+    // Services / Anusthan
+    services: '/services',
+    servicesByCategory: (category) => `/services?category=${category}`,
+    servicesActive: '/services?status=active',
+
+    // Bookings
+    bookings: '/bookings',
+    bookingsByMember: (email) => `/bookings?memberEmail=${email}`,
+    bookingStats: '/bookings/stats',
+    availableSlots: (date, duration) => `/bookings/available-slots?date=${date}&duration=${duration}`,
+
+    // Media & Documents
+    media: '/media',
+    mediaUpload: '/media/upload',
+    mediaByFolder: (folder) => `/media?folder=${folder}`,
+    documents: '/documents',
+    documentsUpload: '/documents/upload',
+    documentsByCategory: (category) => `/documents?category=${category}`,
+    documentsByVisibility: (visibility) => `/documents?visibility=${visibility}`,
+
+    // Subscribers & Messages
+    subscribers: '/subscribers',
+    subscriberUnsubscribe: '/subscribers/unsubscribe',
+    subscriberStats: '/subscribers/stats',
+    messages: '/messages',
+    messagesContact: '/messages/contact',
+    messagesBroadcast: '/messages/broadcast',
+    messagesStats: '/messages/stats',
+    messageMarkRead: (id) => `/messages/${id}/read`,
 
     // Other
     masterPlan: '/master-plan',

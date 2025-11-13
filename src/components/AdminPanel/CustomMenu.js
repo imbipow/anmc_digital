@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useResourceDefinitions } from 'react-admin';
 import { List, ListItem, ListItemIcon, ListItemText, Collapse } from '@mui/material';
 import {
@@ -9,13 +9,38 @@ import {
     PersonOutlined,
     MessageOutlined,
     BookOnlineOutlined,
-    DescriptionOutlined
+    DescriptionOutlined,
+    PermMediaOutlined,
+    InboxOutlined,
+    SendOutlined
 } from '@mui/icons-material';
+import cognitoAuthService from '../../services/cognitoAuth';
 import './customMenu.css';
 
 const CustomMenu = () => {
     const resources = useResourceDefinitions();
     const [contentOpen, setContentOpen] = useState(true);
+    const [userRole, setUserRole] = useState(null);
+
+    useEffect(() => {
+        const getUserRole = async () => {
+            try {
+                const user = await cognitoAuthService.getCurrentUser();
+                const groups = user.groups || [];
+
+                if (groups.includes('AnmcAdmins')) {
+                    setUserRole('admin');
+                } else if (groups.includes('AnmcManagers')) {
+                    setUserRole('manager');
+                }
+            } catch (error) {
+                console.error('Error getting user role:', error);
+                setUserRole('manager'); // Default to manager (more restrictive)
+            }
+        };
+
+        getUserRole();
+    }, []);
 
     const handleContentClick = () => {
         setContentOpen(!contentOpen);
@@ -31,12 +56,12 @@ const CustomMenu = () => {
 
     // Content submenu items (matching the resource names from index.js)
     const contentItems = [
-        { name: 'homepage', label: 'Homepage' },
+        { name: 'hero-slides', label: 'Hero Slides' },
         { name: 'counters', label: 'Statistics' },
         { name: 'news', label: 'News & Updates' },
         { name: 'events', label: 'Events' },
         { name: 'projects', label: 'Projects' },
-        { name: 'facilities', label: 'Facilities' },
+        { name: 'services', label: 'Services / Anusthan' },
         { name: 'about_us', label: 'About Us' },
         { name: 'contact', label: 'Contact Info' },
         { name: 'faqs', label: 'FAQs' },
@@ -44,17 +69,25 @@ const CustomMenu = () => {
 
     // Top-level menu items (not in Content submenu)
     const topLevelItems = [
+        { name: 'bookings', label: 'Bookings' },
         { name: 'donations', label: 'Donations' },
         { name: 'members', label: 'Members' },
+        { name: 'user-management', label: 'User Management' },
     ];
 
-    // Additional menu items (to be implemented)
-    const additionalItems = [
-        { name: 'users', label: 'Users', icon: <PersonOutlined /> },
-        { name: 'messages', label: 'Messages', icon: <MessageOutlined /> },
-        { name: 'bookings', label: 'Bookings', icon: <BookOnlineOutlined /> },
+    // Media and Documents items - Admin Only
+    const mediaItems = [
+        { name: 'media', label: 'Media Library', icon: <PermMediaOutlined /> },
         { name: 'documents', label: 'Documents', icon: <DescriptionOutlined /> },
     ];
+
+    // Messaging items - Admin Only
+    const messagingItems = [
+        { name: 'inbox', label: 'Contact Messages', icon: <InboxOutlined /> },
+        { name: 'broadcast', label: 'Send Messages', icon: <SendOutlined /> },
+    ];
+
+    const isAdmin = userRole === 'admin';
 
     return (
         <List component="nav" className="custom-admin-menu">
@@ -71,45 +104,54 @@ const CustomMenu = () => {
                 <ListItemText primary="Dashboard" />
             </ListItem>
 
-            {/* Content Submenu */}
-            <ListItem
-                button
-                onClick={handleContentClick}
-                className="menu-item submenu-trigger"
-            >
-                <ListItemIcon>
-                    <FolderOutlined />
-                </ListItemIcon>
-                <ListItemText primary="Content" />
-                {contentOpen ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-            <Collapse in={contentOpen} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding className="submenu-list">
-                    {contentItems.map((item) => {
-                        const resource = resources[item.name];
-                        if (!resource) return null;
+            {/* Content Submenu - Admin Only */}
+            {isAdmin && (
+                <>
+                    <ListItem
+                        button
+                        onClick={handleContentClick}
+                        className="menu-item submenu-trigger"
+                    >
+                        <ListItemIcon>
+                            <FolderOutlined />
+                        </ListItemIcon>
+                        <ListItemText primary="Content" />
+                        {contentOpen ? <ExpandLess /> : <ExpandMore />}
+                    </ListItem>
+                    <Collapse in={contentOpen} timeout="auto" unmountOnExit>
+                        <List component="div" disablePadding className="submenu-list">
+                            {contentItems.map((item) => {
+                                const resource = resources[item.name];
+                                if (!resource) return null;
 
-                        const Icon = resource.icon;
-                        return (
-                            <ListItem
-                                button
-                                key={item.name}
-                                onClick={() => handleNavigation(item.name)}
-                                selected={isSelected(item.name)}
-                                className="submenu-item"
-                            >
-                                <ListItemIcon>
-                                    {Icon && <Icon />}
-                                </ListItemIcon>
-                                <ListItemText primary={item.label} />
-                            </ListItem>
-                        );
-                    })}
-                </List>
-            </Collapse>
+                                const Icon = resource.icon;
+                                return (
+                                    <ListItem
+                                        button
+                                        key={item.name}
+                                        onClick={() => handleNavigation(item.name)}
+                                        selected={isSelected(item.name)}
+                                        className="submenu-item"
+                                    >
+                                        <ListItemIcon>
+                                            {Icon && <Icon />}
+                                        </ListItemIcon>
+                                        <ListItemText primary={item.label} />
+                                    </ListItem>
+                                );
+                            })}
+                        </List>
+                    </Collapse>
+                </>
+            )}
 
-            {/* Top-level items (Donations, Members) */}
+            {/* Top-level items - Filter based on role */}
             {topLevelItems.map((item) => {
+                // User Management is admin-only
+                if (item.name === 'user-management' && !isAdmin) {
+                    return null;
+                }
+
                 const resource = resources[item.name];
                 if (!resource) return null;
 
@@ -130,23 +172,35 @@ const CustomMenu = () => {
                 );
             })}
 
-            {/* Additional Items (Users, Messages, Bookings, Documents) */}
-            {additionalItems.map((item) => (
+            {/* Media and Documents - Admin Only */}
+            {isAdmin && mediaItems.map((item) => (
                 <ListItem
                     button
                     key={item.name}
                     onClick={() => handleNavigation(item.name)}
                     selected={isSelected(item.name)}
-                    className="menu-item menu-item-disabled"
-                    disabled
+                    className="menu-item"
                 >
                     <ListItemIcon>
                         {item.icon}
                     </ListItemIcon>
-                    <ListItemText
-                        primary={item.label}
-                        secondary="Coming soon"
-                    />
+                    <ListItemText primary={item.label} />
+                </ListItem>
+            ))}
+
+            {/* Messaging - Admin Only */}
+            {isAdmin && messagingItems.map((item) => (
+                <ListItem
+                    button
+                    key={item.name}
+                    onClick={() => handleNavigation(item.name)}
+                    selected={isSelected(item.name)}
+                    className="menu-item"
+                >
+                    <ListItemIcon>
+                        {item.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={item.label} />
                 </ListItem>
             ))}
         </List>

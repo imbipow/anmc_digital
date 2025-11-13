@@ -6,6 +6,7 @@ import './style.css'
 const EventSection2 = (props) => {
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [recentEvents, setRecentEvents] = useState([]);
+    const [hasMorePastEvents, setHasMorePastEvents] = useState(false);
 
     const ClickHandler = () => {
         window.scrollTo(10, 0);
@@ -16,37 +17,66 @@ const EventSection2 = (props) => {
             try {
                 const events = await contentService.getEvents();
                 if (events && events.length > 0) {
-                    // Format events for upcoming section
-                    const formattedUpcoming = events.map(event => {
-                        const startDate = new Date(event.startDate);
-                        return {
-                            id: event.id,
-                            date: startDate.getDate().toString(),
-                            month: startDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
-                            year: startDate.getFullYear().toString(),
-                            title: event.title,
-                            description: event.description,
-                            time: `${event.startTime} - ${event.endTime}`,
-                            venue: event.location,
-                            category: event.category || 'Event',
-                            status: event.status === 'upcoming' ? 'registration-open' : 'coming-soon'
-                        };
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    // Filter upcoming events (future dates)
+                    const upcomingEventsData = events.filter(event => {
+                        if (!event.startDate) return false;
+                        const eventDate = new Date(event.startDate);
+                        eventDate.setHours(0, 0, 0, 0);
+                        return eventDate >= today;
                     });
+
+                    // Filter past events (past dates)
+                    const pastEventsData = events.filter(event => {
+                        if (!event.startDate) return false;
+                        const eventDate = new Date(event.startDate);
+                        eventDate.setHours(0, 0, 0, 0);
+                        return eventDate < today;
+                    });
+
+                    // Format events for upcoming section
+                    const formattedUpcoming = upcomingEventsData
+                        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+                        .map(event => {
+                            const startDate = new Date(event.startDate);
+                            return {
+                                id: event.id,
+                                slug: event.slug,
+                                date: startDate.getDate().toString(),
+                                month: startDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
+                                year: startDate.getFullYear().toString(),
+                                title: event.title,
+                                description: event.description,
+                                time: `${event.startTime} - ${event.endTime}`,
+                                venue: event.location,
+                                category: event.category || 'Event',
+                                status: event.status === 'upcoming' ? 'registration-open' : 'coming-soon'
+                            };
+                        });
                     setUpcomingEvents(formattedUpcoming);
 
-                    // Format events for recent section
-                    const formattedRecent = events.slice(0, 3).map((event, index) => {
-                        const images = [props.eventImg1, props.eventImg2, props.eventImg3];
-                        return {
-                            id: event.id,
-                            title: event.title,
-                            date: new Date(event.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }),
-                            summary: event.description,
-                            image: event.featuredImage || images[index % images.length],
-                            highlights: [`${event.maxAttendees || '100+'} attendees`, event.category || 'Community event', 'Cultural activities']
-                        };
-                    });
+                    // Format events for recent section (show up to 3 past events)
+                    const formattedRecent = pastEventsData
+                        .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
+                        .slice(0, 3)
+                        .map((event, index) => {
+                            const images = [props.eventImg1, props.eventImg2, props.eventImg3];
+                            return {
+                                id: event.id,
+                                slug: event.slug,
+                                title: event.title,
+                                date: new Date(event.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }),
+                                summary: event.description,
+                                image: event.featuredImage || images[index % images.length],
+                                highlights: [`${event.maxAttendees || '100+'} attendees`, event.category || 'Community event', 'Cultural activities']
+                            };
+                        });
                     setRecentEvents(formattedRecent);
+
+                    // Check if there are more than 3 past events
+                    setHasMorePastEvents(pastEventsData.length > 3);
                 }
             } catch (error) {
                 console.error('Error loading events:', error);
@@ -129,14 +159,12 @@ const EventSection2 = (props) => {
                                         </div>
                                     </div>
                                     <div className="event-actions">
-                                        <Link 
-                                            onClick={ClickHandler} 
-                                            to="/event-single" 
+                                        <Link
+                                            onClick={ClickHandler}
+                                            to={`/event/${event.slug || event.id}`}
                                             className="event-register-btn"
                                         >
-                                            {event.status === 'registration-open' ? 'Register Now' : 
-                                             event.status === 'tickets-available' ? 'Buy Tickets' : 
-                                             'Learn More'}
+                                            View Event
                                             <i className="fa fa-arrow-right"></i>
                                         </Link>
                                         <span className={`event-status ${event.status}`}>
@@ -183,8 +211,8 @@ const EventSection2 = (props) => {
                                             ))}
                                         </ul>
                                         <div className="event-archive-link">
-                                            <Link onClick={ClickHandler} to="/event-single">
-                                                View Gallery <i className="fa fa-images"></i>
+                                            <Link onClick={ClickHandler} to={`/event/${event.slug || event.id}`}>
+                                                View Event <i className="fa fa-arrow-right"></i>
                                             </Link>
                                         </div>
                                     </div>
@@ -192,13 +220,15 @@ const EventSection2 = (props) => {
                             </div>
                         ))}
                     </div>
-                    <div className="archive-section">
-                        <div className="text-center">
-                            <Link onClick={ClickHandler} to="/event" className="archive-link">
-                                View All Past Events <i className="fa fa-archive"></i>
-                            </Link>
+                    {hasMorePastEvents && (
+                        <div className="archive-section">
+                            <div className="text-center">
+                                <Link onClick={ClickHandler} to="/event" className="archive-link">
+                                    View All Past Events <i className="fa fa-archive"></i>
+                                </Link>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
             </div>
         </div>

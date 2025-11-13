@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import contentService from '../../services/contentService';
+import API_CONFIG from '../../config/api';
 import './style.css'
 
 const Contactpage = () => {
@@ -13,6 +14,8 @@ const Contactpage = () => {
     });
     const [contactInfo, setContactInfo] = useState({});
     const [executiveMembers, setExecutiveMembers] = useState([]);
+    const [submitting, setSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState({ type: '', message: '' });
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -39,34 +42,6 @@ const Contactpage = () => {
                         phone: member.phone
                     }));
                     setExecutiveMembers(formattedMembers);
-                } else {
-                    // Fallback data
-                    setExecutiveMembers([
-                        {
-                            name: 'Rajesh Sharma',
-                            position: 'President',
-                            email: 'president@anmc.org.au',
-                            phone: '+61 400 123 456'
-                        },
-                        {
-                            name: 'Sita Patel',
-                            position: 'Vice President',
-                            email: 'vicepresident@anmc.org.au',
-                            phone: '+61 400 234 567'
-                        },
-                        {
-                            name: 'Prakash Thapa',
-                            position: 'Secretary',
-                            email: 'secretary@anmc.org.au',
-                            phone: '+61 400 345 678'
-                        },
-                        {
-                            name: 'Kamala Gurung',
-                            position: 'Treasurer',
-                            email: 'treasurer@anmc.org.au',
-                            phone: '+61 400 456 789'
-                        }
-                    ]);
                 }
             } catch (error) {
                 console.error('Error loading contact data:', error);
@@ -75,10 +50,60 @@ const Contactpage = () => {
         loadContactData();
     }, []);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Contact form submitted:', formData);
-        // Handle form submission logic here
+        setSubmitting(true);
+        setSubmitStatus({ type: '', message: '' });
+
+        try {
+            // Combine first and last name
+            const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+
+            const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.messagesContact), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    name: fullName,
+                    email: formData.email,
+                    phone: formData.phone,
+                    subject: formData.subject,
+                    message: formData.message
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setSubmitStatus({
+                    type: 'success',
+                    message: 'Thank you for contacting us! Your message has been sent successfully. We will get back to you within 24 hours.'
+                });
+                // Reset form
+                setFormData({
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    phone: '',
+                    subject: '',
+                    message: ''
+                });
+            } else {
+                setSubmitStatus({
+                    type: 'error',
+                    message: data.error || 'Failed to send message. Please try again.'
+                });
+            }
+        } catch (error) {
+            console.error('Error submitting contact form:', error);
+            setSubmitStatus({
+                type: 'error',
+                message: 'An error occurred while sending your message. Please try again later.'
+            });
+        } finally {
+            setSubmitting(false);
+        }
     };
 
     return(
@@ -286,10 +311,26 @@ const Contactpage = () => {
                                         </div>
                                     </div>
 
+                                    {submitStatus.message && (
+                                        <div
+                                            className={`form-message ${submitStatus.type}`}
+                                            style={{
+                                                padding: '15px',
+                                                marginBottom: '20px',
+                                                borderRadius: '5px',
+                                                backgroundColor: submitStatus.type === 'success' ? '#d4edda' : '#f8d7da',
+                                                color: submitStatus.type === 'success' ? '#155724' : '#721c24',
+                                                border: `1px solid ${submitStatus.type === 'success' ? '#c3e6cb' : '#f5c6cb'}`
+                                            }}
+                                        >
+                                            {submitStatus.message}
+                                        </div>
+                                    )}
+
                                     <div className="form-submit">
-                                        <button type="submit" className="theme-btn submit-btn">
+                                        <button type="submit" className="theme-btn submit-btn" disabled={submitting}>
                                             <i className="fa fa-paper-plane"></i>
-                                            Send Message
+                                            {submitting ? 'Sending...' : 'Send Message'}
                                         </button>
                                         <p className="form-note">
                                             We'll get back to you within 24 hours during business days.
@@ -310,7 +351,7 @@ const Contactpage = () => {
                             <div className="contact-map">
                                 <iframe 
                                     title='anmc-location' 
-                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3312.6283087794563!2d151.2069902153138!3d-33.87365098065089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b12ae3f9e5c8b21%3A0x5017d681632ccc0!2sSydney%20NSW%2C%20Australia!5e0!3m2!1sen!2sau!4v1635123456789!5m2!1sen!2sau"
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3159.1706566187295!2d144.740645376594!3d-37.645191724423796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad6f70dda01840b%3A0xa3819c2122fd02d1!2sNepali%20Temple%20(Mandir)!5e0!3m2!1sen!2sau!4v1762208541355!5m2!1sen!2sau"
                                     width="100%" 
                                     height="400" 
                                     style={{border: 0}} 
@@ -321,8 +362,8 @@ const Contactpage = () => {
                                 <div className="map-overlay">
                                     <div className="map-info">
                                         <h4>Visit Our Centre</h4>
-                                        <p>123 Multicultural Drive, Community Hub, NSW 2000</p>
-                                        <a href="https://maps.google.com/?q=Sydney+NSW+Australia" target="_blank" rel="noopener noreferrer" className="theme-btn-s3">
+                                        <p>100 Duncans Ln, Diggers Rest VIC 3427</p>
+                                        <a href="https://maps.google.com/?q=Nepali+temple+Melbourne" target="_blank" rel="noopener noreferrer" className="theme-btn-s3">
                                             <i className="fa fa-map-marker"></i>
                                             Get Directions
                                         </a>

@@ -23,7 +23,14 @@ export const MemberAuthProvider = ({ children }) => {
     const checkAuth = async () => {
         try {
             const user = await cognitoAuthService.getCurrentUser();
-            setCurrentUser(user);
+
+            // Check if user is in AnmcMembers or AnmcUsers group
+            const groups = user.groups || [];
+            if (groups.includes('AnmcMembers') || groups.includes('AnmcUsers')) {
+                setCurrentUser(user);
+            } else {
+                setCurrentUser(null);
+            }
         } catch (error) {
             setCurrentUser(null);
         } finally {
@@ -35,9 +42,13 @@ export const MemberAuthProvider = ({ children }) => {
         try {
             const result = await cognitoAuthService.signIn(email, password);
 
-            // Store auth data for fallback
-            if (result.fallbackAuth) {
-                cognitoAuthService.storeAuthData(result);
+            // Check if user is in AnmcMembers or AnmcUsers group
+            const groups = result.groups || [];
+            if (!groups.includes('AnmcMembers') && !groups.includes('AnmcUsers')) {
+                return {
+                    success: false,
+                    error: 'Access denied. Only ANMC members and registered users can access the portal.'
+                };
             }
 
             setCurrentUser(result);

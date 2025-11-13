@@ -6,13 +6,18 @@ import Button from "@mui/material/Button";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Link, useNavigate } from "react-router-dom";
+import Alert from "@mui/material/Alert";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useMemberAuth } from '../../components/MemberAuth';
 import './style.scss';
 
 const LoginPage = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { login } = useMemberAuth();
+
+    // Get state from navigation (if coming from booking flow)
+    const { from, message, returnUrl } = location.state || {};
 
     const [value, setValue] = useState({
         email: '',
@@ -66,9 +71,10 @@ const LoginPage = () => {
             const result = await login(value.email, value.password);
 
             if (result.success) {
-                toast.success('Successfully logged in! Redirecting to Member Portal...');
+                toast.success('Successfully logged in!');
                 setTimeout(() => {
-                    navigate('/member-portal');
+                    // Redirect to return URL if provided, otherwise to member portal
+                    navigate(returnUrl || '/member-portal');
                 }, 1000);
             } else {
                 toast.error(result.error || 'Login failed. Please check your credentials.');
@@ -84,15 +90,15 @@ const LoginPage = () => {
     return (
         <Grid className="loginWrapper">
             <Grid className="loginForm">
-                <h2>Member Sign In</h2>
-                <p>Sign in to access your member portal</p>
+                <h2>Sign In</h2>
+                <p>{from === 'booking' ? 'Login or create an account to book services' : 'Sign in to access your portal'}</p>
 
-                {/* Test Credentials Info */}
-                <div className="test-credentials-info">
-                    <p><strong>Test Credentials:</strong></p>
-                    <p>Email: <code>member@anmc.org.au</code></p>
-                    <p>Password: <code>Member123!</code></p>
-                </div>
+                {/* Show alert if coming from booking flow */}
+                {from === 'booking' && (
+                    <Alert severity="info" sx={{ mb: 2 }}>
+                        {message || 'Please login or sign up to continue booking'}
+                    </Alert>
+                )}
 
                 <form onSubmit={submitForm}>
                     <Grid container spacing={3}>
@@ -164,8 +170,56 @@ const LoginPage = () => {
                                     )}
                                 </Button>
                             </Grid>
-                            <p className="noteHelp">
-                                Don't have an account? <Link to="/sign-up">Register for membership</Link>
+
+                            {/* Show different signup options based on context */}
+                            {from === 'booking' ? (
+                                <div className="noteHelp" style={{ marginTop: '15px' }}>
+                                    <p style={{ marginBottom: '8px', fontWeight: '500', color: '#333' }}>
+                                        Don't have an account?
+                                    </p>
+                                    <div style={{ display: 'flex', gap: '10px', flexDirection: 'column' }}>
+                                        <Link
+                                            to="/user-signup"
+                                            state={{ returnUrl }}
+                                            style={{
+                                                padding: '10px 15px',
+                                                backgroundColor: '#2a5298',
+                                                color: 'white',
+                                                textDecoration: 'none',
+                                                borderRadius: '5px',
+                                                textAlign: 'center',
+                                                fontWeight: '500'
+                                            }}
+                                        >
+                                            Sign up as User (Quick - Book Services Only)
+                                        </Link>
+                                        <Link
+                                            to="/signup"
+                                            style={{
+                                                padding: '10px 15px',
+                                                backgroundColor: '#1e3c72',
+                                                color: 'white',
+                                                textDecoration: 'none',
+                                                borderRadius: '5px',
+                                                textAlign: 'center',
+                                                fontWeight: '500'
+                                            }}
+                                        >
+                                            Register for Full Membership
+                                        </Link>
+                                    </div>
+                                    <p style={{ fontSize: '0.85em', color: '#666', marginTop: '10px', lineStyle: 'italic' }}>
+                                        User accounts can book services immediately. Members get full access + 10% discount.
+                                    </p>
+                                </div>
+                            ) : (
+                                <p className="noteHelp">
+                                    Don't have an account? <Link to="/signup">Register for membership</Link>
+                                </p>
+                            )}
+
+                            <p className="noteHelp" style={{ marginTop: '10px', fontSize: '0.85em', color: '#666' }}>
+                                Both members and users can login here
                             </p>
                         </Grid>
                     </Grid>

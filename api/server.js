@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const config = require('./config');
+const { initializeSecrets } = require('./config/initSecrets');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -40,6 +41,16 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Compression middleware
 app.use(compression());
 
+// Disable caching in development
+if (config.nodeEnv === 'development') {
+  app.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+    next();
+  });
+}
+
 // API routes
 app.use('/api', routes);
 
@@ -70,21 +81,37 @@ app.use(notFound);
 // Error handler (must be last)
 app.use(errorHandler);
 
-// Start server
+// Start server with secrets loaded
 const PORT = config.port;
 const HOST = config.host;
 
-app.listen(PORT, () => {
-  console.log('╔══════════════════════════════════════════════════════════╗');
-  console.log('║            ANMC Digital API Server                       ║');
-  console.log('╚══════════════════════════════════════════════════════════╝');
-  console.log(`\n🚀 Server running on http://${HOST}:${PORT}`);
-  console.log(`📍 Environment: ${config.nodeEnv}`);
-  console.log(`🗄️  DynamoDB Region: ${config.aws.region}`);
-  console.log(`🏷️  Table Prefix: anmc-*-${process.env.ENVIRONMENT || 'dev'}`);
-  console.log('\n📚 API Documentation: http://${HOST}:${PORT}/');
-  console.log('🏥 Health Check: http://${HOST}:${PORT}/api/health\n');
-});
+async function startServer() {
+  try {
+    // Initialize secrets from AWS Secrets Manager
+    // This populates process.env with secret values
+    await initializeSecrets();
+
+    app.listen(PORT, () => {
+      console.log('\n╔══════════════════════════════════════════════════════════╗');
+      console.log('║            ANMC Digital API Server                       ║');
+      console.log('╚══════════════════════════════════════════════════════════╝');
+      console.log(`\n🚀 Server running on http://${HOST}:${PORT}`);
+      console.log(`📍 Environment: ${config.nodeEnv}`);
+      console.log(`🗄️  DynamoDB Region: ${config.aws.region}`);
+      console.log(`🏷️  Table Prefix: anmc-*-${process.env.ENVIRONMENT || 'dev'}`);
+      console.log(`🔐 Secrets: Loaded from AWS Secrets Manager`);
+      console.log('\n📚 API Documentation: http://${HOST}:${PORT}/');
+      console.log('🏥 Health Check: http://${HOST}:${PORT}/api/health\n');
+    });
+  } catch (error) {
+    console.error('❌ Failed to start server:', error);
+    console.error('Error details:', error.message);
+    process.exit(1);
+  }
+}
+
+// Start the server
+startServer();
 
 // Graceful shutdown
 process.on('SIGTERM', () => {

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const newsService = require('../services/newsService');
+const { verifyToken, requireAdmin } = require('../middleware/auth');
 
 // GET /api/news - Get all news articles
 router.get('/', async (req, res, next) => {
@@ -68,7 +69,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // POST /api/news - Create new news article
-router.post('/', async (req, res, next) => {
+router.post('/', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const news = await newsService.create(req.body);
     res.status(201).json(news);
@@ -78,7 +79,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // PUT /api/news/:id - Update news article
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.params;
     const news = await newsService.update(id, req.body);
@@ -89,7 +90,7 @@ router.put('/:id', async (req, res, next) => {
 });
 
 // DELETE /api/news/:id - Delete news article
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.params;
     const deleted = await newsService.delete(id);

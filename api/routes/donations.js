@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const donationsService = require('../services/donationsService');
+const { verifyToken, requireAdmin } = require('../middleware/auth');
 
 // Get all donations
-router.get('/', async (req, res, next) => {
+router.get('/', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const donations = await donationsService.getAll();
     res.json(donations);
@@ -13,7 +14,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // Get donation statistics
-router.get('/stats', async (req, res, next) => {
+router.get('/stats', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const stats = await donationsService.getStats();
     res.json(stats);
@@ -23,7 +24,7 @@ router.get('/stats', async (req, res, next) => {
 });
 
 // Get donations by status
-router.get('/status/:status', async (req, res, next) => {
+router.get('/status/:status', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const { status } = req.params;
     const donations = await donationsService.getByStatus(status);
@@ -34,7 +35,7 @@ router.get('/status/:status', async (req, res, next) => {
 });
 
 // Get single donation by ID
-router.get('/:id', async (req, res, next) => {
+router.get('/:id', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.params;
     const donation = await donationsService.getById(id);
@@ -49,7 +50,7 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-// Create new donation
+// Create new donation - PUBLIC ENDPOINT
 router.post('/', async (req, res, next) => {
   try {
     const donationData = req.body;
@@ -76,7 +77,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // Update donation
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.params;
     const updates = req.body;
@@ -92,7 +93,7 @@ router.put('/:id', async (req, res, next) => {
 });
 
 // Delete donation
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.params;
     const deletedDonation = await donationsService.delete(id);

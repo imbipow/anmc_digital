@@ -1,43 +1,208 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
 import classnames from 'classnames';
+import SEO from '../SEO';
 import SidebarWrap from '../SidebarWrap'
-import simg from '../../images/event-details2.jpg'
-
-
-
-
+import API_CONFIG from '../../config/api';
 import './style.css'
 
 const EventSingle = (props) => {
+    const { slug } = useParams();
+    const [event, setEvent] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [activeTab, setActiveTab] = useState('1');
 
-    const SubmitHandler = (e) =>{
+    const SubmitHandler = (e) => {
         e.preventDefault()
     }
 
-    const [activeTab, setActiveTab] = useState('1');
-
     const toggle = tab => {
-      if(activeTab !== tab) setActiveTab(tab);
+        if(activeTab !== tab) setActiveTab(tab);
     }
 
+    useEffect(() => {
+        const loadEvent = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+
+                if (!slug) {
+                    // If no slug provided, load the first featured event (for backward compatibility)
+                    const eventsResponse = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.eventsFeatured));
+                    const events = await eventsResponse.json();
+
+                    if (events && events.length > 0) {
+                        setEvent(events[0]);
+                    } else {
+                        // If no featured events, get the first upcoming event
+                        const allEventsResponse = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.events));
+                        const allEvents = await allEventsResponse.json();
+                        if (allEvents && allEvents.length > 0) {
+                            setEvent(allEvents[0]);
+                        } else {
+                            setError('No events available');
+                        }
+                    }
+                    setLoading(false);
+                    return;
+                }
+
+                // Fetch event by slug
+                const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.eventsBySlug(slug)));
+
+                if (!response.ok) {
+                    throw new Error('Event not found');
+                }
+
+                const eventData = await response.json();
+                setEvent(eventData);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error loading event:', error);
+                setError('Failed to load event. Please try again.');
+                setLoading(false);
+            }
+        };
+
+        loadEvent();
+    }, [slug]);
+
+    if (loading) {
         return (
+            <div className="wpo-event-details-area section-padding">
+                <div className="container">
+                    <div className="loading-state">
+                        <div className="spinner"></div>
+                        <p>Loading event...</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error || !event) {
+        return (
+            <div className="wpo-event-details-area section-padding">
+                <div className="container">
+                    <div className="error-state">
+                        <h2>Event Not Found</h2>
+                        <p>{error || 'The event you are looking for does not exist.'}</p>
+                        <Link to="/event" className="theme-btn">
+                            <i className="fa fa-arrow-left"></i> Back to Events
+                        </Link>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    const formattedStartDate = new Date(event.startDate).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+
+    const formattedEndDate = event.endDate ? new Date(event.endDate).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    }) : null;
+
+    return (
+        <>
+            {event && !loading && (
+                <SEO
+                    title={event.title}
+                    description={event.description || event.summary}
+                    keywords={event.tags ? event.tags.join(', ') : `${event.category}, ANMC Events, Community Events`}
+                    type="event"
+                    image={event.featuredImage || ''}
+                    publishedTime={event.startDate || ''}
+                    category={event.category || ''}
+                    tags={event.tags || []}
+                />
+            )}
             <div className="wpo-event-details-area section-padding">
                 <div className="container">
                     <div className="row">
                         <div className="col col-lg-8">
                             <div className="wpo-event-item">
                                 <div className="wpo-event-img">
-                                    <img src={simg} alt=""/>
-                                    <div className="thumb-text">
-                                        <span>25</span>
-                                        <span>NOV</span>
-                                    </div>
+                                    <img src={event.featuredImage || event.image} alt={event.title}/>
+                                    {event.startDate && (
+                                        <div className="thumb-text">
+                                            <span>{new Date(event.startDate).getDate()}</span>
+                                            <span>{new Date(event.startDate).toLocaleDateString('en-US', { month: 'short' }).toUpperCase()}</span>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="wpo-event-details-text">
-                                    <h2>Learn about Hajj</h2>
-                                    <p>On the other hand, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain.</p>
+                                    <h2>{event.title}</h2>
+
+                                    {/* Event Meta Information */}
+                                    <div className="event-meta">
+                                        <div className="meta-item">
+                                            <i className="fa fa-calendar"></i>
+                                            <span>
+                                                {formattedStartDate}
+                                                {formattedEndDate && formattedEndDate !== formattedStartDate && ` - ${formattedEndDate}`}
+                                            </span>
+                                        </div>
+                                        {event.time && (
+                                            <div className="meta-item">
+                                                <i className="fa fa-clock-o"></i>
+                                                <span>{event.time}</span>
+                                            </div>
+                                        )}
+                                        {event.location && (
+                                            <div className="meta-item">
+                                                <i className="fa fa-map-marker"></i>
+                                                <span>{event.location}</span>
+                                            </div>
+                                        )}
+                                        {event.category && (
+                                            <div className="meta-item">
+                                                <i className="fa fa-tag"></i>
+                                                <span>{event.category}</span>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Event Description */}
+                                    <div className="event-description">
+                                        <p>{event.description || event.summary}</p>
+                                    </div>
+
+                                    {/* Action Buttons */}
+                                    {((event.registrationLink && event.registrationLink.trim() !== '') ||
+                                      (event.galleryLink && event.galleryLink.trim() !== '')) && (
+                                        <div className="event-action-buttons">
+                                            {event.registrationLink && event.registrationLink.trim() !== '' && (
+                                                <a
+                                                    href={event.registrationLink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="theme-btn"
+                                                >
+                                                    <i className="fa fa-user-plus"></i> Register for Event
+                                                </a>
+                                            )}
+                                            {event.galleryLink && event.galleryLink.trim() !== '' && (
+                                                <a
+                                                    href={event.galleryLink}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="theme-btn"
+                                                >
+                                                    <i className="fa fa-camera"></i> View Gallery
+                                                </a>
+                                            )}
+                                        </div>
+                                    )}
                                 </div>
+
                                 <div className="wpo-event-details-wrap">
                                     <div className="wpo-event-details-tab">
                                         <Nav tabs>
@@ -46,86 +211,60 @@ const EventSingle = (props) => {
                                                     className={classnames({ active: activeTab === '1' })}
                                                     onClick={() => { toggle('1'); }}
                                                 >
-                                                    Event Schedule
+                                                    Event Details
                                                 </NavLink>
                                             </NavItem>
-                                            <NavItem>
-                                                <NavLink
-                                                    className={classnames({ active: activeTab === '2' })}
-                                                    onClick={() => { toggle('2'); }}
-                                                >
-                                                Map Location
-                                                </NavLink>
-                                            </NavItem>
-
-                                            <NavItem>
-                                                <NavLink
-                                                    className={classnames({ active: activeTab === '3' })}
-                                                        onClick={() => { toggle('3'); }}
+                                            {event.mapUrl && (
+                                                <NavItem>
+                                                    <NavLink
+                                                        className={classnames({ active: activeTab === '2' })}
+                                                        onClick={() => { toggle('2'); }}
                                                     >
-                                                    Contact Us
-                                                </NavLink>
-                                            </NavItem>
+                                                    Map Location
+                                                    </NavLink>
+                                                </NavItem>
+                                            )}
                                         </Nav>
                                     </div>
                                     <div className="wpo-event-details-content">
                                         <TabContent activeTab={activeTab}>
-                                            <TabPane tabId="1" id="Schedule">
-                                                <p>These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided.</p>
-                                                <ul>
-                                                    <li>The wise man therefore in these matters.</li>
-                                                    <li>In a free hour, when our power of choice and when nothing.</li>
-                                                    <li>Else he pains to avoid pains.</li>
-                                                    <li>We denounce with righteous indignation dislike men. </li>
-                                                    <li>Which is the same as saying through.</li>
-                                                    <li>The wise man therefore always holds in these matters.</li>
-                                                    <li>Power of choice and when nothing.</li>
-                                                    <li>Pains to avoid worse pains.</li>
-                                                </ul>
-                                            </TabPane>
-                                            <TabPane tabId="2">
-                                                <div className="contact-map enent-map">
-                                                    <iframe title='enent-map' src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d193595.9147703055!2d-74.11976314309273!3d40.69740344223377!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew+York%2C+NY%2C+USA!5e0!3m2!1sen!2sbd!4v1547528325671"></iframe>
-                                                </div>
-                                            </TabPane>
-                                            <TabPane tabId="3">
-                                                <div className="event-contact">
-                                                    <div className="wpo-donations-details">
-                                                        <form onSubmit={SubmitHandler} id="contact-form">
-                                                            <div className="row">
-                                                                <div className="col-lg-12 col-md-12 col-sm-12 col-12 form-group">
-                                                                    <input type="text" className="form-control" name="name" id="name" placeholder="Your Name*"/>
-                                                                </div>
-                                                                <div className="col-lg-12 col-md-12 col-sm-12 col-12 form-group clearfix">
-                                                                    <input type="email" className="form-control" name="email" id="email" placeholder="Your Email"/>
-                                                                </div>
-                                                                <div className="col-lg-12 col-12 form-group">
-                                                                    <textarea className="form-control" name="note" id="note" placeholder="Massage"></textarea>
-                                                                </div>
-                                                                <div className="submit-area col-lg-12 col-12">
-                                                                    <button type="submit" className="theme-btn submit-btn">Submit Now</button>
-                                                                </div>
+                                            <TabPane tabId="1" id="Details">
+                                                {event.fullDescription ? (
+                                                    <div dangerouslySetInnerHTML={{ __html: event.fullDescription }} />
+                                                ) : (
+                                                    <div>
+                                                        <p>{event.description || event.summary}</p>
+                                                        {event.tags && event.tags.length > 0 && (
+                                                            <div className="event-tags">
+                                                                <h4>Tags:</h4>
+                                                                <ul>
+                                                                    {event.tags.map((tag, index) => (
+                                                                        <li key={index}>#{tag}</li>
+                                                                    ))}
+                                                                </ul>
                                                             </div>
-                                                        </form>
+                                                        )}
                                                     </div>
-                                                </div>
+                                                )}
                                             </TabPane>
+                                            {event.mapUrl && (
+                                                <TabPane tabId="2">
+                                                    <div className="contact-map enent-map">
+                                                        <iframe title='enent-map' src={event.mapUrl}></iframe>
+                                                    </div>
+                                                </TabPane>
+                                            )}
                                         </TabContent>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <SidebarWrap/>
-
                     </div>
                 </div>
             </div>
+        </>
+    );
+}
 
-            );
-    }
-    
-    export default EventSingle;
-          
-          
-          
-          
+export default EventSingle;

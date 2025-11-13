@@ -314,12 +314,12 @@ const SignUpPage = () => {
             }
 
             setMemberId(data.member.id);
-            toast.success('Registration successful!');
 
-            // Redirect to member portal or login
-            setTimeout(() => {
-                navigate('/member-portal');
-            }, 2000);
+            // Navigate to success page with member data
+            navigate('/registration-success', {
+                state: { member: data.member },
+                replace: true
+            });
 
             return data.member;
         } catch (error) {

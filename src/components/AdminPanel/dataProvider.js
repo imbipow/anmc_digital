@@ -1,12 +1,29 @@
 import { fetchUtils } from 'react-admin';
 import API_CONFIG from '../../config/api';
+import cognitoAuthService from '../../services/cognitoAuth';
 
-const httpClient = (url, options = {}) => {
+const httpClient = async (url, options = {}) => {
     // Add custom headers if needed
     if (!options.headers) {
         options.headers = new Headers({ Accept: 'application/json' });
     }
     options.headers.set('Content-Type', 'application/json');
+
+    // Add JWT token for authentication
+    try {
+        const token = await cognitoAuthService.getIdToken();
+        if (token) {
+            options.headers.set('Authorization', `Bearer ${token}`);
+            console.log('🔑 Token added to request:', url.substring(url.lastIndexOf('/') + 1));
+        } else {
+            console.warn('⚠️ No token available for request:', url);
+        }
+    } catch (error) {
+        console.error('❌ Failed to get authentication token for:', url, error.message);
+        // If token retrieval fails, throw error to prevent unauthorized requests
+        throw new Error('Authentication required. Please log in again.');
+    }
+
     return fetchUtils.fetchJson(url, options);
 };
 
@@ -15,8 +32,8 @@ const resourceToEndpoint = {
     news: API_CONFIG.endpoints.news,
     events: API_CONFIG.endpoints.events,
     projects: API_CONFIG.endpoints.projects,
-    facilities: API_CONFIG.endpoints.facilities,
     homepage: API_CONFIG.endpoints.homepage,
+    'hero-slides': '/hero-slides',
     counters: API_CONFIG.endpoints.counters,
     about_us: API_CONFIG.endpoints.aboutUs,
     contact: API_CONFIG.endpoints.contact,
@@ -25,11 +42,22 @@ const resourceToEndpoint = {
     faqs: API_CONFIG.endpoints.faqs,
     donations: API_CONFIG.endpoints.donations,
     members: API_CONFIG.endpoints.members,
+    users: '/users',
+    services: API_CONFIG.endpoints.services,
+    bookings: API_CONFIG.endpoints.bookings,
+    documents: '/documents',
+    inbox: API_CONFIG.endpoints.messages,
+    broadcast: API_CONFIG.endpoints.messages,
 };
 
 const dataProvider = {
     getList: async (resource, params) => {
         try {
+            // Special handling for resources with custom UI
+            if (resource === 'user-management' || resource === 'inbox' || resource === 'broadcast') {
+                return { data: [], total: 0 };
+            }
+
             const endpoint = resourceToEndpoint[resource] || `/${resource}`;
             const url = API_CONFIG.getURL(endpoint);
 
@@ -118,6 +146,11 @@ const dataProvider = {
 
     getOne: async (resource, params) => {
         try {
+            // Special handling for user-management
+            if (resource === 'user-management') {
+                return { data: { id: 1 } };
+            }
+
             const endpoint = resourceToEndpoint[resource] || `/${resource}`;
 
             // Special handling for About Us - it doesn't use ID in the URL

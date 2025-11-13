@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react';
 import Navbar from '../../components/Navbar'
-import Hero from '../../components/hero'
+// import SEO from '../../components/SEO'
+import HeroSlider from '../../components/hero/HeroSlider'
 import Service from '../../components/Service'
 import CounterSection from '../../components/counter'
 import BlogSection from '../../components/BlogSection'
@@ -19,12 +20,17 @@ import evn2 from '../../images/event/img-4.jpg'
 const HomePage =() => {
     return(
         <Fragment>
+            {/* <SEO
+                title="Home"
+                description="Welcome to the Australian Nepalese Multicultural Centre (ANMC). Building a stronger, more connected Nepalese and multicultural community in Australia through cultural programs, social services, and community engagement."
+                keywords="ANMC, Australian Nepalese Multicultural Centre, Nepalese Community Australia, Multicultural Centre, Community Programs, Cultural Events, Community Support"
+            /> */}
             <Navbar/>
-            <Hero HeroStyleClass={'hero-style-2'} heroImg={hero1}/>
-            <CounterSection countclass={'section-padding'}/>
-            <ProjectAchievements />
+            <HeroSlider HeroStyleClass={'hero-style-2'} heroImg={hero1}/>
             <EventSection eventImg1={evn1} eventImg2={evn2} EventClass={'wpo-event-area-2'}/>
+            <ProjectAchievements />
             <BlogSection blogImg1={blog1} blogImg2={blog2} blogImg3={blog3}/>
+            <CounterSection countclass={'section-padding'}/>
             <Footer/>
             <Scrollbar/>
         </Fragment>

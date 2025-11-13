@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Edit,
     SimpleForm,
@@ -13,9 +13,13 @@ import {
     TopToolbar,
     ListButton,
     ShowButton,
-    DeleteButton
+    DeleteButton,
+    useInput
 } from 'react-admin';
-import { Card, CardContent, Typography } from '@mui/material';
+import { Card, CardContent, Typography, Button, Box, TextField } from '@mui/material';
+import { Image as ImageIcon } from '@mui/icons-material';
+import MediaGallerySelector from './MediaGallerySelector';
+import RichTextInput from './RichTextInput';
 
 const EditActions = () => (
     <TopToolbar>
@@ -24,6 +28,59 @@ const EditActions = () => (
         <DeleteButton />
     </TopToolbar>
 );
+
+const FeaturedImageField = () => {
+    const { field } = useInput({ source: 'featuredImage' });
+    const [galleryOpen, setGalleryOpen] = useState(false);
+
+    const handleSelectImage = (url) => {
+        field.onChange(url);
+    };
+
+    return (
+        <Box>
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start', mb: 2 }}>
+                <TextField
+                    fullWidth
+                    label="Featured Image URL"
+                    value={field.value || ''}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    onBlur={field.onBlur}
+                    error={!!field.error}
+                    helperText={field.error?.message}
+                />
+                <Button
+                    variant="outlined"
+                    startIcon={<ImageIcon />}
+                    onClick={() => setGalleryOpen(true)}
+                    sx={{ mt: 1, minWidth: '200px' }}
+                >
+                    Select from Gallery
+                </Button>
+            </Box>
+            {field.value && (
+                <Box sx={{ mb: 2 }}>
+                    <Typography variant="caption" color="text.secondary" gutterBottom>
+                        Preview:
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                        <img
+                            src={field.value}
+                            alt="Featured"
+                            style={{ maxWidth: '300px', maxHeight: '200px', objectFit: 'cover', borderRadius: '4px' }}
+                        />
+                    </Box>
+                </Box>
+            )}
+            <MediaGallerySelector
+                open={galleryOpen}
+                onClose={() => setGalleryOpen(false)}
+                onSelect={handleSelectImage}
+                currentImage={field.value}
+            />
+        </Box>
+    );
+};
 
 const EventEdit = () => (
     <Edit actions={<EditActions />}>
@@ -83,6 +140,18 @@ const EventEdit = () => (
                     <NumberInput source="maxAttendees" />
                     <BooleanInput source="registrationRequired" />
                     <TextInput source="contactEmail" fullWidth type="email" />
+                    <TextInput
+                        source="registrationLink"
+                        fullWidth
+                        label="Registration Link"
+                        helperText="URL to event registration form (e.g., Google Forms, Eventbrite)"
+                    />
+                    <TextInput
+                        source="galleryLink"
+                        fullWidth
+                        label="Gallery Link"
+                        helperText="URL to event photo gallery (e.g., Google Photos, Flickr)"
+                    />
                 </CardContent>
             </Card>
 
@@ -91,8 +160,8 @@ const EventEdit = () => (
                     <Typography variant="h6" gutterBottom>
                         Content & Media
                     </Typography>
-                    <TextInput source="featuredImage" fullWidth label="Featured Image URL" />
-                    <TextInput source="content" fullWidth multiline rows={6} required />
+                    <FeaturedImageField />
+                    <RichTextInput source="content" label="Event Content" required />
                 </CardContent>
             </Card>
 

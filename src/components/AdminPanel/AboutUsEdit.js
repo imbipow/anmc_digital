@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
     Edit,
     SimpleForm,
@@ -8,9 +8,12 @@ import {
     TopToolbar,
     ListButton,
     ShowButton,
-    DeleteButton
+    DeleteButton,
+    useInput
 } from 'react-admin';
-import { Card, CardContent, Typography, Box } from '@mui/material';
+import { Card, CardContent, Typography, Box, Button, TextField } from '@mui/material';
+import { Image as ImageIcon } from '@mui/icons-material';
+import MediaGallerySelector from './MediaGallerySelector';
 
 const EditActions = () => (
     <TopToolbar>
@@ -19,6 +22,108 @@ const EditActions = () => (
         <DeleteButton />
     </TopToolbar>
 );
+
+const FeaturedImageField = () => {
+    const { field } = useInput({ source: 'featuredImage' });
+    const [galleryOpen, setGalleryOpen] = useState(false);
+
+    const handleSelectImage = (url) => {
+        field.onChange(url);
+    };
+
+    return (
+        <Box>
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start', mb: 2 }}>
+                <TextField
+                    fullWidth
+                    label="Featured Image URL"
+                    value={field.value || ''}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    onBlur={field.onBlur}
+                    error={!!field.error}
+                    helperText={field.error?.message}
+                />
+                <Button
+                    variant="outlined"
+                    startIcon={<ImageIcon />}
+                    onClick={() => setGalleryOpen(true)}
+                    sx={{ mt: 0, minWidth: '200px' }}
+                >
+                    Select from Gallery
+                </Button>
+            </Box>
+            {field.value && (
+                <Box sx={{ mb: 2 }}>
+                    <Typography variant="caption" color="text.secondary" gutterBottom>
+                        Preview:
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                        <img
+                            src={field.value}
+                            alt="Featured"
+                            style={{ maxWidth: '300px', maxHeight: '200px', objectFit: 'cover', borderRadius: '4px' }}
+                        />
+                    </Box>
+                </Box>
+            )}
+            <MediaGallerySelector
+                open={galleryOpen}
+                onClose={() => setGalleryOpen(false)}
+                onSelect={handleSelectImage}
+                currentImage={field.value}
+            />
+        </Box>
+    );
+};
+
+const MemberImageField = ({ source }) => {
+    const { field } = useInput({ source });
+    const [galleryOpen, setGalleryOpen] = useState(false);
+
+    const handleSelectImage = (url) => {
+        field.onChange(url);
+    };
+
+    return (
+        <Box>
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
+                <TextField
+                    fullWidth
+                    label="Profile Image URL"
+                    value={field.value || ''}
+                    onChange={(e) => field.onChange(e.target.value)}
+                    onBlur={field.onBlur}
+                    error={!!field.error}
+                    helperText={field.error?.message}
+                />
+                <Button
+                    variant="outlined"
+                    size="small"
+                    startIcon={<ImageIcon />}
+                    onClick={() => setGalleryOpen(true)}
+                    sx={{ minWidth: '160px' }}
+                >
+                    Select Image
+                </Button>
+            </Box>
+            {field.value && (
+                <Box sx={{ mt: 1 }}>
+                    <img
+                        src={field.value}
+                        alt="Member"
+                        style={{ maxWidth: '150px', maxHeight: '150px', objectFit: 'cover', borderRadius: '4px' }}
+                    />
+                </Box>
+            )}
+            <MediaGallerySelector
+                open={galleryOpen}
+                onClose={() => setGalleryOpen(false)}
+                onSelect={handleSelectImage}
+                currentImage={field.value}
+            />
+        </Box>
+    );
+};
 
 const AboutUsEdit = () => (
     <Edit actions={<EditActions />}>
@@ -30,7 +135,7 @@ const AboutUsEdit = () => (
                     </Typography>
                     <TextInput source="title" fullWidth required />
                     <TextInput source="subtitle" fullWidth required />
-                    <TextInput source="featuredImage" fullWidth label="Featured Image URL" />
+                    <FeaturedImageField />
                 </CardContent>
             </Card>
 
@@ -106,7 +211,7 @@ const AboutUsEdit = () => (
                             <TextInput source="email" fullWidth label="Email Address" />
                             <TextInput source="phone" fullWidth label="Phone Number" />
                             <TextInput source="description" fullWidth multiline rows={3} label="Description" />
-                            <TextInput source="image" fullWidth label="Profile Image URL" />
+                            <MemberImageField source="image" />
                             <TextInput source="tenure" fullWidth label="Tenure Period" helperText="e.g., 2022-2024" />
 
                             <ArrayInput source="responsibilities" label="Key Responsibilities">

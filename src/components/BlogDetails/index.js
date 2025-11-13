@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import contentService from '../../services/contentService';
 import API_CONFIG from '../../config/api';
+import SEO from '../SEO';
+import { stripHtmlTags } from '../../utils/htmlUtils';
 import './style.css';
 import blog1 from '../../images/blog/img-1.jpg';
 import blog2 from '../../images/blog/img-2.jpg';
@@ -98,15 +100,30 @@ const BlogSingle = () => {
         day: 'numeric'
     });
 
-    const shareUrl = window.location.href;
+    const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
     const shareTitle = encodeURIComponent(article.title);
 
     return (
-        <section className="wpo-blog-single-section section-padding">
-            <div className="container">
-                <div className="row">
-                    <div className="col col-lg-10 offset-lg-1 col-12">
-                        <div className="wpo-blog-content">
+        <>
+            {article && !loading && (
+                <SEO
+                    title={article.title}
+                    description={article.excerpt || (article.content ? article.content.substring(0, 160) : '')}
+                    keywords={article.tags ? article.tags.join(', ') : `${article.category}, ANMC News, Community News`}
+                    author={article.authorName || 'ANMC'}
+                    type="article"
+                    image={article.featuredImage || ''}
+                    publishedTime={article.date || ''}
+                    modifiedTime={article.updatedAt || article.date || ''}
+                    category={article.category || ''}
+                    tags={article.tags || []}
+                />
+            )}
+            <section className="wpo-blog-single-section section-padding">
+                <div className="container">
+                    <div className="row">
+                        <div className="col col-lg-10 offset-lg-1 col-12">
+                            <div className="wpo-blog-content">
                             {/* Breadcrumb */}
                             <div className="breadcrumb-section">
                                 <Link to="/news" onClick={ClickHandler}>
@@ -141,12 +158,12 @@ const BlogSingle = () => {
                             {/* Article Content */}
                             <div className="article-content">
                                 <div className="article-excerpt">
-                                    <p><strong>{article.excerpt}</strong></p>
+                                    <p><strong>{stripHtmlTags(article.excerpt)}</strong></p>
                                 </div>
 
                                 <div className="article-body">
-                                    {article.content.split('\n\n').map((paragraph, index) => (
-                                        <p key={index}>{paragraph}</p>
+                                    {stripHtmlTags(article.content).split('\n\n').map((paragraph, index) => (
+                                        paragraph.trim() && <p key={index}>{paragraph}</p>
                                     ))}
                                 </div>
                             </div>
@@ -242,6 +259,7 @@ const BlogSingle = () => {
                 </div>
             </div>
         </section>
+        </>
     );
 };
 

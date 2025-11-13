@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import Navbar from '../../components/Navbar';
+// import SEO from '../../components/SEO';
 import PageTitle from '../../components/pagetitle';
 import DonationForm from '../../components/DonationForm';
 import Footer from '../../components/footer';
@@ -15,6 +16,11 @@ const DonatePage = () => {
 
     return (
         <Fragment>
+            {/* <SEO
+                title="Donate - Support Our Community"
+                description="Support the Australian Nepalese Multicultural Centre with your donation. Help us build our community center, provide support programs, and serve the Nepalese and multicultural community in Australia. Every contribution makes a difference."
+                keywords="Donate ANMC, Support Nepalese Community, Community Donations, Tax Deductible, Charity Donations Australia, Help Multicultural Centre"
+            /> */}
             <Navbar />
             <PageTitle pageTitle={'Donate'} pagesub={'Support ANMC'} />
 

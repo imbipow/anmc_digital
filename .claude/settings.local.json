@@ -21,7 +21,19 @@
       "Bash(netstat:*)",
       "Bash(findstr:*)",
       "Bash(powershell -Command \"Get-Content server/db.json | Select-Object -Last 50\")",
-      "Bash(copy /Y \"D:\\my-projects\\anmcDigital\\api\\services\\faqsService.js\" \"D:\\my-projects\\anmcDigital\\api\\services\\faqsService.js.bak\")"
+      "Bash(copy /Y \"D:\\my-projects\\anmcDigital\\api\\services\\faqsService.js\" \"D:\\my-projects\\anmcDigital\\api\\services\\faqsService.js.bak\")",
+      "Bash(aws cognito-idp list-users-in-group:*)",
+      "Bash(timeout /t 2)",
+      "Bash(aws dynamodb list-tables:*)",
+      "Bash(aws cloudformation deploy:*)",
+      "Bash(timeout /t 5)",
+      "Bash(powershell -Command:*)",
+      "Bash(copy \"C:\\Users\\praka\\Downloads\\anmc_posts_dynamo.json\" \"D:\\my-projects\\anmcDigital\\api\\data\\anmc_posts_dynamo.json\")",
+      "Bash(timeout /t 3)",
+      "Bash(cat:*)",
+      "Bash(tasklist:*)",
+      "Bash(test:*)",
+      "Bash(set PORT=3001)"
     ],
     "deny": [],
     "ask": []

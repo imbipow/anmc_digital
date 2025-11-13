@@ -1,18 +1,28 @@
 const express = require('express');
 const router = express.Router();
 
-// Only initialize Stripe if secret key is provided
+// Lazy-load Stripe client to allow secrets to be loaded first
 let stripe = null;
-if (process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY !== 'sk_test_your_secret_key_here') {
-    stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+function getStripeClient() {
+    if (!stripe) {
+        const stripeKey = process.env.STRIPE_SECRET_KEY;
+
+        if (!stripeKey || stripeKey === 'sk_test_your_secret_key_here') {
+            throw new Error('Stripe is not configured. Please set STRIPE_SECRET_KEY in environment variables.');
+        }
+
+        const Stripe = require('stripe');
+        stripe = Stripe(stripeKey);
+        console.log('✅ Stripe client initialized in routes');
+    }
+    return stripe;
 }
 
 // Create payment intent
 router.post('/create-payment-intent', async (req, res, next) => {
   try {
-    if (!stripe) {
-      return res.status(500).json({ error: 'Stripe is not configured. Please set STRIPE_SECRET_KEY in environment variables.' });
-    }
+    const stripe = getStripeClient();
 
     const { amount, currency = 'aud', metadata = {} } = req.body;
 
@@ -43,9 +53,7 @@ router.post('/create-payment-intent', async (req, res, next) => {
 // Verify payment
 router.post('/verify-payment', async (req, res, next) => {
   try {
-    if (!stripe) {
-      return res.status(500).json({ error: 'Stripe is not configured. Please set STRIPE_SECRET_KEY in environment variables.' });
-    }
+    const stripe = getStripeClient();
 
     const { paymentIntentId } = req.body;
 

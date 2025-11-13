@@ -23,6 +23,8 @@ import ErrorPage from '../ErrorPage'
 import ContactPage from '../ContactPage'
 import LoginPage from '../LoginPage'
 import SignUpPage from '../SignUpPage'
+import UserSignUpPage from '../UserSignUpPage'
+import RegistrationSuccess from '../RegistrationSuccess'
 import ForgotPassword from '../ForgotPassword'
 import MemberPortal from '../MemberPortal'
 import UpdateDetails from '../UpdateDetails'
@@ -30,6 +32,8 @@ import UpdateDetails from '../UpdateDetails'
 import MyBookings from '../MyBookings'
 import MemberDocuments from '../MemberDocuments'
 import BookServices from '../BookServices'
+import BookingSuccess from '../BookingSuccess'
+import BookingCancelled from '../BookingCancelled'
 import AdminPage from '../AdminPage'
 import FaqPage from '../FaqPage'
 import ProtectedRoute from '../../components/ProtectedRoute'
@@ -52,6 +56,7 @@ const AllRoute = () => {
           <Route path='facilities-single' element={<ShopSinglePage/>} />
           <Route path='projects-single' element={<ServiceSinglePage/>} />
           <Route path='event' element={<EventPage/>} />
+          <Route path='event/:slug' element={<EventPageSingle/>} />
           <Route path='event-single' element={<EventPageSingle/>} />
           <Route path='donate' element={<DonatePage/>} />
           <Route path='news' element={<BlogPage/>} />
@@ -65,6 +70,8 @@ const AllRoute = () => {
           <Route path='contact' element={<ContactPage/>} />
           <Route path='login' element={<LoginPage/>} />
           <Route path='signup' element={<SignUpPage/>} />
+          <Route path='user-signup' element={<UserSignUpPage/>} />
+          <Route path='registration-success' element={<RegistrationSuccess/>} />
           <Route path='forgot-password' element={<ForgotPassword/>} />
           <Route path='member-portal' element={<ProtectedRoute><MemberPortal/></ProtectedRoute>} />
           <Route path='member/update-details' element={<ProtectedRoute><UpdateDetails/></ProtectedRoute>} />
@@ -72,6 +79,8 @@ const AllRoute = () => {
           {/* Member donate route removed - donate functionality available at /donate */}
           <Route path='member/bookings' element={<ProtectedRoute><MyBookings/></ProtectedRoute>} />
           <Route path='member/documents' element={<ProtectedRoute><MemberDocuments/></ProtectedRoute>} />
+          <Route path='booking-success' element={<BookingSuccess/>} />
+          <Route path='booking-cancelled' element={<BookingCancelled/>} />
           <Route path='admin' element={<AdminPage/>} />
           <Route path='faq' element={<FaqPage/>} />
         </Routes>

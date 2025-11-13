@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const eventsService = require('../services/eventsService');
+const { verifyToken, requireAdmin } = require('../middleware/auth');
 
 // GET /api/events - Get all events
 router.get('/', async (req, res, next) => {
@@ -87,8 +88,8 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-// POST /api/events - Create new event
-router.post('/', async (req, res, next) => {
+// POST /api/events - Create new event (PROTECTED)
+router.post('/', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const event = await eventsService.create(req.body);
     res.status(201).json(event);
@@ -97,8 +98,8 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-// PUT /api/events/:id - Update event
-router.put('/:id', async (req, res, next) => {
+// PUT /api/events/:id - Update event (PROTECTED)
+router.put('/:id', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.params;
     const event = await eventsService.update(id, req.body);
@@ -108,8 +109,8 @@ router.put('/:id', async (req, res, next) => {
   }
 });
 
-// DELETE /api/events/:id - Delete event
-router.delete('/:id', async (req, res, next) => {
+// DELETE /api/events/:id - Delete event (PROTECTED)
+router.delete('/:id', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.params;
     const deleted = await eventsService.delete(id);

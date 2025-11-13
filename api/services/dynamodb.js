@@ -72,6 +72,24 @@ class DynamoDBService {
   }
 
   /**
+   * Put item (create or overwrite)
+   */
+  async putItem(tableName, item) {
+    const params = {
+      TableName: tableName,
+      Item: item
+    };
+
+    try {
+      await dynamodb.put(params).promise();
+      return item;
+    } catch (error) {
+      console.error(`Error putting item in ${tableName}:`, error);
+      throw error;
+    }
+  }
+
+  /**
    * Create new item
    */
   async createItem(tableName, item) {

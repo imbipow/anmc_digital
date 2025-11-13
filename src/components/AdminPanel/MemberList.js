@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     List,
     Datagrid,
@@ -12,8 +12,40 @@ import {
     DeleteButton,
     Filter,
     TextInput,
-    SelectInput
+    SelectInput,
+    useRecordContext
 } from 'react-admin';
+import { Chip } from '@mui/material';
+import cognitoAuthService from '../../services/cognitoAuth';
+
+const StatusField = () => {
+    const record = useRecordContext();
+    if (!record || !record.status) return null;
+
+    const statusColors = {
+        'pending_approval': 'warning',
+        'active': 'success',
+        'rejected': 'error',
+        'suspended': 'error',
+        'expired': 'default'
+    };
+
+    const statusLabels = {
+        'pending_approval': 'Pending Approval',
+        'active': 'Active',
+        'rejected': 'Rejected',
+        'suspended': 'Suspended',
+        'expired': 'Expired'
+    };
+
+    return (
+        <Chip
+            label={statusLabels[record.status] || record.status}
+            color={statusColors[record.status] || 'default'}
+            size="small"
+        />
+    );
+};
 
 const MemberFilters = (props) => (
     <Filter {...props}>
@@ -31,12 +63,70 @@ const MemberFilters = (props) => (
             { id: 'pending', name: 'Pending' },
             { id: 'failed', name: 'Failed' },
         ]} />
-        <SelectInput source="status" choices={[
+        <SelectInput source="status" label="Member Status" choices={[
+            { id: 'pending_approval', name: 'Pending Approval' },
             { id: 'active', name: 'Active' },
-            { id: 'inactive', name: 'Inactive' },
+            { id: 'rejected', name: 'Rejected' },
+            { id: 'suspended', name: 'Suspended' },
+            { id: 'expired', name: 'Expired' },
         ]} />
     </Filter>
 );
+
+// Component to conditionally render buttons based on role
+const ConditionalEditButton = () => {
+    const [userRole, setUserRole] = useState(null);
+
+    useEffect(() => {
+        const getUserRole = async () => {
+            try {
+                const user = await cognitoAuthService.getCurrentUser();
+                const groups = user.groups || [];
+
+                if (groups.includes('AnmcAdmins')) {
+                    setUserRole('admin');
+                } else if (groups.includes('AnmcManagers')) {
+                    setUserRole('manager');
+                }
+            } catch (error) {
+                console.error('Error getting user role:', error);
+                setUserRole('manager'); // Default to manager (more restrictive)
+            }
+        };
+
+        getUserRole();
+    }, []);
+
+    // Only show edit button for admins
+    return userRole === 'admin' ? <EditButton /> : null;
+};
+
+const ConditionalDeleteButton = () => {
+    const [userRole, setUserRole] = useState(null);
+
+    useEffect(() => {
+        const getUserRole = async () => {
+            try {
+                const user = await cognitoAuthService.getCurrentUser();
+                const groups = user.groups || [];
+
+                if (groups.includes('AnmcAdmins')) {
+                    setUserRole('admin');
+                } else if (groups.includes('AnmcManagers')) {
+                    setUserRole('manager');
+                }
+            } catch (error) {
+                console.error('Error getting user role:', error);
+                setUserRole('manager'); // Default to manager (more restrictive)
+            }
+        };
+
+        getUserRole();
+    }, []);
+
+    // Only show delete button for admins
+    return userRole === 'admin' ? <DeleteButton /> : null;
+};
 
 export const MemberList = (props) => (
     <List {...props} filters={<MemberFilters />} sort={{ field: 'createdAt', order: 'DESC' }}>
@@ -54,11 +144,11 @@ export const MemberList = (props) => (
                 options={{ style: 'currency', currency: 'AUD' }}
             />
             <ChipField source="paymentStatus" label="Payment" />
-            <ChipField source="status" />
+            <StatusField label="Status" />
             <DateField source="createdAt" label="Registered" showTime />
-            <EditButton />
+            <ConditionalEditButton />
             <ShowButton />
-            <DeleteButton />
+            <ConditionalDeleteButton />
         </Datagrid>
     </List>
 );

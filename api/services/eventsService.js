@@ -79,7 +79,9 @@ class EventsService {
       id: Date.now(),
       featured: eventData.featured || false,
       tags: eventData.tags || [],
-      registrationRequired: eventData.registrationRequired || false
+      registrationRequired: eventData.registrationRequired || false,
+      galleryLink: eventData.galleryLink || '',
+      registrationLink: eventData.registrationLink || ''
     };
 
     return await dynamoDBService.createItem(this.tableName, item);

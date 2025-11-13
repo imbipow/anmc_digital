@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const projectsService = require('../services/projectsService');
+const { verifyToken, requireAdmin } = require('../middleware/auth');
 
 // GET /api/projects
 router.get('/', async (req, res, next) => {
@@ -78,7 +79,7 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // POST /api/projects
-router.post('/', async (req, res, next) => {
+router.post('/', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const project = await projectsService.create(req.body);
     res.status(201).json(project);
@@ -88,7 +89,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // PUT /api/projects/:id
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.params;
     const project = await projectsService.update(id, req.body);
@@ -99,7 +100,7 @@ router.put('/:id', async (req, res, next) => {
 });
 
 // DELETE /api/projects/:id
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', verifyToken, requireAdmin, async (req, res, next) => {
   try {
     const { id } = req.params;
     const deleted = await projectsService.delete(id);

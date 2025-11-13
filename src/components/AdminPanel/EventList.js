@@ -14,7 +14,8 @@ import {
     FilterButton,
     SearchInput,
     SelectInput,
-    BooleanInput
+    BooleanInput,
+    UrlField
 } from 'react-admin';
 import { Chip } from '@mui/material';
 
@@ -65,6 +66,8 @@ const EventList = () => (
             <DateField source="endDate" />
             <TextField source="status" />
             <BooleanField source="featured" />
+            <UrlField source="registrationLink" label="Registration" emptyText="-" />
+            <UrlField source="galleryLink" label="Gallery" emptyText="-" />
             <EditButton />
             <ShowButton />
             <DeleteButton />
