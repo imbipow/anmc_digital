@@ -1,0 +1,180 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'DynamoDB tables for ANMC Members, Donations, and FAQs'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: 'dev'
+    AllowedValues: ['dev', 'staging', 'prod']
+    Description: Environment name for resource naming
+
+Resources:
+  # Members Table
+  MembersTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-members-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: email
+          AttributeType: S
+        - AttributeName: membershipCategory
+          AttributeType: S
+        - AttributeName: status
+          AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: EmailIndex
+          KeySchema:
+            - AttributeName: email
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: MembershipCategoryIndex
+          KeySchema:
+            - AttributeName: membershipCategory
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: StatusIndex
+          KeySchema:
+            - AttributeName: status
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # Donations Table
+  DonationsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-donations-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: N
+        - AttributeName: paymentStatus
+          AttributeType: S
+        - AttributeName: createdAt
+          AttributeType: S
+        - AttributeName: email
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: PaymentStatusIndex
+          KeySchema:
+            - AttributeName: paymentStatus
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+        - IndexName: EmailIndex
+          KeySchema:
+            - AttributeName: email
+              KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+  # FAQs Table
+  FaqsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-faqs-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: category
+          AttributeType: S
+        - AttributeName: order
+          AttributeType: N
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: CategoryOrderIndex
+          KeySchema:
+            - AttributeName: category
+              KeyType: HASH
+            - AttributeName: order
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: true
+      Tags:
+        - Key: Application
+          Value: ANMC-Digital
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: ManagedBy
+          Value: CloudFormation
+
+Outputs:
+  MembersTableName:
+    Description: Name of the Members table
+    Value: !Ref MembersTable
+    Export:
+      Name: !Sub '${AWS::StackName}-MembersTable'
+
+  MembersTableArn:
+    Description: ARN of the Members table
+    Value: !GetAtt MembersTable.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-MembersTableArn'
+
+  DonationsTableName:
+    Description: Name of the Donations table
+    Value: !Ref DonationsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-DonationsTable'
+
+  DonationsTableArn:
+    Description: ARN of the Donations table
+    Value: !GetAtt DonationsTable.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-DonationsTableArn'
+
+  FaqsTableName:
+    Description: Name of the FAQs table
+    Value: !Ref FaqsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-FaqsTable'
+
+  FaqsTableArn:
+    Description: ARN of the FAQs table
+    Value: !GetAtt FaqsTable.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-FaqsTableArn'

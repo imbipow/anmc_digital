@@ -1,0 +1,111 @@
+/* Common Table Styles for Admin Panel */
+
+/* List Container */
+.admin-list-container {
+    padding: 20px;
+}
+
+.admin-list-container .RaList-main {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+/* Table Styles */
+.admin-table {
+    width: 100%;
+}
+
+.admin-table .MuiTableCell-root {
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.admin-table .MuiTableCell-head {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #062265;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    letter-spacing: 0.5px;
+}
+
+.admin-table .MuiTableRow-root:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.2s ease;
+}
+
+/* Action Buttons */
+.admin-table .RaEditButton-button,
+.admin-table .RaDeleteButton-button,
+.admin-table .RaShowButton-button {
+    min-width: auto;
+    padding: 6px 12px;
+}
+
+/* Pagination */
+.admin-list-container .MuiTablePagination-root {
+    border-top: 1px solid #f0f0f0;
+    background-color: #fafafa;
+}
+
+/* Content Cards */
+.admin-content-card {
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.admin-content-card .MuiCardContent-root {
+    padding: 24px;
+}
+
+.admin-content-card .MuiTypography-h6 {
+    color: #062265;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+/* Form Inputs */
+.admin-content-card .MuiTextField-root {
+    margin-bottom: 16px;
+}
+
+.admin-content-card .MuiFormHelperText-root {
+    color: #666;
+    font-size: 0.75rem;
+}
+
+/* Status Chips */
+.MuiChip-colorSuccess {
+    background-color: #4caf50 !important;
+    color: white !important;
+}
+
+.MuiChip-colorDefault {
+    background-color: #e0e0e0 !important;
+    color: #666 !important;
+}
+
+/* Toolbar */
+.RaTopToolbar-root {
+    padding: 16px 20px;
+    background-color: white;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Create Button */
+.RaCreateButton-root {
+    background-color: #062265 !important;
+    color: white !important;
+}
+
+.RaCreateButton-root:hover {
+    background-color: #0c69b8 !important;
+}
+
+/* List Actions */
+.RaListButton-root {
+    color: #062265 !important;
+}

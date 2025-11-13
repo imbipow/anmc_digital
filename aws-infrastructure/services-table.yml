@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: DynamoDB table for ANMC services/anusthan
+
+Resources:
+  ServicesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: anmc-services-dev
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      Tags:
+        - Key: Environment
+          Value: dev
+        - Key: Application
+          Value: anmc-digital
+        - Key: Purpose
+          Value: services-anusthan
+
+Outputs:
+  ServicesTableName:
+    Description: Name of the services table
+    Value: !Ref ServicesTable
+    Export:
+      Name: !Sub '${AWS::StackName}-ServicesTable'
+
+  ServicesTableArn:
+    Description: ARN of the services table
+    Value: !GetAtt ServicesTable.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-ServicesTableArn'

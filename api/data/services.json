@@ -1,0 +1,72 @@
+[
+  {
+    "id": "1",
+    "item": 1,
+    "anusthanName": "Cleaning fee*",
+    "amount": 160.00,
+    "durationHours": 2,
+    "notes": "2 hours of cleaning service + Rubbish removal",
+    "category": "service",
+    "status": "active"
+  },
+  {
+    "id": "2",
+    "item": 2,
+    "anusthanName": "Homan and Mandup use",
+    "amount": 101.00,
+    "durationHours": 0,
+    "notes": "",
+    "category": "service",
+    "status": "active"
+  },
+  {
+    "id": "3",
+    "item": 3,
+    "anusthanName": "Car & Bike Pooja/ Birthday Pooja/ Anna Prasan (Up to 7 guests)",
+    "amount": 51.00,
+    "durationHours": 0.5,
+    "notes": "",
+    "category": "small",
+    "status": "active"
+  },
+  {
+    "id": "4",
+    "item": 4,
+    "anusthanName": "Small Puja: Garah Shanti/ Small Wedding/ Shradya/ Garaha Pooja/ Satyanarayan pooja without Homam (Up to 7 guests)",
+    "amount": 101.00,
+    "durationHours": 2,
+    "notes": "",
+    "category": "small",
+    "status": "active"
+  },
+  {
+    "id": "5",
+    "item": 5,
+    "anusthanName": "Medium Puja: Wedding/ Barta Bandan/ Lakh Bati/ Satyanarayan (Less than 14 guests)",
+    "amount": 251.00,
+    "durationHours": 4,
+    "notes": "",
+    "category": "medium",
+    "status": "active"
+  },
+  {
+    "id": "6",
+    "item": 6,
+    "anusthanName": "Large Puja: Wedding Ceremony/ Barta Bandan/ Rudri/ Yekaha/ Ganesh Puran/ 108 Hanuman pooja/ Devi Pooja - More than 14 guests",
+    "amount": 301.00,
+    "durationHours": 6,
+    "notes": "",
+    "category": "large",
+    "status": "active"
+  },
+  {
+    "id": "7",
+    "item": 7,
+    "anusthanName": "Special Budda Pooja with Lama guru",
+    "amount": 151.00,
+    "durationHours": 4,
+    "notes": "",
+    "category": "special",
+    "status": "active"
+  }
+]

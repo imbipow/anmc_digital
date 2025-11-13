@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'DynamoDB table for ANMC Hero Slides'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+    Description: Environment name
+
+Resources:
+  HeroSlidesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-hero-slides-${Environment}'
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Project
+          Value: ANMC
+        - Key: ManagedBy
+          Value: CloudFormation
+
+Outputs:
+  TableName:
+    Description: Name of the Hero Slides table
+    Value: !Ref HeroSlidesTable
+    Export:
+      Name: !Sub '${AWS::StackName}-TableName'
+
+  TableArn:
+    Description: ARN of the Hero Slides table
+    Value: !GetAtt HeroSlidesTable.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-TableArn'

@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'DynamoDB table for service bookings'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: 'dev'
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+    Description: Environment name
+
+Resources:
+  BookingsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub 'anmc-bookings-${Environment}'
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: memberEmail
+          AttributeType: S
+        - AttributeName: bookingDate
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: MemberEmailIndex
+          KeySchema:
+            - AttributeName: memberEmail
+              KeyType: HASH
+            - AttributeName: bookingDate
+              KeyType: RANGE
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+        - Key: Application
+          Value: ANMC-Digital
+
+Outputs:
+  TableName:
+    Description: Name of the Bookings table
+    Value: !Ref BookingsTable
+    Export:
+      Name: !Sub '${AWS::StackName}-TableName'
+
+  TableArn:
+    Description: ARN of the Bookings table
+    Value: !GetAtt BookingsTable.Arn
+    Export:
+      Name: !Sub '${AWS::StackName}-TableArn'
