@@ -51,8 +51,10 @@ Click **"New repository secret"** and add these **9 secrets**:
 1. Go back to Secrets
 2. Update `REACT_APP_API_URL` with:
    ```
-   https://anmc-api-prod.ap-southeast-2.elasticbeanstalk.com/api
+   http://anmc-api-prod.eba-8kyprvvf.ap-southeast-2.elasticbeanstalk.com/api
    ```
+
+   Note: Currently using HTTP. For HTTPS, you'll need to set up CloudFront or a load-balanced environment.
 
 ### Step 5: Push to Main Branch
 
@@ -96,7 +98,7 @@ http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com
 
 **Backend API:**
 ```
-https://anmc-api-prod.ap-southeast-2.elasticbeanstalk.com/api
+http://anmc-api-prod.eba-8kyprvvf.ap-southeast-2.elasticbeanstalk.com/api
 ```
 
 **GitHub Actions:**
