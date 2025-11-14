@@ -51,11 +51,17 @@ jobs:
             --application-name ${{ env.EB_APP_NAME }} \
             --environment-names ${{ env.EB_ENV_NAME }}
 
+      - name: Setup Node.js
+        if: steps.check-env.outcome == 'failure'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
       - name: Create initial deployment package
         if: steps.check-env.outcome == 'failure'
         run: |
           cd api
-          npm ci --only=production
+          npm ci --omit=dev
           zip -r ../deploy-backend-initial.zip . -x "*.git*" "*.log"
 
       - name: Upload initial package to S3
@@ -79,7 +85,7 @@ jobs:
           aws elasticbeanstalk create-environment \
             --application-name ${{ env.EB_APP_NAME }} \
             --environment-name ${{ env.EB_ENV_NAME }} \
-            --solution-stack-name "64bit Amazon Linux 2023 v6.0.1 running Node.js 18" \
+            --solution-stack-name "64bit Amazon Linux 2023 v6.6.8 running Node.js 20" \
             --option-settings \
               Namespace=aws:autoscaling:launchconfiguration,OptionName=InstanceType,Value=t3.small \
               Namespace=aws:elasticbeanstalk:environment,OptionName=EnvironmentType,Value=SingleInstance \
@@ -135,7 +141,17 @@ jobs:
             --index-document index.html \
             --error-document index.html
 
+      - name: Disable Block Public Access for bucket
+        continue-on-error: true
+        run: |
+          echo "Attempting to disable Block Public Access..."
+          aws s3api put-public-access-block \
+            --bucket ${{ env.S3_BUCKET_NAME }} \
+            --public-access-block-configuration \
+              "BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false"
+
       - name: Set bucket policy
+        continue-on-error: true
         run: |
           cat > bucket-policy.json << 'EOF'
           {
@@ -151,9 +167,17 @@ jobs:
             ]
           }
           EOF
-          aws s3api put-bucket-policy \
+          echo "Setting bucket policy..."
+          if ! aws s3api put-bucket-policy \
             --bucket ${{ env.S3_BUCKET_NAME }} \
-            --policy file://bucket-policy.json
+            --policy file://bucket-policy.json; then
+            echo "⚠️ Failed to set public bucket policy."
+            echo "⚠️ S3 Block Public Access is enabled on your account."
+            echo "⚠️ You have two options:"
+            echo "   1. Manually disable Block Public Access in AWS Console"
+            echo "   2. Use CloudFront distribution for better security"
+            echo "⚠️ For now, bucket is private. You'll need to set up CloudFront or disable Block Public Access manually."
+          fi
 
       - name: Enable CORS
         run: |
