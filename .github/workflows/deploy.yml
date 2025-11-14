@@ -52,6 +52,18 @@ jobs:
           cd api
           npm ci --omit=dev
 
+      - name: Ensure Elastic Beanstalk application exists
+        run: |
+          if ! aws elasticbeanstalk describe-applications --application-names anmc-api --region ${{ env.AWS_REGION }} 2>/dev/null; then
+            echo "Creating Elastic Beanstalk application..."
+            aws elasticbeanstalk create-application \
+              --application-name anmc-api \
+              --description "ANMC Digital Backend API" \
+              --region ${{ env.AWS_REGION }}
+          else
+            echo "Elastic Beanstalk application already exists"
+          fi
+
       - name: Create deployment package
         run: |
           cd api
@@ -60,6 +72,10 @@ jobs:
       - name: Get timestamp
         id: timestamp
         run: echo "time=$(date +%Y%m%d-%H%M%S)" >> $GITHUB_OUTPUT
+
+      - name: Ensure S3 bucket exists
+        run: |
+          aws s3 mb s3://elasticbeanstalk-${{ env.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }} --region ${{ env.AWS_REGION }} 2>/dev/null || true
 
       - name: Upload to S3
         run: |
@@ -73,14 +89,36 @@ jobs:
             --source-bundle S3Bucket=elasticbeanstalk-${{ env.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }},S3Key=anmc-api/deploy-backend-${{ steps.timestamp.outputs.time }}.zip \
             --description "Commit ${{ github.sha }}"
 
+      - name: Check if environment exists
+        id: check-env
+        run: |
+          if aws elasticbeanstalk describe-environments \
+            --application-name anmc-api \
+            --environment-names anmc-api-prod \
+            --region ${{ env.AWS_REGION }} 2>/dev/null | grep -q "anmc-api-prod"; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Deploy to Elastic Beanstalk
+        if: steps.check-env.outputs.exists == 'true'
         run: |
           aws elasticbeanstalk update-environment \
             --application-name anmc-api \
             --environment-name anmc-api-prod \
             --version-label ${{ github.sha }}-${{ steps.timestamp.outputs.time }}
 
+      - name: Create Elastic Beanstalk environment (if needed)
+        if: steps.check-env.outputs.exists == 'false'
+        run: |
+          echo "⚠️ Elastic Beanstalk environment 'anmc-api-prod' does not exist!"
+          echo "Please run the 'Initial AWS Setup' workflow first to create the environment."
+          echo "Or manually create the environment in the AWS Console."
+          exit 1
+
       - name: Wait for deployment
+        if: steps.check-env.outputs.exists == 'true'
         run: |
           aws elasticbeanstalk wait environment-updated \
             --application-name anmc-api \
