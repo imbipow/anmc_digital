@@ -97,13 +97,18 @@ jobs:
       - name: Check if environment exists
         id: check-env
         run: |
-          if aws elasticbeanstalk describe-environments \
+          ENV_STATUS=$(aws elasticbeanstalk describe-environments \
             --application-name anmc-api \
             --environment-names anmc-api-prod \
-            --region ${{ env.AWS_REGION }} 2>/dev/null | grep -q "anmc-api-prod"; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
+            --region ${{ env.AWS_REGION }} \
+            --query "Environments[?Status!='Terminated'] | [0].Status" \
+            --output text 2>/dev/null || echo "None")
+          if [ "$ENV_STATUS" = "None" ] || [ -z "$ENV_STATUS" ]; then
             echo "exists=false" >> $GITHUB_OUTPUT
+            echo "No active environment found"
+          else
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Active environment found with status: $ENV_STATUS"
           fi
 
       - name: Deploy to Elastic Beanstalk

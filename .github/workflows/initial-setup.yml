@@ -47,17 +47,19 @@ jobs:
         id: check-env
         continue-on-error: true
         run: |
-          ENV_COUNT=$(aws elasticbeanstalk describe-environments \
+          ENV_STATUS=$(aws elasticbeanstalk describe-environments \
             --application-name ${{ env.EB_APP_NAME }} \
             --environment-names ${{ env.EB_ENV_NAME }} \
             --region ${{ env.AWS_REGION }} \
-            --query "length(Environments)" \
-            --output text)
-          if [ "$ENV_COUNT" = "0" ]; then
+            --query "Environments[?Status!='Terminated'] | [0].Status" \
+            --output text 2>/dev/null || echo "None")
+          if [ "$ENV_STATUS" = "None" ] || [ -z "$ENV_STATUS" ]; then
             echo "exists=false" >> $GITHUB_OUTPUT
+            echo "No active environment found"
             exit 1
           else
             echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Active environment found with status: $ENV_STATUS"
           fi
 
       - name: Setup Node.js
