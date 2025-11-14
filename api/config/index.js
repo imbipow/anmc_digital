@@ -1,9 +1,9 @@
 const path = require('path');
 require('dotenv').config({ path: path.join(__dirname, '..', '.env'), override: true });
 
-// IMPORTANT: Force API server to use port 3001 regardless of parent environment
-// Frontend uses PORT=3036, API must use PORT=3001
-const API_PORT = 3001;
+// IMPORTANT: Use environment PORT for production (EB uses 8080), fallback to 3001 for local dev
+// Frontend uses PORT=3036, API must use PORT=3001 locally
+const API_PORT = process.env.PORT || 3001;
 
 module.exports = {
   // Server config
