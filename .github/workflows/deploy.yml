@@ -76,6 +76,11 @@ jobs:
       - name: Ensure S3 bucket exists
         run: |
           aws s3 mb s3://elasticbeanstalk-${{ env.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }} --region ${{ env.AWS_REGION }} 2>/dev/null || true
+          # Enable ACLs for Elastic Beanstalk
+          aws s3api put-bucket-ownership-controls \
+            --bucket elasticbeanstalk-${{ env.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }} \
+            --ownership-controls Rules=[{ObjectOwnership=BucketOwnerPreferred}] \
+            --region ${{ env.AWS_REGION }} 2>/dev/null || true
 
       - name: Upload to S3
         run: |
