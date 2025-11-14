@@ -121,6 +121,7 @@ jobs:
               Namespace=aws:elasticbeanstalk:application:environment,OptionName=NODE_ENV,Value=production \
               Namespace=aws:elasticbeanstalk:application:environment,OptionName=AWS_REGION,Value=${{ env.AWS_REGION }} \
               Namespace=aws:elasticbeanstalk:application:environment,OptionName=PORT,Value=8080 \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=CORS_ORIGIN,Value=http://${{ env.S3_FRONTEND_BUCKET }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com \
             --version-label initial-${{ github.sha }}
 
       - name: Wait for environment creation
