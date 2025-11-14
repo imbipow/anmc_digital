@@ -84,7 +84,7 @@ jobs:
         run: |
           cd api
           npm ci --omit=dev
-          zip -r ../deploy-backend-initial.zip . -x "*.git*" "*.log"
+          zip -r ../deploy-backend-initial.zip . -x "*.git*" "*.log" "*.env*" ".env"
 
       - name: Upload initial package to S3
         if: steps.check-env.outcome == 'failure'

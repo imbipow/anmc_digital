@@ -1,5 +1,8 @@
 const path = require('path');
-require('dotenv').config({ path: path.join(__dirname, '..', '.env'), override: true });
+// Load .env only in development, don't override environment variables in production
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
+}
 
 // IMPORTANT: Use environment PORT for production (EB uses 8080), fallback to 3001 for local dev
 // Frontend uses PORT=3036, API must use PORT=3001 locally
