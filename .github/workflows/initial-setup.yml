@@ -34,14 +34,25 @@ jobs:
         id: check-app
         continue-on-error: true
         run: |
-          aws elasticbeanstalk describe-applications --application-names ${{ env.EB_APP_NAME }}
+          APP_COUNT=$(aws elasticbeanstalk describe-applications \
+            --application-names ${{ env.EB_APP_NAME }} \
+            --region ${{ env.AWS_REGION }} \
+            --query "length(Applications)" \
+            --output text 2>/dev/null || echo "0")
+          if [ "$APP_COUNT" = "0" ]; then
+            echo "Application does not exist"
+            exit 1
+          else
+            echo "Application exists"
+          fi
 
       - name: Create EB application
         if: steps.check-app.outcome == 'failure'
         run: |
           aws elasticbeanstalk create-application \
             --application-name ${{ env.EB_APP_NAME }} \
-            --description "ANMC Digital Backend API"
+            --description "ANMC Digital Backend API" \
+            --region ${{ env.AWS_REGION }}
 
       - name: Check if EB environment exists
         id: check-env
