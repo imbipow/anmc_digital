@@ -67,7 +67,7 @@ jobs:
       - name: Create deployment package
         run: |
           cd api
-          zip -r ../deploy-backend.zip . -x "*.git*" "node_modules/@aws-sdk/*" "*.log" "*.env*" ".env"
+          zip -r ../deploy-backend.zip . -x "*.git*" "*.log" "*.env*" ".env"
 
       - name: Get timestamp
         id: timestamp
