@@ -47,9 +47,18 @@ jobs:
         id: check-env
         continue-on-error: true
         run: |
-          aws elasticbeanstalk describe-environments \
+          ENV_COUNT=$(aws elasticbeanstalk describe-environments \
             --application-name ${{ env.EB_APP_NAME }} \
-            --environment-names ${{ env.EB_ENV_NAME }}
+            --environment-names ${{ env.EB_ENV_NAME }} \
+            --region ${{ env.AWS_REGION }} \
+            --query "length(Environments)" \
+            --output text)
+          if [ "$ENV_COUNT" = "0" ]; then
+            echo "exists=false" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "exists=true" >> $GITHUB_OUTPUT
+          fi
 
       - name: Setup Node.js
         if: steps.check-env.outcome == 'failure'
@@ -103,14 +112,20 @@ jobs:
             --environment-names ${{ env.EB_ENV_NAME }}
 
       - name: Get EB environment URL
+        if: always()
         run: |
           URL=$(aws elasticbeanstalk describe-environments \
             --application-name ${{ env.EB_APP_NAME }} \
             --environment-names ${{ env.EB_ENV_NAME }} \
+            --region ${{ env.AWS_REGION }} \
             --query "Environments[0].CNAME" \
-            --output text)
-          echo "🌐 Backend API URL: https://$URL"
-          echo "⚠️  Update GitHub Secret REACT_APP_API_URL to: https://$URL/api"
+            --output text 2>/dev/null || echo "None")
+          if [ "$URL" != "None" ] && [ "$URL" != "" ]; then
+            echo "🌐 Backend API URL: https://$URL"
+            echo "⚠️  Update GitHub Secret REACT_APP_API_URL to: https://$URL/api"
+          else
+            echo "⚠️ No environment found. Environment creation may have failed."
+          fi
 
   setup-frontend-bucket:
     name: Setup S3 Frontend Bucket
