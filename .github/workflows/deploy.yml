@@ -52,10 +52,6 @@ jobs:
           cd api
           npm ci --omit=dev
 
-      - name: Ensure S3 bucket exists
-        run: |
-          aws s3 mb s3://elasticbeanstalk-${{ env.AWS_REGION }}-${{ secrets.AWS_ACCOUNT_ID }} --region ${{ env.AWS_REGION }} 2>/dev/null || true
-
       - name: Create deployment package
         run: |
           cd api
