@@ -9,11 +9,23 @@ AWS.config.update({
 });
 
 // Only add explicit credentials if they are provided (local development)
-if (config.aws.accessKeyId && config.aws.secretAccessKey) {
+if (
+  process.env.NODE_ENV !== 'production' &&
+  process.env.AWS_ACCESS_KEY_ID &&
+  process.env.AWS_SECRET_ACCESS_KEY &&
+  process.env.AWS_ACCESS_KEY_ID.trim() !== '' &&
+  process.env.AWS_SECRET_ACCESS_KEY.trim() !== ''
+) {
   AWS.config.update({
-    accessKeyId: config.aws.accessKeyId,
-    secretAccessKey: config.aws.secretAccessKey
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
   });
+}
+
+if (process.env.NODE_ENV === 'production') {
+  delete AWS.config.credentials;
+  delete AWS.config.accessKeyId;
+  delete AWS.config.secretAccessKey;
 }
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
