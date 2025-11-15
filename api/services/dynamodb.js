@@ -3,17 +3,18 @@ const config = require('../config');
 
 // Configure AWS SDK
 // In production (EB), credentials come from IAM instance profile automatically
-const awsConfig = {
+// Only set region (required)
+AWS.config.update({
   region: config.aws.region
-};
+});
 
 // Only add explicit credentials if they are provided (local development)
 if (config.aws.accessKeyId && config.aws.secretAccessKey) {
-  awsConfig.accessKeyId = config.aws.accessKeyId;
-  awsConfig.secretAccessKey = config.aws.secretAccessKey;
+  AWS.config.update({
+    accessKeyId: config.aws.accessKeyId,
+    secretAccessKey: config.aws.secretAccessKey
+  });
 }
-
-AWS.config.update(awsConfig);
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
