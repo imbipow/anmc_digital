@@ -1,18 +1,32 @@
 const AWS = require('aws-sdk');
 const config = require('../config');
 
+console.log('=== AWS SDK Configuration Debug ===');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+console.log('AWS_REGION:', process.env.AWS_REGION);
+console.log('AWS_ACCESS_KEY_ID exists:', !!process.env.AWS_ACCESS_KEY_ID);
+console.log('AWS_SECRET_ACCESS_KEY exists:', !!process.env.AWS_SECRET_ACCESS_KEY);
+console.log('config.aws.region:', config.aws.region);
+
 // Configure AWS SDK
 // In production (EB), credentials come from IAM instance profile automatically
 AWS.config.update({
   region: config.aws.region
 });
 
+console.log('After initial config update:');
+console.log('AWS.config.region:', AWS.config.region);
+console.log('AWS.config.credentials:', AWS.config.credentials);
+
 // In production, ensure we're not using any explicit credentials
 // Let AWS SDK use the default credential chain (IAM instance profile)
 if (process.env.NODE_ENV === 'production') {
+  console.log('Running in PRODUCTION mode - clearing explicit credentials');
   delete AWS.config.credentials;
   delete AWS.config.accessKeyId;
   delete AWS.config.secretAccessKey;
+  console.log('After clearing credentials:');
+  console.log('AWS.config.credentials:', AWS.config.credentials);
 }
 
 // Only add explicit credentials in development if provided
@@ -23,11 +37,17 @@ if (
   process.env.AWS_ACCESS_KEY_ID.trim() !== '' &&
   process.env.AWS_SECRET_ACCESS_KEY.trim() !== ''
 ) {
+  console.log('Running in DEVELOPMENT mode - using explicit credentials');
   AWS.config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
   });
 }
+
+console.log('Final AWS.config before creating DocumentClient:');
+console.log('Region:', AWS.config.region);
+console.log('Credentials object:', AWS.config.credentials);
+console.log('================================');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
@@ -63,10 +83,19 @@ class DynamoDBService {
     }
 
     try {
+      console.log(`Scanning table: ${tableName} with params:`, JSON.stringify(params));
       const result = await dynamodb.scan(params).promise();
+      console.log(`Successfully scanned ${tableName}, found ${result.Items?.length || 0} items`);
       return result.Items || [];
     } catch (error) {
-      console.error(`Error scanning ${tableName}:`, error);
+      console.error(`Error scanning ${tableName}:`, {
+        message: error.message,
+        code: error.code,
+        statusCode: error.statusCode,
+        requestId: error.requestId,
+        tableName: tableName,
+        region: AWS.config.region
+      });
       throw error;
     }
   }
