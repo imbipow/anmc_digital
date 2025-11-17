@@ -3,12 +3,19 @@ const config = require('../config');
 
 // Configure AWS SDK
 // In production (EB), credentials come from IAM instance profile automatically
-// Only set region (required)
 AWS.config.update({
   region: config.aws.region
 });
 
-// Only add explicit credentials if they are provided (local development)
+// In production, ensure we're not using any explicit credentials
+// Let AWS SDK use the default credential chain (IAM instance profile)
+if (process.env.NODE_ENV === 'production') {
+  delete AWS.config.credentials;
+  delete AWS.config.accessKeyId;
+  delete AWS.config.secretAccessKey;
+}
+
+// Only add explicit credentials in development if provided
 if (
   process.env.NODE_ENV !== 'production' &&
   process.env.AWS_ACCESS_KEY_ID &&
@@ -20,12 +27,6 @@ if (
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
   });
-}
-
-if (process.env.NODE_ENV === 'production') {
-  delete AWS.config.credentials;
-  delete AWS.config.accessKeyId;
-  delete AWS.config.secretAccessKey;
 }
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
