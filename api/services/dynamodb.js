@@ -1,53 +1,22 @@
 const AWS = require('aws-sdk');
 const config = require('../config');
 
-console.log('=== AWS SDK Configuration Debug ===');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('AWS_REGION:', process.env.AWS_REGION);
-console.log('AWS_ACCESS_KEY_ID exists:', !!process.env.AWS_ACCESS_KEY_ID);
-console.log('AWS_SECRET_ACCESS_KEY exists:', !!process.env.AWS_SECRET_ACCESS_KEY);
-console.log('config.aws.region:', config.aws.region);
-
-// Configure AWS SDK
-// In production (EB), credentials come from IAM instance profile automatically
-AWS.config.update({
-  region: config.aws.region
-});
-
-console.log('After initial config update:');
-console.log('AWS.config.region:', AWS.config.region);
-console.log('AWS.config.credentials:', AWS.config.credentials);
-
-// In production, ensure we're not using any explicit credentials
-// Let AWS SDK use the default credential chain (IAM instance profile)
+// Configure AWS SDK for production vs development
 if (process.env.NODE_ENV === 'production') {
-  console.log('Running in PRODUCTION mode - clearing explicit credentials');
-  delete AWS.config.credentials;
-  delete AWS.config.accessKeyId;
-  delete AWS.config.secretAccessKey;
-  console.log('After clearing credentials:');
-  console.log('AWS.config.credentials:', AWS.config.credentials);
-}
-
-// Only add explicit credentials in development if provided
-if (
-  process.env.NODE_ENV !== 'production' &&
-  process.env.AWS_ACCESS_KEY_ID &&
-  process.env.AWS_SECRET_ACCESS_KEY &&
-  process.env.AWS_ACCESS_KEY_ID.trim() !== '' &&
-  process.env.AWS_SECRET_ACCESS_KEY.trim() !== ''
-) {
-  console.log('Running in DEVELOPMENT mode - using explicit credentials');
+  // In production (Elastic Beanstalk), explicitly use EC2 instance metadata for credentials
+  AWS.config.credentials = new AWS.EC2MetadataCredentials({
+    httpOptions: { timeout: 5000 }, // 5 second timeout
+    maxRetries: 10
+  });
+  AWS.config.region = config.aws.region;
+} else {
+  // In development, use explicit credentials from environment
   AWS.config.update({
+    region: config.aws.region,
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
   });
 }
-
-console.log('Final AWS.config before creating DocumentClient:');
-console.log('Region:', AWS.config.region);
-console.log('Credentials object:', AWS.config.credentials);
-console.log('================================');
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
