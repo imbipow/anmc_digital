@@ -214,7 +214,7 @@ const LoginPage = () => {
                                 </div>
                             ) : (
                                 <p className="noteHelp">
-                                    Don't have an account? <Link to="/signup">Register for membership</Link>
+                                    Don't have an account? <Link to="/user-signup">Register</Link>
                                 </p>
                             )}
 
