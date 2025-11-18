@@ -8,140 +8,26 @@ const menus = [
         id: 1,
         title: 'Home',
         link: '/home',
-        submenu: [
-            {
-                id: 11,
-                title: 'Home style 1',
-                link: '/home'
-            },
-            {
-                id: 12,
-                title: 'Home style 2',
-                link: '/home2'
-            },
-            {
-                id: 13,
-                title: 'Home style 3',
-                link: '/home3'
-            },
-            {
-                id: 14,
-                title: 'Home style 4',
-                link: '/home4'
-            },
-        ]
     },
-
     {
         id: 2,
         title: 'About',
         link: '/about',
     },
-
-{
-    id: 3,
+    {
+        id: 3,
         title: 'Projects',
         link: '/projects',
-        submenu: [
-            {
-                id: 31,
-                title: 'Projects',
-                link: '/projects'
-            },
-            {
-                id: 32,
-                title: 'Project Single',
-                link: '/projects-single'
-            }
-        ]
-    },
-{
-    id: 4,
-        title: 'Event',
-        link: '/event',
-        submenu: [
-            {
-                id: 41,
-                title: 'Event',
-                link: '/event'
-            },
-            {
-                id: 42,
-                title: 'Event Single',
-                link: '/event-single'
-            }
-        ]
     },
     {
-        id: 7,
-        title: 'Pages',
-        link: '/',
-        submenu: [
-            {
-                id: 71,
-                title: 'About',
-                link: '/about'
-            },
-            {
-                id: 72,
-                title: 'Facilities',
-                link: '/facilities'
-            },
-            {
-                id: 73,
-                title: 'Facility Details',
-                link: '/facilities-single'
-            },
-            {
-                id: 75,
-                title: 'Donate',
-                link: '/donate'
-            },
-            {
-                id: 79,
-                title: 'Error 404',
-                link: '/404'
-            },
-            
-        ]
+        id: 4,
+        title: 'Events',
+        link: '/event',
     },
-
     {
         id: 5,
         title: 'News',
         link: '/news',
-        submenu: [
-            {
-                id: 51,
-                title: 'News',
-                link: '/news'
-            },
-            {
-                id: 52,
-                title: 'News Left sidebar',
-                link: '/news-left'
-            },
-            {
-                id: 53,
-                title: 'News full width',
-                link: '/news-fullwidth'
-            },
-            {
-                id: 54,
-                title: 'News single',
-                link: '/news-details'
-            },
-            {
-                id: 55,
-                title: 'News single Left sidebar',
-                link: '/news-details-left'
-            },
-            {
-                id: 56,
-                title: 'News single full width',
-                link: '/news-details-fullwidth'
-            },
-        ]
     },
     {
         id: 6,
@@ -149,12 +35,15 @@ const menus = [
         link: '/faq',
     },
     {
-        id: 88,
+        id: 7,
+        title: 'Donate',
+        link: '/donate',
+    },
+    {
+        id: 8,
         title: 'Contact',
         link: '/contact',
     }
-    
-    
 ]
 
 

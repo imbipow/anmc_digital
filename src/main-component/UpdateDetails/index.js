@@ -17,7 +17,7 @@ import ANMCHeader from '../../components/ANMCHeader';
 import cognitoAuthService from '../../services/cognitoAuth';
 import './style.css';
 
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
 // Helper function to make authenticated API calls
 const authenticatedFetch = async (url, options = {}) => {
