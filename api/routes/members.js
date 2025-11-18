@@ -3,6 +3,7 @@ const router = express.Router();
 const membersService = require('../services/membersService');
 const { verifyToken, requireAdmin, requireMember } = require('../middleware/auth');
 const cognitoService = require('../services/cognitoService');
+const emailService = require('../services/emailService');
 
 // Get all members with optional filters
 // Members can view their own data by email, admins can view all
@@ -206,6 +207,20 @@ router.post('/register', async (req, res, next) => {
             }
         } else {
             console.log('Skipping Cognito creation - Password:', !!memberData.password, 'Configured:', cognitoService.isConfigured());
+        }
+
+        // Send welcome email to member
+        try {
+            await emailService.sendMemberWelcomeEmail({
+                email: newMember.email,
+                firstName: newMember.firstName,
+                lastName: newMember.lastName,
+                referenceNo: newMember.referenceNo
+            });
+            console.log('✅ Welcome email sent to:', newMember.email);
+        } catch (emailError) {
+            // Don't fail registration if email fails
+            console.error('⚠️ Failed to send welcome email:', emailError.message);
         }
 
         // Return response without password fields
@@ -474,6 +489,20 @@ router.post('/:id/approve', verifyToken, requireAdmin, async (req, res, next) =>
             approvedAt: new Date().toISOString(),
             approvedBy: req.body.approvedBy || 'admin'
         });
+
+        // Send approval email to member
+        try {
+            await emailService.sendMemberApprovalEmail({
+                email: updatedMember.email,
+                firstName: updatedMember.firstName,
+                lastName: updatedMember.lastName,
+                referenceNo: updatedMember.referenceNo
+            });
+            console.log('✅ Approval email sent to:', updatedMember.email);
+        } catch (emailError) {
+            // Don't fail approval if email fails
+            console.error('⚠️ Failed to send approval email:', emailError.message);
+        }
 
         res.json({
             success: true,

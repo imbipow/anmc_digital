@@ -445,11 +445,209 @@ ANMC Team
     return results;
 };
 
+/**
+ * Send welcome email to new member after registration
+ */
+const sendMemberWelcomeEmail = async (memberData) => {
+    const { email, firstName, lastName, referenceNo } = memberData;
+
+    const emailBody = `
+Dear ${firstName} ${lastName},
+
+Thank you for registering with ANMC (Australian Nepalese Multicultural Centre)!
+
+Your Registration Details:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Member Reference: ${referenceNo}
+Email: ${email}
+Status: Pending Approval
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Your membership application has been received and is currently pending approval from our team.
+You will receive a confirmation email once your membership has been approved by an administrator.
+
+Please note: You will be able to login and access member features once your account is approved.
+
+If you have any questions, please contact us at ${ADMIN_EMAIL}.
+
+Best regards,
+ANMC Team
+Australian Nepalese Multicultural Centre
+    `.trim();
+
+    const params = {
+        Source: FROM_EMAIL,
+        Destination: {
+            ToAddresses: [email]
+        },
+        Message: {
+            Subject: {
+                Data: 'Welcome to ANMC - Registration Received',
+                Charset: 'UTF-8'
+            },
+            Body: {
+                Text: {
+                    Data: emailBody,
+                    Charset: 'UTF-8'
+                }
+            }
+        }
+    };
+
+    try {
+        const command = new SendEmailCommand(params);
+        const client = getSESClient();
+        const response = await client.send(command);
+        console.log('Member welcome email sent successfully:', response.MessageId);
+        return { success: true, messageId: response.MessageId };
+    } catch (error) {
+        console.error('Error sending member welcome email:', error);
+        throw error;
+    }
+};
+
+/**
+ * Send approval email to member
+ */
+const sendMemberApprovalEmail = async (memberData) => {
+    const { email, firstName, lastName, referenceNo } = memberData;
+
+    const emailBody = `
+Dear ${firstName} ${lastName},
+
+Congratulations! Your ANMC membership has been approved.
+
+Your Membership Details:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Member Reference: ${referenceNo}
+Email: ${email}
+Status: Active
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+You can now login to the member portal and access all member features:
+${process.env.FRONTEND_URL || 'https://anmc.org.au'}/member-login
+
+Member Benefits:
+• Book temple services and puja
+• Access exclusive member content
+• Participate in ANMC events and programs
+• Connect with the Nepalese Australian community
+
+If you have any questions or need assistance, please contact us at ${ADMIN_EMAIL}.
+
+Welcome to the ANMC community!
+
+Best regards,
+ANMC Team
+Australian Nepalese Multicultural Centre
+    `.trim();
+
+    const params = {
+        Source: FROM_EMAIL,
+        Destination: {
+            ToAddresses: [email]
+        },
+        Message: {
+            Subject: {
+                Data: 'ANMC Membership Approved - Welcome!',
+                Charset: 'UTF-8'
+            },
+            Body: {
+                Text: {
+                    Data: emailBody,
+                    Charset: 'UTF-8'
+                }
+            }
+        }
+    };
+
+    try {
+        const command = new SendEmailCommand(params);
+        const client = getSESClient();
+        const response = await client.send(command);
+        console.log('Member approval email sent successfully:', response.MessageId);
+        return { success: true, messageId: response.MessageId };
+    } catch (error) {
+        console.error('Error sending member approval email:', error);
+        throw error;
+    }
+};
+
+/**
+ * Send welcome email to new regular user after registration
+ */
+const sendUserWelcomeEmail = async (userData) => {
+    const { email, firstName, lastName } = userData;
+
+    const emailBody = `
+Dear ${firstName} ${lastName},
+
+Welcome to ANMC (Australian Nepalese Multicultural Centre)!
+
+Your Registration Details:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Email: ${email}
+Account Type: User
+Status: Active
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Your account has been created successfully. You can now:
+• Book temple services and puja
+• View upcoming events
+• Contact ANMC for information
+
+Login to your account:
+${process.env.FRONTEND_URL || 'https://anmc.org.au'}/login
+
+If you're interested in becoming a member to access exclusive benefits, please visit:
+${process.env.FRONTEND_URL || 'https://anmc.org.au'}/membership
+
+If you have any questions, please contact us at ${ADMIN_EMAIL}.
+
+Best regards,
+ANMC Team
+Australian Nepalese Multicultural Centre
+    `.trim();
+
+    const params = {
+        Source: FROM_EMAIL,
+        Destination: {
+            ToAddresses: [email]
+        },
+        Message: {
+            Subject: {
+                Data: 'Welcome to ANMC - Account Created',
+                Charset: 'UTF-8'
+            },
+            Body: {
+                Text: {
+                    Data: emailBody,
+                    Charset: 'UTF-8'
+                }
+            }
+        }
+    };
+
+    try {
+        const command = new SendEmailCommand(params);
+        const client = getSESClient();
+        const response = await client.send(command);
+        console.log('User welcome email sent successfully:', response.MessageId);
+        return { success: true, messageId: response.MessageId };
+    } catch (error) {
+        console.error('Error sending user welcome email:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     sendBookingRequestEmail,
     sendBookingNotificationToAdmin,
     sendBookingConfirmationEmail,
     sendPaymentSuccessEmail,
     sendContactFormEmail,
-    sendBroadcastEmail
+    sendBroadcastEmail,
+    sendMemberWelcomeEmail,
+    sendMemberApprovalEmail,
+    sendUserWelcomeEmail
 };

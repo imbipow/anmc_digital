@@ -219,6 +219,20 @@ router.post('/register', async (req, res, next) => {
 
         console.log(`✅ Regular user registered: ${email} (AnmcUsers group)`);
 
+        // Send welcome email to user
+        try {
+            const emailService = require('../services/emailService');
+            await emailService.sendUserWelcomeEmail({
+                email,
+                firstName,
+                lastName
+            });
+            console.log('✅ Welcome email sent to:', email);
+        } catch (emailError) {
+            // Don't fail registration if email fails
+            console.error('⚠️ Failed to send welcome email:', emailError.message);
+        }
+
         res.status(201).json({
             success: true,
             message: 'Registration successful! You can now login and book services.',
