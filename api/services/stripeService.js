@@ -67,8 +67,8 @@ const createCheckoutSession = async (bookingData) => {
                 },
             ],
             mode: 'payment',
-            success_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/booking-success?session_id={CHECKOUT_SESSION_ID}&booking_id=${id}`,
-            cancel_url: `${process.env.FRONTEND_URL || 'http://localhost:3000'}/booking-cancelled?booking_id=${id}`,
+            success_url: `${process.env.FRONTEND_URL}/booking-success?session_id={CHECKOUT_SESSION_ID}&booking_id=${id}`,
+            cancel_url: `${process.env.FRONTEND_URL}/booking-cancelled?booking_id=${id}`,
             customer_email: memberEmail,
             client_reference_id: id,
             metadata: {
