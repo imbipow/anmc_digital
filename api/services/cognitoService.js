@@ -10,6 +10,7 @@ const {
     AdminUpdateUserAttributesCommand,
     AdminUpdateUserAttributesCommand: AdminVerifyUserAttributeCommand
 } = require('@aws-sdk/client-cognito-identity-provider');
+const { fromInstanceMetadata } = require('@aws-sdk/credential-providers');
 const crypto = require('crypto');
 
 class CognitoService {
@@ -45,8 +46,12 @@ class CognitoService {
                     // In production (Elastic Beanstalk), use EC2 instance metadata for credentials
                     // In development, use explicit credentials if provided
                     if (process.env.NODE_ENV === 'production') {
-                        // Let AWS SDK use the default credential chain (IAM instance profile)
-                        console.log('🔐 Using EC2 instance profile credentials for Cognito');
+                        // AWS SDK v3 requires explicit credential provider for EC2 instance metadata
+                        clientConfig.credentials = fromInstanceMetadata({
+                            timeout: 5000,
+                            maxRetries: 10
+                        });
+                        console.log('🔐 Using EC2 instance profile credentials for Cognito (SDK v3)');
                     } else if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
                         // Development: use explicit credentials
                         clientConfig.credentials = {
