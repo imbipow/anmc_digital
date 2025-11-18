@@ -172,7 +172,7 @@ const EventSingle = (props) => {
 
                                     {/* Event Description */}
                                     <div className="event-description">
-                                        <p>{event.description || event.summary}</p>
+                                        <p>{event.content || event.summary}</p>
                                     </div>
 
                                     {/* Action Buttons */}

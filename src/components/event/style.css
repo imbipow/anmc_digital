@@ -55,6 +55,7 @@
 .wpo-event-img {
     position: relative;
     float: left;
+    width: 240px;
 }
 
 .wpo-event-img img {
