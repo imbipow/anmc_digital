@@ -41,14 +41,20 @@ const EventSection = (props) => {
                 if (events && events.length > 0) {
                     const formattedEvents = events.slice(0, 2).map((event, index) => {
                         const startDate = new Date(event.startDate);
+                        // Handle both time formats: single 'time' field or separate 'startTime' and 'endTime'
+                        let timeDisplay = event.time || '';
+                        if (!timeDisplay && event.startTime && event.endTime) {
+                            timeDisplay = `${event.startTime} - ${event.endTime}`;
+                        }
+
                         return {
-                            eventImg: event.featuredImage || (index === 0 ? props.eventImg1 : props.eventImg2),
+                            eventImg: event.featuredImage || event.image || (index === 0 ? props.eventImg1 : props.eventImg2),
                             date: startDate.getDate().toString(),
                             month: startDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
                             title: event.title,
-                            time: `${event.startTime} - ${event.endTime}`,
+                            time: timeDisplay,
                             location: event.location,
-                            des: event.description,
+                            des: event.description || event.summary,
                             btn: "Learn More...",
                             link: `/event/${event.slug || event.id}`,
                         };
