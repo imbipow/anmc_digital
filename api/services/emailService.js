@@ -1,10 +1,39 @@
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
+const { fromInstanceMetadata } = require('@aws-sdk/credential-providers');
 const config = require('../config');
 
-// Initialize SES client
-const sesClient = new SESClient({
-    region: process.env.AWS_REGION || 'ap-southeast-2'
-});
+// Initialize SES client with proper credentials
+let sesClient = null;
+
+function getSESClient() {
+    if (!sesClient) {
+        const clientConfig = {
+            region: process.env.AWS_REGION || 'ap-southeast-2'
+        };
+
+        // In production (Elastic Beanstalk), use EC2 instance metadata for credentials
+        // In development, use explicit credentials if provided
+        if (process.env.NODE_ENV === 'production') {
+            // AWS SDK v3 requires explicit credential provider for EC2 instance metadata
+            clientConfig.credentials = fromInstanceMetadata({
+                timeout: 5000,
+                maxRetries: 10
+            });
+            console.log('🔐 Using EC2 instance profile credentials for SES (SDK v3)');
+        } else if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
+            // Development: use explicit credentials
+            clientConfig.credentials = {
+                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+            };
+            console.log('🔐 Using explicit credentials for SES (development)');
+        }
+
+        sesClient = new SESClient(clientConfig);
+        console.log('✅ SES client initialized successfully');
+    }
+    return sesClient;
+}
 
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@anmc.org.au';
 const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@anmc.org.au';
@@ -64,7 +93,8 @@ Australian Nepalese Multicultural Centre
 
     try {
         const command = new SendEmailCommand(params);
-        const response = await sesClient.send(command);
+        const client = getSESClient();
+        const response = await client.send(command);
         console.log('Booking request email sent successfully:', response.MessageId);
         return { success: true, messageId: response.MessageId };
     } catch (error) {
@@ -126,7 +156,8 @@ Login to Admin Panel: ${process.env.ADMIN_PANEL_URL || 'https://anmc.org.au/admi
 
     try {
         const command = new SendEmailCommand(params);
-        const response = await sesClient.send(command);
+        const client = getSESClient();
+        const response = await client.send(command);
         console.log('Admin notification email sent successfully:', response.MessageId);
         return { success: true, messageId: response.MessageId };
     } catch (error) {
@@ -198,7 +229,8 @@ Australian Nepalese Multicultural Centre
 
     try {
         const command = new SendEmailCommand(params);
-        const response = await sesClient.send(command);
+        const client = getSESClient();
+        const response = await client.send(command);
         console.log('Booking confirmation email sent successfully:', response.MessageId);
         return { success: true, messageId: response.MessageId };
     } catch (error) {
@@ -271,7 +303,8 @@ Australian Nepalese Multicultural Centre
 
     try {
         const command = new SendEmailCommand(params);
-        const response = await sesClient.send(command);
+        const client = getSESClient();
+        const response = await client.send(command);
         console.log('Payment success email sent successfully:', response.MessageId);
         return { success: true, messageId: response.MessageId };
     } catch (error) {
@@ -338,7 +371,8 @@ Reply to this contact via: ${email}
 
     try {
         const command = new SendEmailCommand(params);
-        const response = await sesClient.send(command);
+        const client = getSESClient();
+        const response = await client.send(command);
         console.log('Contact form email sent successfully:', response.MessageId);
         return { success: true, messageId: response.MessageId };
     } catch (error) {
@@ -398,7 +432,8 @@ ANMC Team
 
         try {
             const command = new SendEmailCommand(params);
-            const response = await sesClient.send(command);
+            const client = getSESClient();
+            const response = await client.send(command);
             console.log(`Broadcast email batch sent successfully: ${response.MessageId}`);
             results.push({ success: true, messageId: response.MessageId, recipientCount: batch.length });
         } catch (error) {
