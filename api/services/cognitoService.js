@@ -40,13 +40,23 @@ class CognitoService {
             // Initialize Cognito client only if credentials are available
             if (this.userPoolId && this.userPoolId !== 'your_user_pool_id_here') {
                 try {
-                    this.cognitoClient = new CognitoIdentityProviderClient({
-                        region: this.region,
-                        credentials: {
+                    const clientConfig = { region: this.region };
+
+                    // In production (Elastic Beanstalk), use EC2 instance metadata for credentials
+                    // In development, use explicit credentials if provided
+                    if (process.env.NODE_ENV === 'production') {
+                        // Let AWS SDK use the default credential chain (IAM instance profile)
+                        console.log('🔐 Using EC2 instance profile credentials for Cognito');
+                    } else if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
+                        // Development: use explicit credentials
+                        clientConfig.credentials = {
                             accessKeyId: process.env.AWS_ACCESS_KEY_ID,
                             secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-                        }
-                    });
+                        };
+                        console.log('🔐 Using explicit credentials for Cognito (development)');
+                    }
+
+                    this.cognitoClient = new CognitoIdentityProviderClient(clientConfig);
                     console.log('✅ Cognito client initialized successfully (lazy init)');
                 } catch (error) {
                     console.warn('❌ Cognito client initialization failed:', error.message);

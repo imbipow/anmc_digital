@@ -3,12 +3,22 @@ const { v4: uuidv4 } = require('uuid');
 const mime = require('mime-types');
 const config = require('../config');
 
-// Configure AWS SDK
-AWS.config.update({
+// Configure AWS SDK for production vs development
+if (process.env.NODE_ENV === 'production') {
+  // In production (Elastic Beanstalk), explicitly use EC2 instance metadata for credentials
+  AWS.config.credentials = new AWS.EC2MetadataCredentials({
+    httpOptions: { timeout: 5000 },
+    maxRetries: 10
+  });
+  AWS.config.region = config.aws.region;
+} else {
+  // In development, use explicit credentials from environment
+  AWS.config.update({
     region: config.aws.region,
     accessKeyId: config.aws.accessKeyId,
     secretAccessKey: config.aws.secretAccessKey
-});
+  });
+}
 
 const s3 = new AWS.S3();
 const BUCKET_NAME = process.env.S3_BUCKET_NAME || 'anmc-media-dev';

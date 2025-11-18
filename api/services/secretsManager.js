@@ -24,14 +24,23 @@ class SecretsManagerService {
         // After getting credentials from Secrets Manager, they'll be used for subsequent calls
         const region = process.env.AWS_REGION || 'ap-southeast-2';
 
-        AWS.config.update({ region });
-
-        // If we have credentials in env, use them (for initial bootstrap)
-        if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
-            AWS.config.update({
-                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+        // Configure AWS SDK for production vs development
+        if (process.env.NODE_ENV === 'production') {
+            // In production (Elastic Beanstalk), use EC2 instance metadata for credentials
+            AWS.config.credentials = new AWS.EC2MetadataCredentials({
+                httpOptions: { timeout: 5000 },
+                maxRetries: 10
             });
+            AWS.config.region = region;
+        } else {
+            // In development, use explicit credentials if available
+            AWS.config.update({ region });
+            if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
+                AWS.config.update({
+                    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+                });
+            }
         }
 
         this.secretsManager = new AWS.SecretsManager();
