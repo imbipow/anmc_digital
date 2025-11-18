@@ -15,27 +15,40 @@ const {
     AdminUpdateUserAttributesCommand,
     ListGroupsCommand
 } = require('@aws-sdk/client-cognito-identity-provider');
+const { fromInstanceMetadata } = require('@aws-sdk/credential-providers');
 
 let cognitoClient = null;
 
 function getCognitoClient() {
     if (!cognitoClient) {
         const region = process.env.AWS_REGION || 'ap-southeast-2';
-        const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
-        const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+        const clientConfig = { region };
 
-        if (!accessKeyId || !secretAccessKey) {
-            throw new Error('AWS credentials not configured. Please ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are set.');
-        }
+        // In production (Elastic Beanstalk), use EC2 instance metadata for credentials
+        // In development, use explicit credentials if provided
+        if (process.env.NODE_ENV === 'production') {
+            // AWS SDK v3 requires explicit credential provider for EC2 instance metadata
+            clientConfig.credentials = fromInstanceMetadata({
+                timeout: 5000,
+                maxRetries: 10
+            });
+            console.log('🔐 Using EC2 instance profile credentials for Cognito in users routes (SDK v3)');
+        } else {
+            const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+            const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 
-        cognitoClient = new CognitoIdentityProviderClient({
-            region,
-            credentials: {
+            if (!accessKeyId || !secretAccessKey) {
+                throw new Error('AWS credentials not configured. Please ensure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are set.');
+            }
+
+            clientConfig.credentials = {
                 accessKeyId,
                 secretAccessKey
-            }
-        });
+            };
+            console.log('🔐 Using explicit credentials for Cognito in users routes (development)');
+        }
 
+        cognitoClient = new CognitoIdentityProviderClient(clientConfig);
         console.log('✅ Cognito client initialized in users routes');
     }
     return cognitoClient;
