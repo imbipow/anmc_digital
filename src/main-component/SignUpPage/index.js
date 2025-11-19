@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import API_CONFIG from '../../config/api';
 import MembershipPayment from './MembershipPayment';
+import { isValidAustralianPhone, getPhoneValidationError } from '../../utils/phoneValidation';
 import './style.scss';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
@@ -191,7 +192,11 @@ const SignUpPage = () => {
         if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
         if (!formData.email.trim()) newErrors.email = 'Email is required';
         else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format';
-        if (!formData.mobile.trim()) newErrors.mobile = 'Mobile number is required';
+
+        // Australian phone validation
+        const phoneError = getPhoneValidationError(formData.mobile);
+        if (phoneError) newErrors.mobile = phoneError;
+
         if (!formData.gender) newErrors.gender = 'Gender is required';
 
         // Age validation (must be 18 or above)
@@ -218,7 +223,11 @@ const SignUpPage = () => {
                     if (!member.lastName.trim()) newErrors[`family${index}LastName`] = 'Last name required';
                     if (!member.email || !member.email.trim()) newErrors[`family${index}Email`] = 'Email required';
                     else if (!/\S+@\S+\.\S+/.test(member.email)) newErrors[`family${index}Email`] = 'Invalid email format';
-                    if (!member.mobile || !member.mobile.trim()) newErrors[`family${index}Mobile`] = 'Mobile required';
+
+                    // Australian phone validation for family members
+                    const familyPhoneError = getPhoneValidationError(member.mobile);
+                    if (familyPhoneError) newErrors[`family${index}Mobile`] = familyPhoneError;
+
                     if (!member.relationship) newErrors[`family${index}Relationship`] = 'Relationship required';
                     if (!member.age) newErrors[`family${index}Age`] = 'Age required';
                     else if (parseInt(member.age) < 18) newErrors[`family${index}Age`] = 'Must be 18 or above';

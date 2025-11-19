@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import contentService from '../../services/contentService';
 import API_CONFIG from '../../config/api';
+import { getPhoneValidationError } from '../../utils/phoneValidation';
 import './style.css'
 
 const Contactpage = () => {
@@ -54,6 +55,17 @@ const Contactpage = () => {
         e.preventDefault();
         setSubmitting(true);
         setSubmitStatus({ type: '', message: '' });
+
+        // Validate phone number
+        const phoneError = getPhoneValidationError(formData.phone);
+        if (phoneError) {
+            setSubmitStatus({
+                type: 'error',
+                message: phoneError
+            });
+            setSubmitting(false);
+            return;
+        }
 
         try {
             // Combine first and last name

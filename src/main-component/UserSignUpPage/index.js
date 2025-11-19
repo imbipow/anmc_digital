@@ -14,6 +14,7 @@ import Checkbox from "@mui/material/Checkbox";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 import API_CONFIG from '../../config/api';
+import { getPhoneValidationError } from '../../utils/phoneValidation';
 import '../SignUpPage/style.scss';
 
 const UserSignUpPage = () => {
@@ -90,7 +91,11 @@ const UserSignUpPage = () => {
         if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
         if (!formData.email.trim()) newErrors.email = 'Email is required';
         else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format';
-        if (!formData.mobile.trim()) newErrors.mobile = 'Mobile number is required';
+
+        // Australian phone validation
+        const phoneError = getPhoneValidationError(formData.mobile);
+        if (phoneError) newErrors.mobile = phoneError;
+
         if (!formData.gender) newErrors.gender = 'Gender is required';
 
         // Password

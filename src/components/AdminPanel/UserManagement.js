@@ -29,6 +29,7 @@ import {
     Edit as EditIcon
 } from '@mui/icons-material';
 import cognitoAuthService from '../../services/cognitoAuth';
+import { getPhoneValidationError } from '../../utils/phoneValidation';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
@@ -109,6 +110,15 @@ const UserManagement = () => {
     };
 
     const handleAddManager = async () => {
+        // Validate phone number if provided
+        if (formData.phoneNumber) {
+            const phoneError = getPhoneValidationError(formData.phoneNumber);
+            if (phoneError) {
+                setError(phoneError);
+                return;
+            }
+        }
+
         try {
             const response = await authenticatedFetch(`${API_BASE_URL}/users/managers`, {
                 method: 'POST',

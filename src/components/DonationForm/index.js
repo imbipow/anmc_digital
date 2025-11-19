@@ -3,6 +3,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from './CheckoutForm';
 import API_CONFIG from '../../config/api';
+import { getPhoneValidationError } from '../../utils/phoneValidation';
 import './style.css';
 
 // Load Stripe publishable key
@@ -36,9 +37,10 @@ const DonationForm = ({ onClose, onSuccess }) => {
         } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
             newErrors.email = 'Email is invalid';
         }
-        if (!formData.phone.trim()) {
-            newErrors.phone = 'Phone number is required';
-        }
+
+        // Australian phone validation
+        const phoneError = getPhoneValidationError(formData.phone);
+        if (phoneError) newErrors.phone = phoneError;
         if (!formData.amount || parseFloat(formData.amount) <= 0) {
             newErrors.amount = 'Please enter a valid donation amount';
         }
