@@ -1,425 +1,0 @@
-----------------------------------------
-/var/log/eb-hooks.log
-----------------------------------------
-
-
-----------------------------------------
-/var/log/nginx/access.log
-----------------------------------------
-173.249.56.67 - - [17/Nov/2025:08:02:16 +0000] "GET /index.php?lang=../../../../../../../../tmp/index1 HTTP/1.1" 404 103 "-" "libredtail-http" "-"
-173.249.56.67 - - [17/Nov/2025:08:02:17 +0000] "GET /containers/json HTTP/1.1" 404 69 "-" "libredtail-http" "-"
-194.163.129.51 - - [17/Nov/2025:08:24:26 +0000] "GET /admin/config.php HTTP/1.0" 404 70 "-" "xfa1" "-"
-120.28.148.125 - - [17/Nov/2025:08:26:35 +0000] "POST /GponForm/diag_Form?images/ HTTP/1.1" 404 80 "-" "Hello, World" "-"
-120.28.148.125 - - [17/Nov/2025:08:26:37 +0000] ";sh+/tmp/gpon80&ipv=0" 400 150 "-" "-" "-"
-205.210.31.186 - - [17/Nov/2025:09:03:56 +0000] "\x16\x03\x01\x00\xCA\x01\x00\x00\xC6\x03\x03%\xC30>\xA6\xCD\xEC\xF8F\x5C\xFD\xBF\xC4\xBFMr\x7F\xFD\xA7Y{\x95\xD4A|\xECZE\xC0S\x8C\x07\x00\x00h\xCC\x14\xCC\x13\xC0/\xC0+\xC00\xC0,\xC0\x11\xC0\x07\xC0'\xC0#\xC0\x13\xC0\x09\xC0(\xC0$\xC0\x14\xC0" 400 150 "-" "-" "-"
-205.210.31.186 - - [17/Nov/2025:09:03:56 +0000] "\x16\x03\x01\x00\xEE\x01\x00\x00\xEA\x03\x03\x0E&6\x02\x8C5,T\xE6\xD1e\xEC\xD5\x04*\xF8\x081P\xE1\xDB\x9C\xCBU\xA3\x1C]\xD5\xF4V\x8D| i\xB5\x92\x83:F\x82\xCBG0\xD7V\xF1U^uj\x1Ew\x22\xCD\x8F,\xF2#\x8A\xC7\xAF\x89wG\xE9\x00&\xC0+\xC0/\xC0,\xC00\xCC\xA9\xCC\xA8\xC0\x09\xC0\x13\xC0" 400 150 "-" "-" "-"
-194.163.129.51 - - [17/Nov/2025:09:12:09 +0000] "GET /robots.txt HTTP/1.1" 404 64 "-" "Mozilla/5.0" "-"
-104.168.8.69 - - [17/Nov/2025:09:18:29 +0000] "GET /.env HTTP/1.1" 404 58 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.140 Safari/537.36" "-"
-104.168.8.69 - - [17/Nov/2025:09:18:30 +0000] "POST / HTTP/1.1" 404 54 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.140 Safari/537.36" "-"
-87.120.191.121 - - [17/Nov/2025:09:23:58 +0000] "GET /logon.htm HTTP/1.1" 404 63 "-" "Hello World" "-"
-143.198.66.251 - - [17/Nov/2025:09:29:17 +0000] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03\x1DU\x0B\xCEf\xCEA\xE5H+\x95\x87?`9\xDE|\xF6E\xA7W6\xD0\xE2\x09\xF1\xF5\xEF\xDF#\x9Bs\x00\x00\x1A\xC0/\xC0+\xC0\x11\xC0\x07\xC0\x13\xC0\x09\xC0\x14\xC0" 400 150 "-" "-" "-"
-143.198.66.251 - - [17/Nov/2025:09:29:17 +0000] "\x16\x03\x01\x00{\x01\x00\x00w\x03\x03e" 400 150 "-" "-" "-"
-143.198.66.251 - - [17/Nov/2025:09:29:17 +0000] "GET / HTTP/1.1" 200 357 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" "-"
-143.198.66.251 - - [17/Nov/2025:09:29:17 +0000] "GET /form.html HTTP/1.1" 404 63 "-" "curl/8.1.2" "-"
-143.198.66.251 - - [17/Nov/2025:09:29:17 +0000] "GET /upl.php HTTP/1.1" 404 61 "-" "Mozilla/5.0" "-"
-143.198.66.251 - - [17/Nov/2025:09:29:18 +0000] "GET /t4 HTTP/1.1" 404 56 "-" "Mozilla/5.0" "-"
-143.198.66.251 - - [17/Nov/2025:09:29:18 +0000] "GET /geoip/ HTTP/1.1" 404 60 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" "-"
-143.198.66.251 - - [17/Nov/2025:09:29:18 +0000] "GET /favicon.ico HTTP/1.1" 404 65 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" "-"
-143.198.66.251 - - [17/Nov/2025:09:29:18 +0000] "GET /1.php HTTP/1.1" 404 59 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" "-"
-143.198.66.251 - - [17/Nov/2025:09:29:19 +0000] "GET /systembc/password.php HTTP/1.1" 404 75 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" "-"
-143.198.66.251 - - [17/Nov/2025:09:29:19 +0000] "GET /password.php HTTP/1.1" 404 66 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36" "-"
-35.221.53.249 - - [17/Nov/2025:09:56:14 +0000] "\x16\x03\x01\x00M\x01\x00\x00I\x03\x03\xD1\x91\x18|j\xD2i\x5CmX\xF9=\xE4\xC0\xC7\x85Ps\xF8\x1C{\xFA\xACy\xD1\x22i \xA6\xCA\x15a \xBE\xB1\xB3\xED\xB4dM\x1A+\xEDl\xB1\xA1\xB5\x9D" 400 150 "-" "-" "-"
-35.221.53.249 - - [17/Nov/2025:09:56:16 +0000] "OPTIONS / HTTP/1.0" 204 0 "-" "-" "-"
-81.161.239.26 - - [17/Nov/2025:10:21:20 +0000] "GET / HTTP/1.1" 200 357 "-" "-" "-"
-162.142.125.221 - - [17/Nov/2025:10:30:52 +0000] "GET / HTTP/1.1" 200 357 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)" "-"
-162.142.125.221 - - [17/Nov/2025:10:30:53 +0000] "\x16\x03\x01\x00\xEE\x01\x00\x00\xEA\x03\x03=\xC1*)4\xFC\xE1\xB6R\xB26J\xAC\x88\x0CC\x08\xE7\xFFx\xB7\xA4_\xA3q\xDA\xAE\xE8\x1E\xD3\x02t \xDB\xB7\xAF\xE12\xBB\xDA\xF3e\xD4\x1C\xFA\x9Dvnw\xF0\xDD\xFD\x05E\x88\x1A\xC7\xFC5Ex\xAC\xA3\x19\xF7\x00&\xCC\xA8\xCC\xA9\xC0/\xC00\xC0+\xC0,\xC0\x13\xC0\x09\xC0\x14\xC0" 400 150 "-" "-" "-"
-162.142.125.221 - - [17/Nov/2025:10:30:56 +0000] "PRI * HTTP/2.0" 400 150 "-" "-" "-"
-162.142.125.221 - - [17/Nov/2025:10:31:01 +0000] "GET /favicon.ico HTTP/1.1" 404 65 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)" "-"
-162.142.125.221 - - [17/Nov/2025:10:31:34 +0000] "GET / HTTP/1.1" 200 357 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)" "-"
-162.142.125.221 - - [17/Nov/2025:10:32:03 +0000] "GET /robots.txt HTTP/1.1" 404 64 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)" "-"
-162.142.125.221 - - [17/Nov/2025:10:32:07 +0000] "\x16\x03\x01\x00\xEE\x01\x00\x00\xEA\x03\x03\x16D\xCE\x1BE\x9Bby\x1Dpq38B\x8A\xAB\xA4K\x17\x1F\xEF\xF4G\xC5\x9B\x84\xF0U\xFE\xEC?\xE7 w\x22\xC0.!\xAF]t+\xB5\xFD\x16d" 400 150 "-" "-" "-"
-44.244.234.190 - - [17/Nov/2025:10:50:52 +0000] "GET / HTTP/1.1" 200 357 "-" "Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:20 +0000] "GET /api/hero-slides HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:20 +0000] "GET /api/events/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:20 +0000] "GET /api/news HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:20 +0000] "GET /api/achievements HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:20 +0000] "GET /api/homepage HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:20 +0000] "GET /api/counters HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:20 +0000] "GET /api/contact HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:21 +0000] "GET /api/events/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:21 +0000] "GET /api/projects/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:21 +0000] "GET /api/news/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:22 +0000] "GET /api/news HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:35 +0000] "GET /api/achievements HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:35 +0000] "GET /api/hero-slides HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:35 +0000] "GET /api/events/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:35 +0000] "GET /api/news HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:35 +0000] "GET /api/homepage HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:35 +0000] "GET /api/counters HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:35 +0000] "GET /api/contact HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:36 +0000] "GET /api/news/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:36 +0000] "GET /api/events/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:36 +0000] "GET /api/projects/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:20:36 +0000] "GET /api/news HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:05 +0000] "GET /api/hero-slides HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:05 +0000] "GET /api/events/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:05 +0000] "GET /api/achievements HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:05 +0000] "GET /api/news HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:05 +0000] "GET /api/homepage HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:05 +0000] "GET /api/counters HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:05 +0000] "GET /api/contact HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:05 +0000] "GET /api/news/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:05 +0000] "GET /api/projects/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:05 +0000] "GET /api/events/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:05 +0000] "GET /api/news HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:19 +0000] "GET /api/hero-slides HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:19 +0000] "GET /api/events/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:19 +0000] "GET /api/news HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:19 +0000] "GET /api/homepage HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:19 +0000] "GET /api/achievements HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:19 +0000] "GET /api/counters HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:19 +0000] "GET /api/contact HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:20 +0000] "GET /api/news/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:20 +0000] "GET /api/projects/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:20 +0000] "GET /api/events/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:22:20 +0000] "GET /api/news HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-185.242.226.110 - - [17/Nov/2025:11:23:41 +0000] "\x16\x03\x01\x00\x8B\x01\x00\x00\x87\x03\x03!N6\xA2ex\xC7\x5C\xEC\x970\xD0\xFD\x8A]" 400 150 "-" "-" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:18 +0000] "GET /api/hero-slides HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:18 +0000] "GET /api/events/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:18 +0000] "GET /api/news HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:18 +0000] "GET /api/homepage HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:18 +0000] "GET /api/counters HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:18 +0000] "GET /api/achievements HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:18 +0000] "GET /api/contact HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:19 +0000] "GET /api/news/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:19 +0000] "GET /api/events/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:19 +0000] "GET /api/projects/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:19 +0000] "GET /api/news HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:32 +0000] "GET /api/hero-slides HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:32 +0000] "GET /api/events/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:32 +0000] "GET /api/achievements HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:32 +0000] "GET /api/counters HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:32 +0000] "GET /api/homepage HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:32 +0000] "GET /api/news HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:32 +0000] "GET /api/contact HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:33 +0000] "GET /api/projects/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:33 +0000] "GET /api/events/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:33 +0000] "GET /api/news/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-121.200.4.58 - - [17/Nov/2025:11:28:33 +0000] "GET /api/news HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36" "-"
-
-
-----------------------------------------
-/var/log/nginx/error.log
-----------------------------------------
-2025/11/16 22:06:32 [warn] 85992#85992: *446 using uninitialized "day" variable while logging request, client: 95.215.0.144, server: , request: "® §ˆmSÀ‘|q` Gü÷4{c+$oÊï≈ÛÔLΩ6–ı$ qxP„ì˜ázöêÖªGh‰~ˇ‹µI± 9Òû>ñ¥®ˆ¿ ¿+¿/¿,¿0Ã©Ã®¿	¿¿"
-2025/11/16 22:06:32 [warn] 85992#85992: *446 using uninitialized "hour" variable while logging request, client: 95.215.0.144, server: , request: "® §ˆmSÀ‘|q` Gü÷4{c+$oÊï≈ÛÔLΩ6–ı$ qxP„ì˜ázöêÖªGh‰~ˇ‹µI± 9Òû>ñ¥®ˆ¿ ¿+¿/¿,¿0Ã©Ã®¿	¿¿"
-2025/11/16 22:06:34 [warn] 85992#85992: *449 using uninitialized "year" variable while logging request, client: 95.215.0.144, server: , request: "® §Fïªµê≥¡ÖW?Æ–äv˙n˚˝È∑XK¬¯40™◊æ#8 ˚Tt^x.ﬂ≤∑±•Éx)~Xkfó≤éåÅN¢	ñÁÉ ¿+¿/¿,¿0Ã©Ã®¿	¿¿"
-2025/11/16 22:06:34 [warn] 85992#85992: *449 using uninitialized "month" variable while logging request, client: 95.215.0.144, server: , request: "® §Fïªµê≥¡ÖW?Æ–äv˙n˚˝È∑XK¬¯40™◊æ#8 ˚Tt^x.ﬂ≤∑±•Éx)~Xkfó≤éåÅN¢	ñÁÉ ¿+¿/¿,¿0Ã©Ã®¿	¿¿"
-2025/11/16 22:06:34 [warn] 85992#85992: *449 using uninitialized "day" variable while logging request, client: 95.215.0.144, server: , request: "® §Fïªµê≥¡ÖW?Æ–äv˙n˚˝È∑XK¬¯40™◊æ#8 ˚Tt^x.ﬂ≤∑±•Éx)~Xkfó≤éåÅN¢	ñÁÉ ¿+¿/¿,¿0Ã©Ã®¿	¿¿"
-2025/11/16 22:06:34 [warn] 85992#85992: *449 using uninitialized "hour" variable while logging request, client: 95.215.0.144, server: , request: "® §Fïªµê≥¡ÖW?Æ–äv˙n˚˝È∑XK¬¯40™◊æ#8 ˚Tt^x.ﬂ≤∑±•Éx)~Xkfó≤éåÅN¢	ñÁÉ ¿+¿/¿,¿0Ã©Ã®¿	¿¿"
-2025/11/16 22:18:22 [warn] 85992#85992: *454 using uninitialized "year" variable while logging request, client: 152.32.173.151, server: , request: "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1"
-2025/11/16 22:18:22 [warn] 85992#85992: *454 using uninitialized "month" variable while logging request, client: 152.32.173.151, server: , request: "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1"
-2025/11/16 22:18:22 [warn] 85992#85992: *454 using uninitialized "day" variable while logging request, client: 152.32.173.151, server: , request: "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1"
-2025/11/16 22:18:22 [warn] 85992#85992: *454 using uninitialized "hour" variable while logging request, client: 152.32.173.151, server: , request: "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1"
-2025/11/16 22:18:23 [warn] 85992#85992: *455 using uninitialized "year" variable while logging request, client: 152.32.173.151, server: , request: "POST /cgi-bin/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/bin/sh HTTP/1.1"
-2025/11/16 22:18:23 [warn] 85992#85992: *455 using uninitialized "month" variable while logging request, client: 152.32.173.151, server: , request: "POST /cgi-bin/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/bin/sh HTTP/1.1"
-2025/11/16 22:18:23 [warn] 85992#85992: *455 using uninitialized "day" variable while logging request, client: 152.32.173.151, server: , request: "POST /cgi-bin/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/bin/sh HTTP/1.1"
-2025/11/16 22:18:23 [warn] 85992#85992: *455 using uninitialized "hour" variable while logging request, client: 152.32.173.151, server: , request: "POST /cgi-bin/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/bin/sh HTTP/1.1"
-2025/11/16 23:55:03 [warn] 85991#85991: *532 using uninitialized "year" variable while logging request, client: 172.236.35.120, server: , request: "  ¸ñÕC‘2Ÿ©ß˘ßgæ¥ÙCt◊Æ˙∏ºﬁîü|ê&æ≤ 6æ¿èa…ZQ<Ä[≠†ö|r¶ÁoZ¶g2®RU”tø— ú 3 9 5 /¿,¿0 £ üÃ©Ã®Ã™¿Ø¿≠¿£¿ü¿]¿a¿W¿S¿+¿/ ¢ û¿Æ¿¨¿¢¿û¿\¿`¿V¿R¿$¿( k j¿s¿w ƒ √¿#¿' g @¿r¿v æ Ω¿"
-2025/11/16 23:55:03 [warn] 85991#85991: *532 using uninitialized "month" variable while logging request, client: 172.236.35.120, server: , request: "  ¸ñÕC‘2Ÿ©ß˘ßgæ¥ÙCt◊Æ˙∏ºﬁîü|ê&æ≤ 6æ¿èa…ZQ<Ä[≠†ö|r¶ÁoZ¶g2®RU”tø— ú 3 9 5 /¿,¿0 £ üÃ©Ã®Ã™¿Ø¿≠¿£¿ü¿]¿a¿W¿S¿+¿/ ¢ û¿Æ¿¨¿¢¿û¿\¿`¿V¿R¿$¿( k j¿s¿w ƒ √¿#¿' g @¿r¿v æ Ω¿"
-2025/11/16 23:55:03 [warn] 85991#85991: *532 using uninitialized "day" variable while logging request, client: 172.236.35.120, server: , request: "  ¸ñÕC‘2Ÿ©ß˘ßgæ¥ÙCt◊Æ˙∏ºﬁîü|ê&æ≤ 6æ¿èa…ZQ<Ä[≠†ö|r¶ÁoZ¶g2®RU”tø— ú 3 9 5 /¿,¿0 £ üÃ©Ã®Ã™¿Ø¿≠¿£¿ü¿]¿a¿W¿S¿+¿/ ¢ û¿Æ¿¨¿¢¿û¿\¿`¿V¿R¿$¿( k j¿s¿w ƒ √¿#¿' g @¿r¿v æ Ω¿"
-2025/11/16 23:55:03 [warn] 85991#85991: *532 using uninitialized "hour" variable while logging request, client: 172.236.35.120, server: , request: "  ¸ñÕC‘2Ÿ©ß˘ßgæ¥ÙCt◊Æ˙∏ºﬁîü|ê&æ≤ 6æ¿èa…ZQ<Ä[≠†ö|r¶ÁoZ¶g2®RU”tø— ú 3 9 5 /¿,¿0 £ üÃ©Ã®Ã™¿Ø¿≠¿£¿ü¿]¿a¿W¿S¿+¿/ ¢ û¿Æ¿¨¿¢¿û¿\¿`¿V¿R¿$¿( k j¿s¿w ƒ √¿#¿' g @¿r¿v æ Ω¿"
-2025/11/16 23:59:47 [warn] 85991#85991: *537 using uninitialized "year" variable while logging request, client: 103.79.186.110, server: , request: "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1"
-2025/11/16 23:59:47 [warn] 85991#85991: *537 using uninitialized "month" variable while logging request, client: 103.79.186.110, server: , request: "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1"
-2025/11/16 23:59:47 [warn] 85991#85991: *537 using uninitialized "day" variable while logging request, client: 103.79.186.110, server: , request: "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1"
-2025/11/16 23:59:47 [warn] 85991#85991: *537 using uninitialized "hour" variable while logging request, client: 103.79.186.110, server: , request: "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1"
-2025/11/16 23:59:47 [warn] 85991#85991: *538 using uninitialized "year" variable while logging request, client: 103.79.186.110, server: , request: "POST /cgi-bin/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/bin/sh HTTP/1.1"
-2025/11/16 23:59:47 [warn] 85991#85991: *538 using uninitialized "month" variable while logging request, client: 103.79.186.110, server: , request: "POST /cgi-bin/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/bin/sh HTTP/1.1"
-2025/11/16 23:59:47 [warn] 85991#85991: *538 using uninitialized "day" variable while logging request, client: 103.79.186.110, server: , request: "POST /cgi-bin/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/bin/sh HTTP/1.1"
-2025/11/16 23:59:47 [warn] 85991#85991: *538 using uninitialized "hour" variable while logging request, client: 103.79.186.110, server: , request: "POST /cgi-bin/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/bin/sh HTTP/1.1"
-2025/11/17 00:51:24 [warn] 85992#85992: *595 using uninitialized "year" variable while logging request, client: 93.174.93.12, server: , request: "o kRH≈#˜:Nﬂ‚¥Ç/ˇ	Tüßƒy∞h∆å§="·ò Ñ¥,ÖØn„Yªbhlˇ(=':©ÇŸo»¢◊ìò¥ÔÄÂπê (¿"
-2025/11/17 00:51:24 [warn] 85992#85992: *595 using uninitialized "month" variable while logging request, client: 93.174.93.12, server: , request: "o kRH≈#˜:Nﬂ‚¥Ç/ˇ	Tüßƒy∞h∆å§="·ò Ñ¥,ÖØn„Yªbhlˇ(=':©ÇŸo»¢◊ìò¥ÔÄÂπê (¿"
-2025/11/17 00:51:24 [warn] 85992#85992: *595 using uninitialized "day" variable while logging request, client: 93.174.93.12, server: , request: "o kRH≈#˜:Nﬂ‚¥Ç/ˇ	Tüßƒy∞h∆å§="·ò Ñ¥,ÖØn„Yªbhlˇ(=':©ÇŸo»¢◊ìò¥ÔÄÂπê (¿"
-2025/11/17 00:51:24 [warn] 85992#85992: *595 using uninitialized "hour" variable while logging request, client: 93.174.93.12, server: , request: "o kRH≈#˜:Nﬂ‚¥Ç/ˇ	Tüßƒy∞h∆å§="·ò Ñ¥,ÖØn„Yªbhlˇ(=':©ÇŸo»¢◊ìò¥ÔÄÂπê (¿"
-2025/11/17 01:23:11 [warn] 85992#85992: *602 using uninitialized "year" variable while logging request, client: 65.49.1.38, server: , request: " {  w¨∆^{[üëíl=ê%ú&Ås«◊{Ó;2¥∏iÄ™V8†  ¿/¿+¿¿¿¿	¿¿"
-2025/11/17 01:23:11 [warn] 85992#85992: *602 using uninitialized "month" variable while logging request, client: 65.49.1.38, server: , request: " {  w¨∆^{[üëíl=ê%ú&Ås«◊{Ó;2¥∏iÄ™V8†  ¿/¿+¿¿¿¿	¿¿"
-2025/11/17 01:23:11 [warn] 85992#85992: *602 using uninitialized "day" variable while logging request, client: 65.49.1.38, server: , request: " {  w¨∆^{[üëíl=ê%ú&Ås«◊{Ó;2¥∏iÄ™V8†  ¿/¿+¿¿¿¿	¿¿"
-2025/11/17 01:23:11 [warn] 85992#85992: *602 using uninitialized "hour" variable while logging request, client: 65.49.1.38, server: , request: " {  w¨∆^{[üëíl=ê%ú&Ås«◊{Ó;2¥∏iÄ™V8†  ¿/¿+¿¿¿¿	¿¿"
-2025/11/17 02:54:45 [warn] 85992#85992: *606 using uninitialized "year" variable while logging request, client: 198.235.24.146, server: , request: " Ó  Í3πô"
-2025/11/17 02:54:45 [warn] 85992#85992: *606 using uninitialized "month" variable while logging request, client: 198.235.24.146, server: , request: " Ó  Í3πô"
-2025/11/17 02:54:45 [warn] 85992#85992: *606 using uninitialized "day" variable while logging request, client: 198.235.24.146, server: , request: " Ó  Í3πô"
-2025/11/17 02:54:45 [warn] 85992#85992: *606 using uninitialized "hour" variable while logging request, client: 198.235.24.146, server: , request: " Ó  Í3πô"
-2025/11/17 02:54:45 [warn] 85992#85992: *607 using uninitialized "year" variable while logging request, client: 198.235.24.146, server: , request: "    ∆gXÄÃü·f~•BƒîÜƒæ å"
-2025/11/17 02:54:45 [warn] 85992#85992: *607 using uninitialized "month" variable while logging request, client: 198.235.24.146, server: , request: "    ∆gXÄÃü·f~•BƒîÜƒæ å"
-2025/11/17 02:54:45 [warn] 85992#85992: *607 using uninitialized "day" variable while logging request, client: 198.235.24.146, server: , request: "    ∆gXÄÃü·f~•BƒîÜƒæ å"
-2025/11/17 02:54:45 [warn] 85992#85992: *607 using uninitialized "hour" variable while logging request, client: 198.235.24.146, server: , request: "    ∆gXÄÃü·f~•BƒîÜƒæ å"
-2025/11/17 04:50:23 [warn] 85991#85991: *623 using uninitialized "year" variable while logging request, client: 209.38.201.154, server: , request: "                    "
-2025/11/17 04:50:23 [warn] 85991#85991: *623 using uninitialized "month" variable while logging request, client: 209.38.201.154, server: , request: "                    "
-2025/11/17 04:50:23 [warn] 85991#85991: *623 using uninitialized "day" variable while logging request, client: 209.38.201.154, server: , request: "                    "
-2025/11/17 04:50:23 [warn] 85991#85991: *623 using uninitialized "hour" variable while logging request, client: 209.38.201.154, server: , request: "                    "
-2025/11/17 08:01:38 [warn] 85992#85992: *644 using uninitialized "year" variable while logging request, client: 173.249.56.67, server: , request: "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1"
-2025/11/17 08:01:38 [warn] 85992#85992: *644 using uninitialized "month" variable while logging request, client: 173.249.56.67, server: , request: "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1"
-2025/11/17 08:01:38 [warn] 85992#85992: *644 using uninitialized "day" variable while logging request, client: 173.249.56.67, server: , request: "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1"
-2025/11/17 08:01:38 [warn] 85992#85992: *644 using uninitialized "hour" variable while logging request, client: 173.249.56.67, server: , request: "POST /cgi-bin/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/.%2e/bin/sh HTTP/1.1"
-2025/11/17 08:01:39 [warn] 85992#85992: *645 using uninitialized "year" variable while logging request, client: 173.249.56.67, server: , request: "POST /cgi-bin/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/bin/sh HTTP/1.1"
-2025/11/17 08:01:39 [warn] 85992#85992: *645 using uninitialized "month" variable while logging request, client: 173.249.56.67, server: , request: "POST /cgi-bin/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/bin/sh HTTP/1.1"
-2025/11/17 08:01:39 [warn] 85992#85992: *645 using uninitialized "day" variable while logging request, client: 173.249.56.67, server: , request: "POST /cgi-bin/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/bin/sh HTTP/1.1"
-2025/11/17 08:01:39 [warn] 85992#85992: *645 using uninitialized "hour" variable while logging request, client: 173.249.56.67, server: , request: "POST /cgi-bin/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/%%32%65%%32%65/bin/sh HTTP/1.1"
-2025/11/17 08:26:37 [warn] 85992#85992: *693 using uninitialized "year" variable while logging request, client: 120.28.148.125, server: , request: ";sh+/tmp/gpon80&ipv=0"
-2025/11/17 08:26:37 [warn] 85992#85992: *693 using uninitialized "month" variable while logging request, client: 120.28.148.125, server: , request: ";sh+/tmp/gpon80&ipv=0"
-2025/11/17 08:26:37 [warn] 85992#85992: *693 using uninitialized "day" variable while logging request, client: 120.28.148.125, server: , request: ";sh+/tmp/gpon80&ipv=0"
-2025/11/17 08:26:37 [warn] 85992#85992: *693 using uninitialized "hour" variable while logging request, client: 120.28.148.125, server: , request: ";sh+/tmp/gpon80&ipv=0"
-2025/11/17 09:03:56 [warn] 85992#85992: *696 using uninitialized "year" variable while logging request, client: 205.210.31.186, server: , request: "    ∆%√0>¶ÕÏ¯F\˝øƒøMr˝ßY{ï‘A|ÏZE¿Så  hÃÃ¿/¿+¿0¿,¿¿¿'¿#¿¿	¿(¿$¿¿"
-2025/11/17 09:03:56 [warn] 85992#85992: *696 using uninitialized "month" variable while logging request, client: 205.210.31.186, server: , request: "    ∆%√0>¶ÕÏ¯F\˝øƒøMr˝ßY{ï‘A|ÏZE¿Så  hÃÃ¿/¿+¿0¿,¿¿¿'¿#¿¿	¿(¿$¿¿"
-2025/11/17 09:03:56 [warn] 85992#85992: *696 using uninitialized "day" variable while logging request, client: 205.210.31.186, server: , request: "    ∆%√0>¶ÕÏ¯F\˝øƒøMr˝ßY{ï‘A|ÏZE¿Så  hÃÃ¿/¿+¿0¿,¿¿¿'¿#¿¿	¿(¿$¿¿"
-2025/11/17 09:03:56 [warn] 85992#85992: *696 using uninitialized "hour" variable while logging request, client: 205.210.31.186, server: , request: "    ∆%√0>¶ÕÏ¯F\˝øƒøMr˝ßY{ï‘A|ÏZE¿Så  hÃÃ¿/¿+¿0¿,¿¿¿'¿#¿¿	¿(¿$¿¿"
-2025/11/17 09:03:56 [warn] 85992#85992: *695 using uninitialized "year" variable while logging request, client: 205.210.31.186, server: , request: " Ó  Í&6å5,TÊ—eÏ’*¯1P·€úÀU£]’ÙVç| iµíÉ:FÇÀG0◊VÒU^ujw"Õè,Ú#ä«ØâwGÈ &¿+¿/¿,¿0Ã©Ã®¿	¿¿"
-2025/11/17 09:03:56 [warn] 85992#85992: *695 using uninitialized "month" variable while logging request, client: 205.210.31.186, server: , request: " Ó  Í&6å5,TÊ—eÏ’*¯1P·€úÀU£]’ÙVç| iµíÉ:FÇÀG0◊VÒU^ujw"Õè,Ú#ä«ØâwGÈ &¿+¿/¿,¿0Ã©Ã®¿	¿¿"
-2025/11/17 09:03:56 [warn] 85992#85992: *695 using uninitialized "day" variable while logging request, client: 205.210.31.186, server: , request: " Ó  Í&6å5,TÊ—eÏ’*¯1P·€úÀU£]’ÙVç| iµíÉ:FÇÀG0◊VÒU^ujw"Õè,Ú#ä«ØâwGÈ &¿+¿/¿,¿0Ã©Ã®¿	¿¿"
-2025/11/17 09:03:56 [warn] 85992#85992: *695 using uninitialized "hour" variable while logging request, client: 205.210.31.186, server: , request: " Ó  Í&6å5,TÊ—eÏ’*¯1P·€úÀU£]’ÙVç| iµíÉ:FÇÀG0◊VÒU^ujw"Õè,Ú#ä«ØâwGÈ &¿+¿/¿,¿0Ã©Ã®¿	¿¿"
-2025/11/17 09:29:17 [warn] 85992#85992: *706 using uninitialized "year" variable while logging request, client: 143.198.66.251, server: , request: " {  wUŒfŒAÂH+ïá?`9ﬁ|ˆEßW6–‚	ÒıÔﬂ#õs  ¿/¿+¿¿¿¿	¿¿"
-2025/11/17 09:29:17 [warn] 85992#85992: *706 using uninitialized "month" variable while logging request, client: 143.198.66.251, server: , request: " {  wUŒfŒAÂH+ïá?`9ﬁ|ˆEßW6–‚	ÒıÔﬂ#õs  ¿/¿+¿¿¿¿	¿¿"
-2025/11/17 09:29:17 [warn] 85992#85992: *706 using uninitialized "day" variable while logging request, client: 143.198.66.251, server: , request: " {  wUŒfŒAÂH+ïá?`9ﬁ|ˆEßW6–‚	ÒıÔﬂ#õs  ¿/¿+¿¿¿¿	¿¿"
-2025/11/17 09:29:17 [warn] 85992#85992: *706 using uninitialized "hour" variable while logging request, client: 143.198.66.251, server: , request: " {  wUŒfŒAÂH+ïá?`9ﬁ|ˆEßW6–‚	ÒıÔﬂ#õs  ¿/¿+¿¿¿¿	¿¿"
-2025/11/17 09:29:17 [warn] 85992#85992: *705 using uninitialized "year" variable while logging request, client: 143.198.66.251, server: , request: " {  we"
-2025/11/17 09:29:17 [warn] 85992#85992: *705 using uninitialized "month" variable while logging request, client: 143.198.66.251, server: , request: " {  we"
-2025/11/17 09:29:17 [warn] 85992#85992: *705 using uninitialized "day" variable while logging request, client: 143.198.66.251, server: , request: " {  we"
-2025/11/17 09:29:17 [warn] 85992#85992: *705 using uninitialized "hour" variable while logging request, client: 143.198.66.251, server: , request: " {  we"
-2025/11/17 09:56:14 [warn] 85991#85991: *725 using uninitialized "year" variable while logging request, client: 35.221.53.249, server: , request: " M  I—ë|j“i\mX˘=‰¿«ÖPs¯{˙¨y—"i ¶ a æ±≥Ì¥dM+Ìl±°µù"
-2025/11/17 09:56:14 [warn] 85991#85991: *725 using uninitialized "month" variable while logging request, client: 35.221.53.249, server: , request: " M  I—ë|j“i\mX˘=‰¿«ÖPs¯{˙¨y—"i ¶ a æ±≥Ì¥dM+Ìl±°µù"
-2025/11/17 09:56:14 [warn] 85991#85991: *725 using uninitialized "day" variable while logging request, client: 35.221.53.249, server: , request: " M  I—ë|j“i\mX˘=‰¿«ÖPs¯{˙¨y—"i ¶ a æ±≥Ì¥dM+Ìl±°µù"
-2025/11/17 09:56:14 [warn] 85991#85991: *725 using uninitialized "hour" variable while logging request, client: 35.221.53.249, server: , request: " M  I—ë|j“i\mX˘=‰¿«ÖPs¯{˙¨y—"i ¶ a æ±≥Ì¥dM+Ìl±°µù"
-2025/11/17 10:30:53 [warn] 85991#85991: *730 using uninitialized "year" variable while logging request, client: 162.142.125.221, server: , request: " Ó  Í=¡*)4¸·∂R≤6J¨àCÁˇx∑§_£q⁄ÆË”t €∑Ø·2ª⁄Ûe‘˙ùvnw›˝Eà«¸5Ex¨£˜ &Ã®Ã©¿/¿0¿+¿,¿¿	¿¿"
-2025/11/17 10:30:53 [warn] 85991#85991: *730 using uninitialized "month" variable while logging request, client: 162.142.125.221, server: , request: " Ó  Í=¡*)4¸·∂R≤6J¨àCÁˇx∑§_£q⁄ÆË”t €∑Ø·2ª⁄Ûe‘˙ùvnw›˝Eà«¸5Ex¨£˜ &Ã®Ã©¿/¿0¿+¿,¿¿	¿¿"
-2025/11/17 10:30:53 [warn] 85991#85991: *730 using uninitialized "day" variable while logging request, client: 162.142.125.221, server: , request: " Ó  Í=¡*)4¸·∂R≤6J¨àCÁˇx∑§_£q⁄ÆË”t €∑Ø·2ª⁄Ûe‘˙ùvnw›˝Eà«¸5Ex¨£˜ &Ã®Ã©¿/¿0¿+¿,¿¿	¿¿"
-2025/11/17 10:30:53 [warn] 85991#85991: *730 using uninitialized "hour" variable while logging request, client: 162.142.125.221, server: , request: " Ó  Í=¡*)4¸·∂R≤6J¨àCÁˇx∑§_£q⁄ÆË”t €∑Ø·2ª⁄Ûe‘˙ùvnw›˝Eà«¸5Ex¨£˜ &Ã®Ã©¿/¿0¿+¿,¿¿	¿¿"
-2025/11/17 10:30:56 [warn] 85991#85991: *733 using uninitialized "year" variable while logging request, client: 162.142.125.221, server: , request: "PRI * HTTP/2.0"
-2025/11/17 10:30:56 [warn] 85991#85991: *733 using uninitialized "month" variable while logging request, client: 162.142.125.221, server: , request: "PRI * HTTP/2.0"
-2025/11/17 10:30:56 [warn] 85991#85991: *733 using uninitialized "day" variable while logging request, client: 162.142.125.221, server: , request: "PRI * HTTP/2.0"
-2025/11/17 10:30:56 [warn] 85991#85991: *733 using uninitialized "hour" variable while logging request, client: 162.142.125.221, server: , request: "PRI * HTTP/2.0"
-2025/11/17 10:32:07 [warn] 85991#85991: *738 using uninitialized "year" variable while logging request, client: 162.142.125.221, server: , request: " Ó  ÍDŒEõbypq38Bä´§KÔÙG≈õÑU˛Ï?Á w"¿.!Ø]t+µ˝d"
-2025/11/17 10:32:07 [warn] 85991#85991: *738 using uninitialized "month" variable while logging request, client: 162.142.125.221, server: , request: " Ó  ÍDŒEõbypq38Bä´§KÔÙG≈õÑU˛Ï?Á w"¿.!Ø]t+µ˝d"
-2025/11/17 10:32:07 [warn] 85991#85991: *738 using uninitialized "day" variable while logging request, client: 162.142.125.221, server: , request: " Ó  ÍDŒEõbypq38Bä´§KÔÙG≈õÑU˛Ï?Á w"¿.!Ø]t+µ˝d"
-2025/11/17 10:32:07 [warn] 85991#85991: *738 using uninitialized "hour" variable while logging request, client: 162.142.125.221, server: , request: " Ó  ÍDŒEõbypq38Bä´§KÔÙG≈õÑU˛Ï?Á w"¿.!Ø]t+µ˝d"
-2025/11/17 11:18:14 [warn] 157925#157925: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
-2025/11/17 11:18:15 [warn] 157964#157964: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
-2025/11/17 11:18:15 [warn] 157965#157965: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
-2025/11/17 11:23:41 [warn] 157969#157969: *63 using uninitialized "year" variable while logging request, client: 185.242.226.110, server: , request: " ã  á!N6¢ex«\Ïó0–˝ä]"
-2025/11/17 11:23:41 [warn] 157969#157969: *63 using uninitialized "month" variable while logging request, client: 185.242.226.110, server: , request: " ã  á!N6¢ex«\Ïó0–˝ä]"
-2025/11/17 11:23:41 [warn] 157969#157969: *63 using uninitialized "day" variable while logging request, client: 185.242.226.110, server: , request: " ã  á!N6¢ex«\Ïó0–˝ä]"
-2025/11/17 11:23:41 [warn] 157969#157969: *63 using uninitialized "hour" variable while logging request, client: 185.242.226.110, server: , request: " ã  á!N6¢ex«\Ïó0–˝ä]"
-2025/11/17 11:24:39 [warn] 158621#158621: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
-2025/11/17 11:24:40 [warn] 158660#158660: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
-2025/11/17 11:24:40 [warn] 158661#158661: could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
-
-
-----------------------------------------
-/var/log/web.stdout.log
-----------------------------------------
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  retryable: false,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  retryDelay: 29.342735848421718
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: }
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: ::ffff:127.0.0.1 - - [17/Nov/2025:11:28:33 +0000] "GET /api/projects/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: Error scanning anmc-events-dev: {
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  message: 'The security token included in the request is invalid.',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  code: 'UnrecognizedClientException',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  statusCode: 400,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  requestId: 'VO1F5TPF8LO32VG0ULEJBJJUP7VV4KQNSO5AEMVJF66Q9ASUAAJG',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  tableName: 'anmc-events-dev',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  region: 'ap-southeast-2'
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: }
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: Error: UnrecognizedClientException: The security token included in the request is invalid.
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.extractError (/var/app/current/node_modules/aws-sdk/lib/protocol/json.js:80:27)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.callListeners (/var/app/current/node_modules/aws-sdk/lib/sequential_executor.js:106:20)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.emit (/var/app/current/node_modules/aws-sdk/lib/sequential_executor.js:78:10)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.emit (/var/app/current/node_modules/aws-sdk/lib/request.js:686:14)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.transition (/var/app/current/node_modules/aws-sdk/lib/request.js:22:10)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at AcceptorStateMachine.runTo (/var/app/current/node_modules/aws-sdk/lib/state_machine.js:14:12)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at /var/app/current/node_modules/aws-sdk/lib/state_machine.js:26:10
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.<anonymous> (/var/app/current/node_modules/aws-sdk/lib/request.js:38:9)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.<anonymous> (/var/app/current/node_modules/aws-sdk/lib/request.js:688:12)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.callListeners (/var/app/current/node_modules/aws-sdk/lib/sequential_executor.js:116:18) {
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  code: 'UnrecognizedClientException',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  '[__type]': 'See error.__type for details.',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  time: 2025-11-17T11:28:33.351Z,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  requestId: 'VO1F5TPF8LO32VG0ULEJBJJUP7VV4KQNSO5AEMVJF66Q9ASUAAJG',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  statusCode: 400,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  retryable: false,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  retryDelay: 28.322981332720197
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: }
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: ::ffff:127.0.0.1 - - [17/Nov/2025:11:28:33 +0000] "GET /api/events/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: Error querying anmc-news-dev with index FeaturedIndex: UnrecognizedClientException: The security token included in the request is invalid.
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.extractError (/var/app/current/node_modules/aws-sdk/lib/protocol/json.js:80:27)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.callListeners (/var/app/current/node_modules/aws-sdk/lib/sequential_executor.js:106:20)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.emit (/var/app/current/node_modules/aws-sdk/lib/sequential_executor.js:78:10)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.emit (/var/app/current/node_modules/aws-sdk/lib/request.js:686:14)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.transition (/var/app/current/node_modules/aws-sdk/lib/request.js:22:10)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at AcceptorStateMachine.runTo (/var/app/current/node_modules/aws-sdk/lib/state_machine.js:14:12)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at /var/app/current/node_modules/aws-sdk/lib/state_machine.js:26:10
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.<anonymous> (/var/app/current/node_modules/aws-sdk/lib/request.js:38:9)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.<anonymous> (/var/app/current/node_modules/aws-sdk/lib/request.js:688:12)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.callListeners (/var/app/current/node_modules/aws-sdk/lib/sequential_executor.js:116:18) {
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  code: 'UnrecognizedClientException',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  '[__type]': 'See error.__type for details.',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  time: 2025-11-17T11:28:33.353Z,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  requestId: 'KC8JUGMP08IOLMKRQSKL32C003VV4KQNSO5AEMVJF66Q9ASUAAJG',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  statusCode: 400,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  retryable: false,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  retryDelay: 2.487552434023299
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: }
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: Error: UnrecognizedClientException: The security token included in the request is invalid.
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.extractError (/var/app/current/node_modules/aws-sdk/lib/protocol/json.js:80:27)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.callListeners (/var/app/current/node_modules/aws-sdk/lib/sequential_executor.js:106:20)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.emit (/var/app/current/node_modules/aws-sdk/lib/sequential_executor.js:78:10)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.emit (/var/app/current/node_modules/aws-sdk/lib/request.js:686:14)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.transition (/var/app/current/node_modules/aws-sdk/lib/request.js:22:10)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at AcceptorStateMachine.runTo (/var/app/current/node_modules/aws-sdk/lib/state_machine.js:14:12)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at /var/app/current/node_modules/aws-sdk/lib/state_machine.js:26:10
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.<anonymous> (/var/app/current/node_modules/aws-sdk/lib/request.js:38:9)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.<anonymous> (/var/app/current/node_modules/aws-sdk/lib/request.js:688:12)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.callListeners (/var/app/current/node_modules/aws-sdk/lib/sequential_executor.js:116:18) {
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  code: 'UnrecognizedClientException',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  '[__type]': 'See error.__type for details.',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  time: 2025-11-17T11:28:33.353Z,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  requestId: 'KC8JUGMP08IOLMKRQSKL32C003VV4KQNSO5AEMVJF66Q9ASUAAJG',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  statusCode: 400,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  retryable: false,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  retryDelay: 2.487552434023299
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: }
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: ::ffff:127.0.0.1 - - [17/Nov/2025:11:28:33 +0000] "GET /api/news/featured HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: Scanning table: anmc-news-dev with params: {"TableName":"anmc-news-dev"}
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: Error scanning anmc-news-dev: {
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  message: 'The security token included in the request is invalid.',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  code: 'UnrecognizedClientException',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  statusCode: 400,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  requestId: '9AVBQ0EM0LNPO98RFJV5I7383VVV4KQNSO5AEMVJF66Q9ASUAAJG',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  tableName: 'anmc-news-dev',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  region: 'ap-southeast-2'
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: }
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: Error: UnrecognizedClientException: The security token included in the request is invalid.
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.extractError (/var/app/current/node_modules/aws-sdk/lib/protocol/json.js:80:27)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.callListeners (/var/app/current/node_modules/aws-sdk/lib/sequential_executor.js:106:20)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.emit (/var/app/current/node_modules/aws-sdk/lib/sequential_executor.js:78:10)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.emit (/var/app/current/node_modules/aws-sdk/lib/request.js:686:14)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.transition (/var/app/current/node_modules/aws-sdk/lib/request.js:22:10)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at AcceptorStateMachine.runTo (/var/app/current/node_modules/aws-sdk/lib/state_machine.js:14:12)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at /var/app/current/node_modules/aws-sdk/lib/state_machine.js:26:10
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.<anonymous> (/var/app/current/node_modules/aws-sdk/lib/request.js:38:9)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.<anonymous> (/var/app/current/node_modules/aws-sdk/lib/request.js:688:12)
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:    at Request.callListeners (/var/app/current/node_modules/aws-sdk/lib/sequential_executor.js:116:18) {
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  code: 'UnrecognizedClientException',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  '[__type]': 'See error.__type for details.',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  time: 2025-11-17T11:28:33.404Z,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  requestId: '9AVBQ0EM0LNPO98RFJV5I7383VVV4KQNSO5AEMVJF66Q9ASUAAJG',
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  statusCode: 400,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  retryable: false,
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]:  retryDelay: 12.269858350653362
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: }
-Nov 17 11:28:33 ip-172-31-22-27 web[158617]: ::ffff:127.0.0.1 - - [17/Nov/2025:11:28:33 +0000] "GET /api/news HTTP/1.1" 400 91 "http://anmc-frontend.s3-website-ap-southeast-2.amazonaws.com/" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36"
-
-
-----------------------------------------
-/var/log/eb-engine.log
-----------------------------------------
-2025/11/17 11:24:36.833175 [INFO] Executing instruction: stop proxy
-2025/11/17 11:24:36.833220 [INFO] Running command: systemctl show -p PartOf httpd.service
-2025/11/17 11:24:36.848495 [WARN] deregisterProcess Warning: process httpd is not registered, skipping...
-
-2025/11/17 11:24:36.848528 [INFO] Running command: systemctl show -p PartOf nginx.service
-2025/11/17 11:24:36.860967 [INFO] Running command: systemctl is-active nginx.service
-2025/11/17 11:24:36.868908 [INFO] Running command: systemctl show -p PartOf nginx.service
-2025/11/17 11:24:36.881163 [INFO] Running command: systemctl stop nginx.service
-2025/11/17 11:24:37.080827 [INFO] Running command: systemctl disable nginx.service
-2025/11/17 11:24:37.417869 [INFO] Running command: systemctl daemon-reload
-2025/11/17 11:24:37.661248 [INFO] Running command: systemctl reset-failed
-2025/11/17 11:24:37.669993 [INFO] Executing instruction: FlipApplication
-2025/11/17 11:24:37.670020 [INFO] Fetching environment variables...
-2025/11/17 11:24:37.670208 [INFO] Purge old process...
-2025/11/17 11:24:37.670293 [INFO] Running command: systemctl stop eb-app.target
-2025/11/17 11:24:37.679909 [INFO] Running command: systemctl show -p ConsistsOf eb-app.target | cut -d= -f2
-2025/11/17 11:24:37.758594 [INFO] web.service
-
-2025/11/17 11:24:37.758636 [INFO] deregistering process: web
-2025/11/17 11:24:37.758649 [INFO] Running command: systemctl show -p PartOf web.service
-2025/11/17 11:24:37.769844 [INFO] Running command: systemctl is-active web.service
-2025/11/17 11:24:37.777466 [INFO] Running command: systemctl disable web.service
-2025/11/17 11:24:38.055820 [INFO] Removed "/etc/systemd/system/multi-user.target.wants/web.service".
-
-2025/11/17 11:24:38.055914 [INFO] Running command: systemctl daemon-reload
-2025/11/17 11:24:38.324139 [INFO] Running command: systemctl reset-failed
-2025/11/17 11:24:38.332711 [INFO] Running command: systemctl is-active web.service
-2025/11/17 11:24:38.340604 [INFO] Process web has been fully terminated
-2025/11/17 11:24:38.340629 [INFO] All processes have been fully terminated
-2025/11/17 11:24:38.340633 [INFO] Removing /var/app/current/ if it exists
-2025/11/17 11:24:38.590844 [INFO] Renaming /var/app/staging/ to /var/app/current/
-2025/11/17 11:24:38.590877 [INFO] Register application processes...
-2025/11/17 11:24:38.590882 [INFO] Registering the proc: web
-
-2025/11/17 11:24:38.590892 [INFO] Running command: systemctl show -p PartOf web.service
-2025/11/17 11:24:38.627352 [INFO] Running command: systemctl daemon-reload
-2025/11/17 11:24:38.889395 [INFO] Running command: systemctl reset-failed
-2025/11/17 11:24:38.898005 [INFO] Running command: systemctl is-enabled eb-app.target
-2025/11/17 11:24:38.906295 [INFO] Running command: systemctl enable eb-app.target
-2025/11/17 11:24:39.200139 [INFO] Running command: systemctl start eb-app.target
-2025/11/17 11:24:39.209725 [INFO] Running command: systemctl enable web.service
-2025/11/17 11:24:39.493667 [INFO] Created symlink /etc/systemd/system/multi-user.target.wants/web.service ‚Üí /etc/systemd/system/web.service.
-
-2025/11/17 11:24:39.493702 [INFO] Running command: systemctl show -p PartOf web.service
-2025/11/17 11:24:39.505518 [INFO] Running command: systemctl is-active web.service
-2025/11/17 11:24:39.513413 [INFO] Running command: systemctl start web.service
-2025/11/17 11:24:39.550601 [INFO] Executing instruction: start X-Ray
-2025/11/17 11:24:39.550622 [INFO] X-Ray is not enabled.
-2025/11/17 11:24:39.550626 [INFO] Executing instruction: start proxy with new configuration
-2025/11/17 11:24:39.550649 [INFO] Running command: /usr/sbin/nginx -t -c /var/proxy/staging/nginx/nginx.conf
-2025/11/17 11:24:39.570040 [INFO] nginx: [warn] could not build optimal types_hash, you should increase either types_hash_max_size: 1024 or types_hash_bucket_size: 64; ignoring types_hash_bucket_size
-nginx: the configuration file /var/proxy/staging/nginx/nginx.conf syntax is ok
-nginx: configuration file /var/proxy/staging/nginx/nginx.conf test is successful
-
-2025/11/17 11:24:39.570563 [INFO] Running command: cp -rp /var/proxy/staging/nginx/* /etc/nginx
-2025/11/17 11:24:39.575772 [INFO] Running command: systemctl show -p PartOf nginx.service
-2025/11/17 11:24:39.600276 [INFO] Running command: systemctl daemon-reload
-2025/11/17 11:24:39.976685 [INFO] Running command: systemctl reset-failed
-2025/11/17 11:24:39.988456 [INFO] Running command: systemctl show -p PartOf nginx.service
-2025/11/17 11:24:40.013409 [INFO] Running command: systemctl is-active nginx.service
-2025/11/17 11:24:40.028869 [INFO] Running command: systemctl start nginx.service
-2025/11/17 11:24:40.210027 [INFO] Executing instruction: configureSqsd
-2025/11/17 11:24:40.210055 [INFO] This is a web server environment instance, skip configure sqsd daemon ...
-2025/11/17 11:24:40.210066 [INFO] Executing instruction: startSqsd
-2025/11/17 11:24:40.210069 [INFO] This is a web server environment instance, skip start sqsd daemon ...
-2025/11/17 11:24:40.210073 [INFO] Executing instruction: Track pids in healthd
-2025/11/17 11:24:40.210077 [INFO] This is an enhanced health env...
-2025/11/17 11:24:40.210090 [INFO] Running command: systemctl show -p ConsistsOf aws-eb.target | cut -d= -f2
-2025/11/17 11:24:40.230138 [INFO] healthd.service cfn-hup.service nginx.service
-
-2025/11/17 11:24:40.230177 [INFO] Running command: systemctl show -p ConsistsOf eb-app.target | cut -d= -f2
-2025/11/17 11:24:40.247303 [INFO] web.service
-
-2025/11/17 11:24:40.247706 [INFO] Executing instruction: RunAppDeployPostDeployHooks
-2025/11/17 11:24:40.247800 [INFO] Executing platform hooks in .platform/hooks/postdeploy/
-2025/11/17 11:24:40.247821 [INFO] The dir .platform/hooks/postdeploy/ does not exist
-2025/11/17 11:24:40.247825 [INFO] Finished running scripts in /var/app/current/.platform/hooks/postdeploy
-2025/11/17 11:24:40.247831 [INFO] Executing cleanup logic
-2025/11/17 11:24:40.247966 [INFO] CommandService Response: {"status":"SUCCESS","api_version":"1.0","results":[{"status":"SUCCESS","msg":"Engine execution has succeeded.","returncode":0,"events":[{"msg":"Instance deployment: The deployment used the default Node.js version for your platform version instead of the Node.js version included in your 'package.json'.","timestamp":1763378673697,"severity":"WARN"},{"msg":"Instance deployment completed successfully.","timestamp":1763378680247,"severity":"INFO"}]}]}
-
-2025/11/17 11:24:40.248147 [INFO] Platform Engine finished execution on command: app-deploy
-
-2025/11/17 11:30:34.607721 [INFO] Starting...
-2025/11/17 11:30:34.607773 [INFO] Starting EBPlatform-PlatformEngine
-2025/11/17 11:30:34.607796 [INFO] reading event message file
-2025/11/17 11:30:34.608142 [INFO] Engine received EB command cfn-hup-exec
-
-2025/11/17 11:30:34.678566 [INFO] Running command: /opt/aws/bin/cfn-get-metadata -s arn:aws:cloudformation:ap-southeast-2:941377129485:stack/awseb-e-apuamkqmsi-stack/a57116b0-c128-11f0-a966-0202d56edead -r AWSEBAutoScalingGroup --region ap-southeast-2
-2025/11/17 11:30:34.982488 [INFO] Running command: /opt/aws/bin/cfn-get-metadata -s arn:aws:cloudformation:ap-southeast-2:941377129485:stack/awseb-e-apuamkqmsi-stack/a57116b0-c128-11f0-a966-0202d56edead -r AWSEBBeanstalkMetadata --region ap-southeast-2
-2025/11/17 11:30:35.311754 [INFO] checking whether command tail-log is applicable to this instance...
-2025/11/17 11:30:35.311769 [INFO] this command is applicable to the instance, thus instance should execute command
-2025/11/17 11:30:35.311772 [INFO] Engine command: (tail-log)
-
-2025/11/17 11:30:35.311818 [INFO] Executing instruction: GetTailLogs
-2025/11/17 11:30:35.311821 [INFO] Tail Logs...
-2025/11/17 11:30:35.312297 [INFO] Running command: tail -n 100 /var/log/eb-hooks.log
-2025/11/17 11:30:35.314736 [INFO] Running command: tail -n 100 /var/log/nginx/access.log
-2025/11/17 11:30:35.316730 [INFO] Running command: tail -n 100 /var/log/nginx/error.log
-2025/11/17 11:30:35.318797 [INFO] Running command: tail -n 100 /var/log/web.stdout.log
-2025/11/17 11:30:35.320581 [INFO] Running command: tail -n 100 /var/log/eb-engine.log
-
-
