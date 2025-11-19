@@ -19,14 +19,16 @@ import {
     Alert,
     Snackbar,
     Tabs,
-    Tab
+    Tab,
+    LinearProgress
 } from '@mui/material';
 import {
     CloudUpload,
     Delete,
     ContentCopy,
     Folder,
-    Image as ImageIcon
+    Image as ImageIcon,
+    Close
 } from '@mui/icons-material';
 import API_CONFIG from '../../config/api';
 
@@ -34,10 +36,10 @@ const MediaList = () => {
     const [media, setMedia] = useState([]);
     const [loading, setLoading] = useState(false);
     const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-    const [selectedFile, setSelectedFile] = useState(null);
+    const [selectedFiles, setSelectedFiles] = useState([]);
     const [selectedFolder, setSelectedFolder] = useState('images');
-    const [previewUrl, setPreviewUrl] = useState(null);
     const [uploading, setUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
     const [currentTab, setCurrentTab] = useState(0);
 
@@ -70,55 +72,66 @@ const MediaList = () => {
     };
 
     const handleFileSelect = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            // Validate file type
-            if (!file.type.startsWith('image/')) {
-                showSnackbar('Please select an image file', 'error');
-                return;
-            }
+        const files = Array.from(event.target.files);
+        if (files.length === 0) return;
 
-            // Validate file size (max 10MB)
-            if (file.size > 10 * 1024 * 1024) {
-                showSnackbar('File size must be less than 10MB', 'error');
-                return;
-            }
-
-            setSelectedFile(file);
-            setPreviewUrl(URL.createObjectURL(file));
+        // Validate files
+        const invalidFiles = files.filter(file => !file.type.startsWith('image/'));
+        if (invalidFiles.length > 0) {
+            showSnackbar('Please select only image files', 'error');
+            return;
         }
+
+        const largeFiles = files.filter(file => file.size > 10 * 1024 * 1024);
+        if (largeFiles.length > 0) {
+            showSnackbar('Some files are larger than 10MB. Please choose smaller files.', 'error');
+            return;
+        }
+
+        setSelectedFiles(files);
+    };
+
+    const handleRemoveFile = (index) => {
+        setSelectedFiles(prev => prev.filter((_, i) => i !== index));
     };
 
     const handleUpload = async () => {
-        if (!selectedFile) return;
+        if (selectedFiles.length === 0) return;
 
         setUploading(true);
-        const formData = new FormData();
-        formData.append('file', selectedFile);
-        formData.append('folder', selectedFolder);
+        setUploadProgress(0);
+        let uploadedCount = 0;
 
         try {
-            const response = await fetch(
-                API_CONFIG.getURL(API_CONFIG.endpoints.mediaUpload),
-                {
-                    method: 'POST',
-                    body: formData
-                }
-            );
+            for (const file of selectedFiles) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('folder', selectedFolder);
 
-            if (!response.ok) throw new Error('Upload failed');
+                const response = await fetch(
+                    API_CONFIG.getURL(API_CONFIG.endpoints.mediaUpload),
+                    {
+                        method: 'POST',
+                        body: formData
+                    }
+                );
 
-            const result = await response.json();
-            showSnackbar('Image uploaded successfully!', 'success');
+                if (!response.ok) throw new Error(`Upload failed for ${file.name}`);
+
+                uploadedCount++;
+                setUploadProgress(Math.round((uploadedCount / selectedFiles.length) * 100));
+            }
+
+            showSnackbar(`Successfully uploaded ${uploadedCount} image(s)!`, 'success');
             setUploadDialogOpen(false);
-            setSelectedFile(null);
-            setPreviewUrl(null);
+            setSelectedFiles([]);
             fetchMedia();
         } catch (error) {
-            console.error('Error uploading file:', error);
-            showSnackbar('Failed to upload image', 'error');
+            console.error('Error uploading files:', error);
+            showSnackbar('Failed to upload some images. Please try again.', 'error');
         } finally {
             setUploading(false);
+            setUploadProgress(0);
         }
     };
 
@@ -168,7 +181,7 @@ const MediaList = () => {
                     startIcon={<CloudUpload />}
                     onClick={() => setUploadDialogOpen(true)}
                 >
-                    Upload Image
+                    Upload Images
                 </Button>
             </Box>
 
@@ -237,10 +250,10 @@ const MediaList = () => {
             <Dialog
                 open={uploadDialogOpen}
                 onClose={() => !uploading && setUploadDialogOpen(false)}
-                maxWidth="sm"
+                maxWidth="md"
                 fullWidth
             >
-                <DialogTitle>Upload Image</DialogTitle>
+                <DialogTitle>Upload Images</DialogTitle>
                 <DialogContent>
                     <Box sx={{ mt: 2 }}>
                         <input
@@ -248,6 +261,7 @@ const MediaList = () => {
                             style={{ display: 'none' }}
                             id="file-upload"
                             type="file"
+                            multiple
                             onChange={handleFileSelect}
                         />
                         <label htmlFor="file-upload">
@@ -257,28 +271,61 @@ const MediaList = () => {
                                 startIcon={<CloudUpload />}
                                 fullWidth
                             >
-                                Select Image
+                                Select Images (Multiple)
                             </Button>
                         </label>
 
-                        {previewUrl && (
+                        {uploading && (
                             <Box sx={{ mt: 2 }}>
-                                <img
-                                    src={previewUrl}
-                                    alt="Preview"
-                                    style={{ width: '100%', maxHeight: '300px', objectFit: 'contain' }}
-                                />
-                                <Typography variant="body2" sx={{ mt: 1 }}>
-                                    {selectedFile?.name}
+                                <Typography variant="body2" sx={{ mb: 1 }}>
+                                    Uploading images... {uploadProgress}%
                                 </Typography>
-                                <Typography variant="caption" color="text.secondary">
-                                    {(selectedFile?.size / 1024).toFixed(2)} KB
+                                <LinearProgress variant="determinate" value={uploadProgress} />
+                            </Box>
+                        )}
+
+                        {selectedFiles.length > 0 && (
+                            <Box sx={{ mt: 2 }}>
+                                <Typography variant="subtitle2" gutterBottom>
+                                    Selected Files ({selectedFiles.length}):
                                 </Typography>
+                                <Grid container spacing={2}>
+                                    {selectedFiles.map((file, index) => (
+                                        <Grid item xs={6} sm={4} key={index}>
+                                            <Card>
+                                                <CardMedia
+                                                    component="img"
+                                                    height="120"
+                                                    image={URL.createObjectURL(file)}
+                                                    alt={file.name}
+                                                    sx={{ objectFit: 'cover' }}
+                                                />
+                                                <CardContent sx={{ p: 1 }}>
+                                                    <Typography variant="caption" noWrap title={file.name}>
+                                                        {file.name}
+                                                    </Typography>
+                                                    <Typography variant="caption" display="block" color="text.secondary">
+                                                        {(file.size / 1024).toFixed(2)} KB
+                                                    </Typography>
+                                                </CardContent>
+                                                <CardActions sx={{ p: 1 }}>
+                                                    <IconButton
+                                                        size="small"
+                                                        onClick={() => handleRemoveFile(index)}
+                                                        disabled={uploading}
+                                                    >
+                                                        <Close fontSize="small" />
+                                                    </IconButton>
+                                                </CardActions>
+                                            </Card>
+                                        </Grid>
+                                    ))}
+                                </Grid>
                             </Box>
                         )}
 
                         <Alert severity="info" sx={{ mt: 2 }}>
-                            Maximum file size: 10MB. Supported formats: JPG, PNG, GIF, WebP
+                            Maximum file size: 10MB per image. Supported formats: JPG, PNG, GIF, WebP
                         </Alert>
                     </Box>
                 </DialogContent>
@@ -289,10 +336,10 @@ const MediaList = () => {
                     <Button
                         onClick={handleUpload}
                         variant="contained"
-                        disabled={!selectedFile || uploading}
+                        disabled={selectedFiles.length === 0 || uploading}
                         startIcon={uploading && <CircularProgress size={20} />}
                     >
-                        {uploading ? 'Uploading...' : 'Upload'}
+                        {uploading ? `Uploading... ${uploadProgress}%` : `Upload ${selectedFiles.length} Image${selectedFiles.length !== 1 ? 's' : ''}`}
                     </Button>
                 </DialogActions>
             </Dialog>

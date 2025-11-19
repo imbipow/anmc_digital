@@ -13,14 +13,18 @@ import {
     useRecordContext,
     useRefresh,
     useNotify,
-    Button
+    Button,
+    ShowButton
 } from 'react-admin';
 import {
     CheckCircle as ApproveIcon,
     Cancel as RejectIcon,
     Block as SuspendIcon,
-    PlayArrow as ReactivateIcon
+    PlayArrow as ReactivateIcon,
+    Autorenew as RenewIcon,
+    Print as PrintIcon
 } from '@mui/icons-material';
+import MembershipCertificate from './MembershipCertificate';
 import {
     Dialog,
     DialogTitle,
@@ -47,6 +51,7 @@ const MemberActions = () => {
     const [requiresPassword, setRequiresPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [userRole, setUserRole] = useState(null);
+    const [certificateDialogOpen, setCertificateDialogOpen] = useState(false);
 
     useEffect(() => {
         const getUserRole = async () => {
@@ -258,6 +263,47 @@ const MemberActions = () => {
         }
     };
 
+    const handleRenew = async () => {
+        if (!window.confirm(`Renew membership for ${record.firstName} ${record.lastName}? This will extend their membership by 1 year.`)) {
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const token = await cognitoAuthService.getIdToken();
+            if (!token) {
+                notify('Authentication required. Please log in again.', { type: 'error' });
+                setLoading(false);
+                return;
+            }
+
+            const response = await fetch(`${API_BASE_URL}/members/${record.id}/renew`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    paymentStatus: 'succeeded' // Mark as paid after admin renewal
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                const expiryDate = new Date(data.newExpiryDate).toLocaleDateString();
+                notify(`Membership renewed successfully! New expiry date: ${expiryDate}`, { type: 'success' });
+                refresh();
+            } else {
+                notify(data.error || 'Failed to renew membership', { type: 'error' });
+            }
+        } catch (error) {
+            notify('Error renewing membership: ' + error.message, { type: 'error' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <>
             <Box sx={{ mt: 2, mb: 2, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -311,7 +357,39 @@ const MemberActions = () => {
                         Reactivate Member
                     </MuiButton>
                 )}
+
+                {/* Renew membership button - only for general memberships */}
+                {isAdmin && record.membershipCategory === 'general' && (record.status === 'active' || record.status === 'pending_approval') && (
+                    <MuiButton
+                        variant="contained"
+                        color="info"
+                        startIcon={<RenewIcon />}
+                        onClick={handleRenew}
+                        disabled={loading}
+                    >
+                        Renew Membership
+                    </MuiButton>
+                )}
+
+                {/* Print Certificate button */}
+                {(record.status === 'active' || record.status === 'pending_approval') && (
+                    <MuiButton
+                        variant="outlined"
+                        color="secondary"
+                        startIcon={<PrintIcon />}
+                        onClick={() => setCertificateDialogOpen(true)}
+                    >
+                        Print Certificate
+                    </MuiButton>
+                )}
             </Box>
+
+            {/* Membership Certificate Dialog */}
+            <MembershipCertificate
+                memberId={record.id}
+                open={certificateDialogOpen}
+                onClose={() => setCertificateDialogOpen(false)}
+            />
 
             {/* Reject Dialog */}
             <Dialog open={rejectDialogOpen} onClose={() => setRejectDialogOpen(false)}>
@@ -435,6 +513,10 @@ export const MemberShow = (props) => (
             <ChipField source="paymentStatus" label="Payment Status" />
             <TextField source="paymentIntentId" label="Stripe Payment ID" />
             <DateField source="paymentDate" label="Payment Date" showTime />
+            <DateField source="membershipStartDate" label="Membership Start Date" showTime />
+            <DateField source="expiryDate" label="Expiry Date" showTime />
+            <TextField source="lastRenewalDate" label="Last Renewal Date" />
+            <NumberField source="renewalCount" label="Renewals" />
 
             <h3>Member Status</h3>
             <ChipField source="status" />
@@ -457,15 +539,27 @@ export const MemberShow = (props) => (
             <TextField source="residentialAddress.postcode" label="Postcode" />
             <TextField source="residentialAddress.country" label="Country" />
 
-            <h3>Family Members</h3>
-            <ArrayField source="familyMembers">
-                <Datagrid>
-                    <TextField source="firstName" />
-                    <TextField source="lastName" />
-                    <TextField source="relationship" />
-                    <TextField source="age" />
+            <h3>Family Information</h3>
+            <TextField source="isPrimaryMember" label="Is Primary Member" />
+            <TextField source="linkedMemberReferenceNo" label="Linked To" />
+            <TextField source="relationship" label="Relationship to Primary" />
+
+            {/* Show linked family members if this is a primary member */}
+            <ArrayField source="familyMembers" label="Linked Family Members">
+                <Datagrid bulkActionButtons={false}>
+                    <TextField source="referenceNo" label="Ref No" />
+                    <TextField source="firstName" label="First Name" />
+                    <TextField source="lastName" label="Last Name" />
+                    <EmailField source="email" />
+                    <TextField source="mobile" />
+                    <TextField source="relationship" label="Relationship" />
+                    <ChipField source="status" label="Status" />
+                    <ShowButton />
                 </Datagrid>
             </ArrayField>
+
+            {/* Show primary member if this is a family member */}
+            {/* Note: This will be handled via primaryMember field */}
 
             <h3>Additional Information</h3>
             <RichTextField source="comments" />

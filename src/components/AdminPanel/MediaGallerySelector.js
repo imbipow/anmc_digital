@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -17,13 +17,15 @@ import {
     CircularProgress,
     Alert,
     TextField,
-    InputAdornment
+    InputAdornment,
+    LinearProgress
 } from '@mui/material';
 import {
     CheckCircle,
     Folder,
     Search,
-    Refresh
+    Refresh,
+    CloudUpload
 } from '@mui/icons-material';
 import API_CONFIG from '../../config/api';
 
@@ -33,6 +35,9 @@ const MediaGallerySelector = ({ open, onClose, onSelect, currentImage }) => {
     const [selectedImage, setSelectedImage] = useState(currentImage || null);
     const [currentTab, setCurrentTab] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
+    const [uploading, setUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const fileInputRef = useRef(null);
 
     const folders = [
         { value: 'images', label: 'General Images' },
@@ -90,6 +95,62 @@ const MediaGallerySelector = ({ open, onClose, onSelect, currentImage }) => {
         onClose();
     };
 
+    const handleFileUpload = async (event) => {
+        const files = Array.from(event.target.files);
+        if (files.length === 0) return;
+
+        // Validate files
+        const invalidFiles = files.filter(file => !file.type.startsWith('image/'));
+        if (invalidFiles.length > 0) {
+            alert('Please select only image files');
+            return;
+        }
+
+        const largeFiles = files.filter(file => file.size > 10 * 1024 * 1024);
+        if (largeFiles.length > 0) {
+            alert('Some files are larger than 10MB. Please choose smaller files.');
+            return;
+        }
+
+        setUploading(true);
+        setUploadProgress(0);
+
+        try {
+            const folder = folders[currentTab].value;
+            let uploadedCount = 0;
+
+            for (const file of files) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('folder', folder);
+
+                const response = await fetch(
+                    API_CONFIG.getURL(API_CONFIG.endpoints.mediaUpload),
+                    {
+                        method: 'POST',
+                        body: formData
+                    }
+                );
+
+                if (!response.ok) throw new Error(`Upload failed for ${file.name}`);
+
+                uploadedCount++;
+                setUploadProgress(Math.round((uploadedCount / files.length) * 100));
+            }
+
+            alert(`Successfully uploaded ${uploadedCount} image(s)!`);
+            fetchMedia();
+        } catch (error) {
+            console.error('Error uploading files:', error);
+            alert('Failed to upload some images. Please try again.');
+        } finally {
+            setUploading(false);
+            setUploadProgress(0);
+            // Reset file input
+            event.target.value = '';
+        }
+    };
+
     const filteredMedia = media.filter(item => {
         if (!searchTerm) return true;
         return item.key.toLowerCase().includes(searchTerm.toLowerCase());
@@ -100,12 +161,40 @@ const MediaGallerySelector = ({ open, onClose, onSelect, currentImage }) => {
             <DialogTitle>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <Typography variant="h6">Select Image from Gallery</Typography>
-                    <IconButton onClick={fetchMedia} size="small" title="Refresh">
-                        <Refresh />
-                    </IconButton>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Button
+                            variant="outlined"
+                            size="small"
+                            startIcon={<CloudUpload />}
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={uploading}
+                        >
+                            Upload Images
+                        </Button>
+                        <IconButton onClick={fetchMedia} size="small" title="Refresh">
+                            <Refresh />
+                        </IconButton>
+                    </Box>
                 </Box>
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    style={{ display: 'none' }}
+                    onChange={handleFileUpload}
+                />
             </DialogTitle>
             <DialogContent>
+                {uploading && (
+                    <Box sx={{ mb: 2 }}>
+                        <Typography variant="body2" sx={{ mb: 1 }}>
+                            Uploading images... {uploadProgress}%
+                        </Typography>
+                        <LinearProgress variant="determinate" value={uploadProgress} />
+                    </Box>
+                )}
+
                 <Box sx={{ mb: 2 }}>
                     <TextField
                         fullWidth

@@ -157,6 +157,7 @@
     flex-wrap: wrap;
 }
 
+.event-date,
 .event-time,
 .event-venue {
     display: flex;
@@ -165,6 +166,7 @@
     font-size: 14px;
 }
 
+.event-date i,
 .event-time i,
 .event-venue i {
     color: #ff6b35;

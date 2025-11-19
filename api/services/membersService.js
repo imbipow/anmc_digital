@@ -42,12 +42,52 @@ class MembersService {
         return members.find(member => member.email === email);
     }
 
+    // Get family members linked to a primary member
+    async getFamilyMembers(memberId) {
+        const members = await dynamoDBService.getAllItems(this.tableName);
+        return members.filter(member => member.linkedToMember === memberId);
+    }
+
+    // Get primary member for a family member
+    async getPrimaryMember(linkedMemberId) {
+        const member = await this.getById(linkedMemberId);
+        return member;
+    }
+
+    // Calculate expiry date for memberships
+    calculateExpiryDate(membershipCategory, startDate = null) {
+        // Life membership never expires
+        if (membershipCategory === 'life') {
+            return null;
+        }
+
+        // General membership expires after 1 year
+        const baseDate = startDate ? new Date(startDate) : new Date();
+        const expiryDate = new Date(baseDate);
+        expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+        return expiryDate.toISOString();
+    }
+
+    // Check if membership is expired
+    isMembershipExpired(member) {
+        if (!member.expiryDate || member.membershipCategory === 'life') {
+            return false;
+        }
+        return new Date() > new Date(member.expiryDate);
+    }
+
     // Create new member
     async create(memberData) {
         const newId = this.generateMemberId();
+
+        // Calculate expiry date based on membership category
+        const expiryDate = this.calculateExpiryDate(memberData.membershipCategory);
+
         const newMember = {
             id: newId,
             ...memberData,
+            expiryDate,
+            membershipStartDate: memberData.membershipStartDate || new Date().toISOString(),
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
             status: memberData.status || 'active',
@@ -68,6 +108,38 @@ class MembersService {
 
         await dynamoDBService.updateItem(this.tableName, { id }, updateData);
         return await this.getById(id);
+    }
+
+    // Renew membership
+    async renewMembership(id, paymentData = {}) {
+        const member = await this.getById(id);
+
+        if (!member) {
+            throw new Error('Member not found');
+        }
+
+        // Life memberships cannot be renewed (they don't expire)
+        if (member.membershipCategory === 'life') {
+            throw new Error('Life memberships do not require renewal');
+        }
+
+        // Calculate new expiry date (1 year from current expiry or from now if expired)
+        const baseDate = member.expiryDate && new Date(member.expiryDate) > new Date()
+            ? new Date(member.expiryDate)
+            : new Date();
+
+        const newExpiryDate = this.calculateExpiryDate(member.membershipCategory, baseDate);
+
+        // Update member with new expiry date and renewal info
+        const renewalData = {
+            expiryDate: newExpiryDate,
+            lastRenewalDate: new Date().toISOString(),
+            renewalCount: (member.renewalCount || 0) + 1,
+            status: 'active', // Reactivate if expired
+            ...paymentData // Include payment info if provided
+        };
+
+        return await this.update(id, renewalData);
     }
 
     // Delete member
@@ -103,6 +175,16 @@ class MembersService {
     // Get statistics
     async getStats() {
         const members = await this.getAll();
+        const now = new Date();
+
+        // Get expired and expiring soon members
+        const expired = members.filter(m => this.isMembershipExpired(m));
+        const expiringSoon = members.filter(m => {
+            if (!m.expiryDate || m.membershipCategory === 'life') return false;
+            const expiryDate = new Date(m.expiryDate);
+            const daysUntilExpiry = Math.floor((expiryDate - now) / (1000 * 60 * 60 * 24));
+            return daysUntilExpiry > 0 && daysUntilExpiry <= 30; // Expiring within 30 days
+        });
 
         const stats = {
             total: members.length,
@@ -120,6 +202,11 @@ class MembersService {
                 paid: members.filter(m => m.paymentStatus === 'succeeded').length,
                 pending: members.filter(m => m.paymentStatus === 'pending').length,
                 failed: members.filter(m => m.paymentStatus === 'failed').length
+            },
+            byExpiryStatus: {
+                expired: expired.length,
+                expiringSoon: expiringSoon.length,
+                active: members.filter(m => !this.isMembershipExpired(m) && (m.membershipCategory === 'life' || (m.expiryDate && new Date(m.expiryDate) > now))).length
             },
             totalRevenue: members
                 .filter(m => m.paymentStatus === 'succeeded')
@@ -165,6 +252,14 @@ class MembersService {
         if (!data.gender) {
             errors.push('Gender is required');
         }
+
+        // Age validation (must be 18 or above)
+        if (!data.age) {
+            errors.push('Age is required');
+        } else if (parseInt(data.age) < 18) {
+            errors.push('You must be at least 18 years old to register');
+        }
+
         if (!data.membershipCategory) {
             errors.push('Membership category is required');
         }
@@ -185,11 +280,27 @@ class MembersService {
             }
 
             data.familyMembers.forEach((member, index) => {
-                if (!member.firstName || !member.lastName) {
-                    errors.push(`Family member ${index + 1}: Name is required`);
+                if (!member.firstName || !member.firstName.trim()) {
+                    errors.push(`Family member ${index + 1}: First name is required`);
+                }
+                if (!member.lastName || !member.lastName.trim()) {
+                    errors.push(`Family member ${index + 1}: Last name is required`);
+                }
+                if (!member.email || !member.email.trim()) {
+                    errors.push(`Family member ${index + 1}: Email is required`);
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(member.email)) {
+                    errors.push(`Family member ${index + 1}: Invalid email format`);
+                }
+                if (!member.mobile || !member.mobile.trim()) {
+                    errors.push(`Family member ${index + 1}: Mobile is required`);
                 }
                 if (!member.relationship) {
                     errors.push(`Family member ${index + 1}: Relationship is required`);
+                }
+                if (!member.age) {
+                    errors.push(`Family member ${index + 1}: Age is required`);
+                } else if (parseInt(member.age) < 18) {
+                    errors.push(`Family member ${index + 1}: Must be at least 18 years old`);
                 }
             });
         }

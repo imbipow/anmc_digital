@@ -16,28 +16,28 @@ const menus = [
     },
     {
         id: 3,
-        title: 'Projects',
-        link: '/projects',
-    },
-    {
-        id: 4,
-        title: 'Events',
-        link: '/event',
-    },
-    {
-        id: 5,
         title: 'News',
         link: '/news',
     },
     {
+        id: 4,
+        title: 'Projects',
+        link: '/projects',
+    },
+    {
+        id: 5,
+        title: 'Events',
+        link: '/event',
+    },
+    {
         id: 6,
-        title: 'FAQ',
-        link: '/faq',
+        title: 'Facilities',
+        link: '/facilities',
     },
     {
         id: 7,
-        title: 'Donate',
-        link: '/donate',
+        title: 'FAQ',
+        link: '/faq',
     },
     {
         id: 8,

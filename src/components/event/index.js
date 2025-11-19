@@ -41,6 +41,25 @@ const EventSection = (props) => {
                 if (events && events.length > 0) {
                     const formattedEvents = events.slice(0, 2).map((event, index) => {
                         const startDate = new Date(event.startDate);
+
+                        // Format date to match EventSingle style: "Month Day, Year"
+                        const formattedStartDate = startDate.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+
+                        const formattedEndDate = event.endDate ? new Date(event.endDate).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        }) : null;
+
+                        // Combine start and end dates if different
+                        const dateDisplay = formattedEndDate && formattedEndDate !== formattedStartDate
+                            ? `${formattedStartDate} - ${formattedEndDate}`
+                            : formattedStartDate;
+
                         // Handle both time formats: single 'time' field or separate 'startTime' and 'endTime'
                         let timeDisplay = event.time || '';
                         if (!timeDisplay && event.startTime && event.endTime) {
@@ -52,6 +71,7 @@ const EventSection = (props) => {
                             date: startDate.getDate().toString(),
                             month: startDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
                             title: event.title,
+                            fullDate: dateDisplay,
                             time: timeDisplay,
                             location: event.location,
                             des: event.description || event.summary,
@@ -93,8 +113,9 @@ const EventSection = (props) => {
                                 <div className="wpo-event-text">
                                     <h2>{item.title}</h2>
                                     <ul>
-                                        <li><i className="fa fa-clock-o" aria-hidden="true"></i>{item.time}</li>
-                                        <li><i className="fa fa-map-marker"></i>{item.location}</li>
+                                        <li><i className="fa fa-calendar" aria-hidden="true"></i>{item.fullDate}</li>
+                                        {item.time && <li><i className="fa fa-clock-o" aria-hidden="true"></i>{item.time}</li>}
+                                        {item.location && <li><i className="fa fa-map-marker"></i>{item.location}</li>}
                                     </ul>
                                     <p>{item.des}</p>
                                     <Link onClick={ClickHandler} to={item.link}>{item.btn}</Link>

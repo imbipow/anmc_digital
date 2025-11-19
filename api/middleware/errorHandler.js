@@ -1,23 +1,21 @@
 /**
  * Error handling middleware
  */
-const errorHandler = (err, req, res, next) => {
+const errorHandler = (err, _req, res, _next) => {
   console.error('Error:', err);
 
   // Default error status
   const status = err.statusCode || 500;
 
-  // Format error response
+  // Format error response to match route handler format
   const errorResponse = {
-    error: {
-      message: err.message || 'Internal server error',
-      status
-    }
+    success: false,
+    error: err.message || 'Internal server error'
   };
 
   // Add stack trace in development
   if (process.env.NODE_ENV === 'development') {
-    errorResponse.error.stack = err.stack;
+    errorResponse.stack = err.stack;
   }
 
   // Send error response

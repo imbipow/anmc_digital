@@ -111,7 +111,27 @@ router.get('/:id', verifyToken, requireAdmin, async (req, res, next) => {
             return res.status(404).json({ error: 'Member not found' });
         }
 
-        res.json(member);
+        // Include family members if this is a primary member or get primary member if this is a family member
+        let familyMembers = [];
+        let primaryMember = null;
+
+        if (member.isPrimaryMember === true) {
+            // Get all family members linked to this primary member
+            familyMembers = await membersService.getFamilyMembers(member.id);
+        } else if (member.linkedToMember) {
+            // This is a family member, get the primary member
+            primaryMember = await membersService.getPrimaryMember(member.linkedToMember);
+            // Also get sibling family members
+            familyMembers = await membersService.getFamilyMembers(member.linkedToMember);
+            // Filter out the current member from siblings
+            familyMembers = familyMembers.filter(fm => fm.id !== member.id);
+        }
+
+        res.json({
+            ...member,
+            familyMembers,
+            primaryMember
+        });
     } catch (error) {
         next(error);
     }
@@ -139,6 +159,34 @@ router.post('/register', async (req, res, next) => {
             });
         }
 
+        // Check if any family member email already exists
+        if (memberData.membershipType === 'family' && memberData.familyMembers && memberData.familyMembers.length > 0) {
+            for (const familyMember of memberData.familyMembers) {
+                const existingFamilyMember = await membersService.getByEmail(familyMember.email);
+                if (existingFamilyMember) {
+                    return res.status(409).json({
+                        error: `A member with email ${familyMember.email} already exists`
+                    });
+                }
+            }
+
+            // Check for duplicate emails within the family members list
+            const familyEmails = memberData.familyMembers.map(fm => fm.email.toLowerCase());
+            const duplicates = familyEmails.filter((email, index) => familyEmails.indexOf(email) !== index);
+            if (duplicates.length > 0) {
+                return res.status(400).json({
+                    error: `Duplicate email found in family members: ${duplicates[0]}`
+                });
+            }
+
+            // Check if family member email is same as main member email
+            if (familyEmails.includes(memberData.email.toLowerCase())) {
+                return res.status(400).json({
+                    error: 'Family member email cannot be the same as the main member email'
+                });
+            }
+        }
+
         // Validate password if provided
         if (memberData.password) {
             const passwordValidation = cognitoService.validatePassword(memberData.password);
@@ -162,12 +210,51 @@ router.post('/register', async (req, res, next) => {
             membershipFee,
             paymentStatus: memberData.paymentIntentId ? 'processing' : 'pending',
             status: 'pending_approval', // Requires admin approval
+            isPrimaryMember: memberData.membershipType === 'family' ? true : null, // Mark as primary if family membership
             password: undefined, // Don't save password in database
             confirmPassword: undefined // Don't save confirm password either
         };
 
         // Create member in database
         const newMember = await membersService.create(memberToSave);
+
+        // Create individual member records for each family member
+        const familyMemberRecords = [];
+        if (memberData.membershipType === 'family' && memberData.familyMembers && memberData.familyMembers.length > 0) {
+            for (const familyMember of memberData.familyMembers) {
+                try {
+                    const familyMemberData = {
+                        firstName: familyMember.firstName,
+                        lastName: familyMember.lastName,
+                        email: familyMember.email,
+                        mobile: familyMember.mobile,
+                        age: familyMember.age,
+                        gender: '', // Can be added later or left empty
+                        membershipCategory: memberData.membershipCategory,
+                        membershipType: 'family', // Family members maintain family type
+                        membershipFee: 0, // No additional fee, covered by family membership
+                        paymentStatus: 'succeeded', // Covered by main member's payment
+                        status: 'pending_approval',
+                        residentialAddress: memberData.residentialAddress,
+                        postalAddress: memberData.postalAddress,
+                        sameAsResidential: memberData.sameAsResidential,
+                        acceptDeclaration: true,
+                        comments: `Family member of ${memberData.firstName} ${memberData.lastName} (${newMember.referenceNo}). Relationship: ${familyMember.relationship}`,
+                        linkedToMember: newMember.id, // Link to main member
+                        linkedMemberReferenceNo: newMember.referenceNo,
+                        relationship: familyMember.relationship, // Store relationship
+                        isPrimaryMember: false // Mark as dependent family member
+                    };
+
+                    const createdFamilyMember = await membersService.create(familyMemberData);
+                    familyMemberRecords.push(createdFamilyMember);
+                    console.log(`✅ Created family member record: ${createdFamilyMember.email} (${createdFamilyMember.referenceNo})`);
+                } catch (familyError) {
+                    console.error(`⚠️ Failed to create family member record for ${familyMember.email}:`, familyError.message);
+                    // Continue with other family members even if one fails
+                }
+            }
+        }
 
         // Create user in Cognito if password is provided (disabled by default)
         let cognitoResult = null;
@@ -226,10 +313,21 @@ router.post('/register', async (req, res, next) => {
         // Return response without password fields
         const { password, confirmPassword, ...memberResponse } = newMember;
 
+        const responseMessage = memberData.membershipType === 'family' && familyMemberRecords.length > 0
+            ? `Registration successful. ${familyMemberRecords.length} family member(s) have been registered as individual members. All accounts are pending admin approval. You will receive an email once approved.`
+            : 'Registration successful. Your account is pending admin approval. You will receive an email once approved.';
+
         res.status(201).json({
             success: true,
             member: memberResponse,
-            message: 'Registration successful. Your account is pending admin approval. You will receive an email once approved.',
+            familyMembers: familyMemberRecords.map(fm => ({
+                id: fm.id,
+                referenceNo: fm.referenceNo,
+                firstName: fm.firstName,
+                lastName: fm.lastName,
+                email: fm.email
+            })),
+            message: responseMessage,
             cognitoEnabled: cognitoResult?.cognitoEnabled || false,
             cognitoCreated: !!cognitoResult,
             requiresApproval: true,
@@ -617,6 +715,101 @@ router.post('/:id/reactivate', verifyToken, requireAdmin, async (req, res, next)
             success: true,
             message: 'Member reactivated successfully. User can now login.',
             member: updatedMember
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Renew membership
+router.post('/:id/renew', verifyToken, requireAdmin, async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { paymentIntentId, paymentStatus } = req.body;
+
+        const member = await membersService.getById(id);
+
+        if (!member) {
+            return res.status(404).json({ error: 'Member not found' });
+        }
+
+        // Prevent renewing life memberships
+        if (member.membershipCategory === 'life') {
+            return res.status(400).json({
+                error: 'Life memberships do not require renewal as they never expire'
+            });
+        }
+
+        // Calculate renewal fee
+        const renewalFee = membersService.calculateMembershipFee(
+            member.membershipCategory,
+            member.membershipType
+        );
+
+        // Prepare payment data if payment info provided
+        const paymentData = {};
+        if (paymentIntentId) {
+            paymentData.paymentIntentId = paymentIntentId;
+            paymentData.paymentStatus = paymentStatus || 'processing';
+            paymentData.membershipFee = renewalFee;
+            paymentData.paymentDate = new Date().toISOString();
+        }
+
+        // Renew membership
+        const renewedMember = await membersService.renewMembership(id, paymentData);
+
+        console.log(`✅ Membership renewed for: ${member.email} (${member.referenceNo})`);
+        console.log(`   New expiry date: ${renewedMember.expiryDate}`);
+
+        res.json({
+            success: true,
+            message: 'Membership renewed successfully',
+            member: renewedMember,
+            renewalFee,
+            newExpiryDate: renewedMember.expiryDate
+        });
+    } catch (error) {
+        if (error.message === 'Member not found' || error.message.includes('Life memberships')) {
+            return res.status(400).json({ error: error.message });
+        }
+        next(error);
+    }
+});
+
+// Get members expiring soon (within 30 days)
+router.get('/expiring/soon', verifyToken, requireAdmin, async (req, res, next) => {
+    try {
+        const members = await membersService.getAll();
+        const now = new Date();
+
+        const expiringSoon = members.filter(m => {
+            if (!m.expiryDate || m.membershipCategory === 'life') return false;
+            const expiryDate = new Date(m.expiryDate);
+            const daysUntilExpiry = Math.floor((expiryDate - now) / (1000 * 60 * 60 * 24));
+            return daysUntilExpiry > 0 && daysUntilExpiry <= 30;
+        });
+
+        res.json({
+            success: true,
+            count: expiringSoon.length,
+            members: expiringSoon.sort((a, b) => new Date(a.expiryDate) - new Date(b.expiryDate))
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Get expired members
+router.get('/expired/list', verifyToken, requireAdmin, async (req, res, next) => {
+    try {
+        const members = await membersService.getAll();
+
+        const expired = members.filter(m => membersService.isMembershipExpired(m));
+
+        res.json({
+            success: true,
+            count: expired.length,
+            members: expired.sort((a, b) => new Date(a.expiryDate) - new Date(b.expiryDate))
         });
     } catch (error) {
         next(error);

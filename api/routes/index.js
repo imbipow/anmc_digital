@@ -23,6 +23,7 @@ const mediaRoutes = require('./media');
 const documentsRoutes = require('./documents');
 const subscribersRoutes = require('./subscribers');
 const messagesRoutes = require('./messages');
+const certificatesRoutes = require('./certificates');
 
 // Mount routes
 router.use('/subscribers', subscribersRoutes);
@@ -46,6 +47,7 @@ router.use('/services', servicesRoutes);
 router.use('/bookings', bookingsRoutes);
 router.use('/media', mediaRoutes);
 router.use('/documents', documentsRoutes);
+router.use('/certificates', certificatesRoutes);
 
 // Health check endpoint
 router.get('/health', (req, res) => {

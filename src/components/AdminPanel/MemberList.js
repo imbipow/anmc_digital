@@ -47,6 +47,37 @@ const StatusField = () => {
     );
 };
 
+const ExpiryField = () => {
+    const record = useRecordContext();
+    if (!record) return null;
+
+    // Life memberships don't expire
+    if (record.membershipCategory === 'life') {
+        return <Chip label="Never" color="success" size="small" />;
+    }
+
+    if (!record.expiryDate) {
+        return <span>-</span>;
+    }
+
+    const expiryDate = new Date(record.expiryDate);
+    const now = new Date();
+    const daysUntilExpiry = Math.floor((expiryDate - now) / (1000 * 60 * 60 * 24));
+
+    // Expired
+    if (daysUntilExpiry < 0) {
+        return <Chip label={`Expired ${Math.abs(daysUntilExpiry)} days ago`} color="error" size="small" />;
+    }
+
+    // Expiring soon (within 30 days)
+    if (daysUntilExpiry <= 30) {
+        return <Chip label={`${daysUntilExpiry} days left`} color="warning" size="small" />;
+    }
+
+    // Active
+    return <Chip label={expiryDate.toLocaleDateString()} color="default" size="small" />;
+};
+
 const MemberFilters = (props) => (
     <Filter {...props}>
         <TextInput label="Search" source="q" alwaysOn />
@@ -103,6 +134,7 @@ const ConditionalEditButton = () => {
 
 const ConditionalDeleteButton = () => {
     const [userRole, setUserRole] = useState(null);
+    const record = useRecordContext();
 
     useEffect(() => {
         const getUserRole = async () => {
@@ -124,8 +156,19 @@ const ConditionalDeleteButton = () => {
         getUserRole();
     }, []);
 
-    // Only show delete button for admins
-    return userRole === 'admin' ? <DeleteButton /> : null;
+    if (!record || userRole !== 'admin') return null;
+
+    // Custom confirmation message with member details
+    const confirmMessage = `Are you sure you want to delete this member?\n\nName: ${record.firstName} ${record.lastName}\nEmail: ${record.email}\nReference: ${record.referenceNo}\n\n⚠️ This action cannot be undone and will permanently delete:\n- Member profile\n- All membership data\n- Payment history\n- Associated Cognito user account`;
+
+    // Only show delete button for admins with enhanced confirmation
+    return (
+        <DeleteButton
+            confirmTitle={`Delete Member: ${record.firstName} ${record.lastName}`}
+            confirmContent={confirmMessage}
+            mutationMode="pessimistic"
+        />
+    );
 };
 
 export const MemberList = (props) => (
@@ -145,6 +188,7 @@ export const MemberList = (props) => (
             />
             <ChipField source="paymentStatus" label="Payment" />
             <StatusField label="Status" />
+            <ExpiryField label="Expiry" />
             <DateField source="createdAt" label="Registered" showTime />
             <ConditionalEditButton />
             <ShowButton />

@@ -34,7 +34,16 @@
       "Bash(tasklist:*)",
       "Bash(test:*)",
       "Bash(set PORT=3001)",
-      "Bash(aws elasticbeanstalk describe-environments:*)"
+      "Bash(aws elasticbeanstalk describe-environments:*)",
+      "Bash(aws elasticbeanstalk describe-application-versions:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push)",
+      "Bash(aws iam create-instance-profile:*)",
+      "Bash(aws iam create-role:*)",
+      "Bash(aws elasticbeanstalk describe-environment-health:*)",
+      "Bash(aws elasticbeanstalk describe-configuration-settings:*)",
+      "Bash(aws elasticbeanstalk describe-events:*)"
     ],
     "deny": [],
     "ask": []

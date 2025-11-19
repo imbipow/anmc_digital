@@ -266,6 +266,14 @@ router.post('/managers', verifyToken, requireAdmin, async (req, res, next) => {
             });
         }
 
+        // Check if Cognito is configured
+        if (!cognitoService.isConfigured()) {
+            return res.status(503).json({
+                success: false,
+                error: 'Cognito is not configured. Please add COGNITO_USER_POOL_ID and COGNITO_CLIENT_ID to environment variables.'
+            });
+        }
+
         // Validate password
         if (password.length < 8 || !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(password)) {
             return res.status(400).json({

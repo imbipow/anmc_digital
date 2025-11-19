@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {Link} from 'react-router-dom'
 import contentService from '../../services/contentService'
+import { formatTimeRange } from '../../utils/timeUtils'
 import './style.css'
 
 const EventSection2 = (props) => {
@@ -41,15 +42,58 @@ const EventSection2 = (props) => {
                         .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
                         .map(event => {
                             const startDate = new Date(event.startDate);
+
+                            // Format dates: "December 18, 2025"
+                            const formattedStartDate = startDate.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+
+                            let fullDateDisplay = formattedStartDate;
+
+                            // If there's an end date and it's different from start date
+                            if (event.endDate) {
+                                const endDate = new Date(event.endDate);
+                                const formattedEndDate = endDate.toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                });
+
+                                if (formattedEndDate !== formattedStartDate) {
+                                    fullDateDisplay = `${formattedStartDate} - ${formattedEndDate}`;
+                                }
+                            }
+
+                            // Format time with AM/PM
+                            let timeDisplay = '';
+                            if (event.time) {
+                                // If time field contains a range separator
+                                if (event.time.includes(' - ') || event.time.includes(' to ')) {
+                                    const parts = event.time.split(/ - | to /);
+                                    if (parts.length === 2) {
+                                        timeDisplay = formatTimeRange(parts[0].trim(), parts[1].trim());
+                                    } else {
+                                        timeDisplay = event.time;
+                                    }
+                                } else {
+                                    timeDisplay = event.time;
+                                }
+                            } else if (event.startTime || event.endTime) {
+                                timeDisplay = formatTimeRange(event.startTime, event.endTime);
+                            }
+
                             return {
                                 id: event.id,
                                 slug: event.slug,
                                 date: startDate.getDate().toString(),
                                 month: startDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
                                 year: startDate.getFullYear().toString(),
+                                fullDate: fullDateDisplay,
                                 title: event.title,
                                 description: event.description,
-                                time: `${event.startTime} - ${event.endTime}`,
+                                time: timeDisplay,
                                 venue: event.location,
                                 category: event.category || 'Event',
                                 status: event.status === 'upcoming' ? 'registration-open' : 'coming-soon'
@@ -149,14 +193,22 @@ const EventSection2 = (props) => {
                                     </div>
                                     <p className="event-description">{event.description}</p>
                                     <div className="event-meta">
-                                        <div className="event-time">
-                                            <i className="fa fa-clock-o"></i>
-                                            <span>{event.time}</span>
+                                        <div className="event-date">
+                                            <i className="fa fa-calendar"></i>
+                                            <span>{event.fullDate}</span>
                                         </div>
-                                        <div className="event-venue">
-                                            <i className="fa fa-map-marker"></i>
-                                            <span>{event.venue}</span>
-                                        </div>
+                                        {event.time && (
+                                            <div className="event-time">
+                                                <i className="fa fa-clock-o"></i>
+                                                <span>{event.time}</span>
+                                            </div>
+                                        )}
+                                        {event.venue && (
+                                            <div className="event-venue">
+                                                <i className="fa fa-map-marker"></i>
+                                                <span>{event.venue}</span>
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="event-actions">
                                         <Link

@@ -155,6 +155,8 @@ const SignUpPage = () => {
                 {
                     firstName: '',
                     lastName: '',
+                    email: '',
+                    mobile: '',
                     relationship: '',
                     age: ''
                 }
@@ -192,6 +194,10 @@ const SignUpPage = () => {
         if (!formData.mobile.trim()) newErrors.mobile = 'Mobile number is required';
         if (!formData.gender) newErrors.gender = 'Gender is required';
 
+        // Age validation (must be 18 or above)
+        if (!formData.age) newErrors.age = 'Age is required';
+        else if (parseInt(formData.age) < 18) newErrors.age = 'You must be at least 18 years old to register';
+
         // Membership
         if (!formData.membershipCategory) newErrors.membershipCategory = 'Please select membership category';
         if (!formData.membershipType) newErrors.membershipType = 'Please select membership type';
@@ -210,7 +216,12 @@ const SignUpPage = () => {
                 formData.familyMembers.forEach((member, index) => {
                     if (!member.firstName.trim()) newErrors[`family${index}FirstName`] = 'First name required';
                     if (!member.lastName.trim()) newErrors[`family${index}LastName`] = 'Last name required';
+                    if (!member.email || !member.email.trim()) newErrors[`family${index}Email`] = 'Email required';
+                    else if (!/\S+@\S+\.\S+/.test(member.email)) newErrors[`family${index}Email`] = 'Invalid email format';
+                    if (!member.mobile || !member.mobile.trim()) newErrors[`family${index}Mobile`] = 'Mobile required';
                     if (!member.relationship) newErrors[`family${index}Relationship`] = 'Relationship required';
+                    if (!member.age) newErrors[`family${index}Age`] = 'Age required';
+                    else if (parseInt(member.age) < 18) newErrors[`family${index}Age`] = 'Must be 18 or above';
                 });
             }
         }
@@ -450,13 +461,15 @@ const SignUpPage = () => {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
-                                label="Age (Optional)"
+                                label="Age *"
                                 name="age"
                                 type="number"
                                 value={formData.age}
                                 onChange={handleChange}
+                                error={!!errors.age}
+                                helperText={errors.age || "Must be 18 or above"}
                                 variant="outlined"
-                                helperText="For statistical purposes only"
+                                inputProps={{ min: 18 }}
                             />
                         </Grid>
 
@@ -516,7 +529,7 @@ const SignUpPage = () => {
                             <>
                                 <Grid item xs={12}>
                                     <h3 className="section-title">Family Members</h3>
-                                    <p className="helper-text">Add up to 3 family members</p>
+                                    <p className="helper-text">Add up to 3 family members. Note: Each family member must be 18 years or above and will be registered as an individual member.</p>
                                     {errors.familyMembers && <span className="error-text">{errors.familyMembers}</span>}
                                 </Grid>
 
@@ -550,6 +563,31 @@ const SignUpPage = () => {
                                                     />
                                                 </Grid>
                                                 <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        fullWidth
+                                                        label="Email *"
+                                                        type="email"
+                                                        value={member.email || ''}
+                                                        onChange={(e) => handleFamilyMemberChange(index, 'email', e.target.value)}
+                                                        error={!!errors[`family${index}Email`]}
+                                                        helperText={errors[`family${index}Email`]}
+                                                        variant="outlined"
+                                                        size="small"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}>
+                                                    <TextField
+                                                        fullWidth
+                                                        label="Mobile *"
+                                                        value={member.mobile || ''}
+                                                        onChange={(e) => handleFamilyMemberChange(index, 'mobile', e.target.value)}
+                                                        error={!!errors[`family${index}Mobile`]}
+                                                        helperText={errors[`family${index}Mobile`]}
+                                                        variant="outlined"
+                                                        size="small"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={4}>
                                                     <FormControl fullWidth size="small" error={!!errors[`family${index}Relationship`]}>
                                                         <InputLabel>Relationship *</InputLabel>
                                                         <Select
@@ -570,15 +608,18 @@ const SignUpPage = () => {
                                                 <Grid item xs={12} sm={4}>
                                                     <TextField
                                                         fullWidth
-                                                        label="Age"
+                                                        label="Age *"
                                                         type="number"
-                                                        value={member.age}
+                                                        value={member.age || ''}
                                                         onChange={(e) => handleFamilyMemberChange(index, 'age', e.target.value)}
+                                                        error={!!errors[`family${index}Age`]}
+                                                        helperText={errors[`family${index}Age`] || "Must be 18 or above"}
                                                         variant="outlined"
                                                         size="small"
+                                                        inputProps={{ min: 18 }}
                                                     />
                                                 </Grid>
-                                                <Grid item xs={12} sm={2}>
+                                                <Grid item xs={12} sm={4}>
                                                     <Button
                                                         variant="outlined"
                                                         color="error"
