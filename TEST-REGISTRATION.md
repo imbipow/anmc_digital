@@ -32,7 +32,7 @@ Use these test values:
 
 - **First Name:** John
 - **Last Name:** Doe
-- **Email:** `test-registration-$(date +%s)@anmc.org.au` (use unique email each time)
+- **Email:** `test-registration-$(date +%s)@anmcinc.org.au` (use unique email each time)
 - **Mobile:** 0412345678
 - **Gender:** Male
 - **Age:** 30 (optional)
@@ -67,17 +67,17 @@ You should see these logs in sequence:
 Checking Cognito creation: {
   hasPassword: true,
   isConfigured: true,
-  email: 'test-registration-...@anmc.org.au'
+  email: 'test-registration-...@anmcinc.org.au'
 }
 
-Creating Cognito user for: test-registration-...@anmc.org.au
+Creating Cognito user for: test-registration-...@anmcinc.org.au
 
-✅ Password set for user: test-registration-...@anmc.org.au
-User test-registration-...@anmc.org.au added to AnmcMembers group
-⚠️ User disabled (pending approval): test-registration-...@anmc.org.au
+✅ Password set for user: test-registration-...@anmcinc.org.au
+User test-registration-...@anmcinc.org.au added to AnmcMembers group
+⚠️ User disabled (pending approval): test-registration-...@anmcinc.org.au
 
 Cognito user created successfully: {
-  username: 'test-registration-...@anmc.org.au',
+  username: 'test-registration-...@anmcinc.org.au',
   userSub: '...',
   cognitoEnabled: true,
   requiresApproval: true,
@@ -288,7 +288,7 @@ After testing, delete test users:
 # Delete from Cognito
 aws cognito-idp admin-delete-user \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username test-registration-...@anmc.org.au \
+  --username test-registration-...@anmcinc.org.au \
   --region ap-southeast-2
 
 # Delete from DynamoDB (get ID first from scan above)
@@ -319,7 +319,7 @@ aws dynamodb delete-item \
 #!/bin/bash
 
 # Generate unique email
-EMAIL="test-$(date +%s)@anmc.org.au"
+EMAIL="test-$(date +%s)@anmcinc.org.au"
 echo "Testing with email: $EMAIL"
 
 # Wait for manual registration...

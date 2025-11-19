@@ -74,7 +74,7 @@ REACT_APP_COGNITO_REGION=ap-southeast-2
 
 4. **Configure Message Delivery:**
    - Email provider: Amazon SES or Cognito email
-   - FROM email address: `noreply@anmc.org.au`
+   - FROM email address: `noreply@anmcinc.org.au`
 
 5. **Integrate Your App:**
    - App type: Public client
@@ -109,7 +109,7 @@ In your Cognito User Pool, create these groups:
 1. Go to Cognito User Pool
 2. Click "Users" > "Create user"
 3. Enter user details:
-   - Email: `member@anmc.org.au`
+   - Email: `member@anmcinc.org.au`
    - Temporary password: `TempPass123!`
 4. User attributes:
    - given_name: `Test`
@@ -124,9 +124,9 @@ In your Cognito User Pool, create these groups:
 ```bash
 aws cognito-idp admin-create-user \
   --user-pool-id ap-southeast-2_xxxxxxxxx \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --user-attributes \
-    Name=email,Value=member@anmc.org.au \
+    Name=email,Value=member@anmcinc.org.au \
     Name=given_name,Value=Test \
     Name=family_name,Value=Member \
     Name=custom:membership_type,Value=general \
@@ -138,7 +138,7 @@ aws cognito-idp admin-create-user \
 # Add user to group
 aws cognito-idp admin-add-user-to-group \
   --user-pool-id ap-southeast-2_xxxxxxxxx \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --group-name GeneralMembers
 ```
 
@@ -186,9 +186,9 @@ When Cognito is not configured, the system automatically uses fallback authentic
 **Fallback User Object:**
 ```javascript
 {
-  email: 'member@anmc.org.au',
+  email: 'member@anmcinc.org.au',
   attributes: {
-    email: 'member@anmc.org.au',
+    email: 'member@anmcinc.org.au',
     given_name: 'Test',
     family_name: 'Member',
     'custom:membership_type': 'general'
@@ -221,7 +221,7 @@ When Cognito is not configured, the system automatically uses fallback authentic
 **Cause:** Incorrect email or password
 
 **Solutions:**
-1. Verify test credentials: `member@anmc.org.au` / `Member123!`
+1. Verify test credentials: `member@anmcinc.org.au` / `Member123!`
 2. If using Cognito, check user exists in User Pool
 3. Check if temporary password needs to be changed
 4. Verify Cognito configuration in `.env`

@@ -237,11 +237,9 @@ router.post('/broadcast', verifyToken, requireAdmin, async (req, res) => {
             await dynamoDBService.updateItem(
                 MESSAGES_TABLE,
                 { id: broadcastMessage.id },
-                'SET #status = :status, errorMessage = :error',
-                { '#status': 'status' },
                 {
-                    ':status': 'error',
-                    ':error': emailError.message
+                    status: 'error',
+                    errorMessage: emailError.message
                 }
             );
 

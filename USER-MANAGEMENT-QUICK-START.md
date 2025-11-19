@@ -41,7 +41,7 @@
 1. Click **"Add Manager"** button (top right)
 2. Fill in the form:
    - **Full Name:** Manager's full name (e.g., "John Manager")
-   - **Email:** Manager's email (e.g., "manager@anmc.org.au")
+   - **Email:** Manager's email (e.g., "manager@anmcinc.org.au")
    - **Phone Number:** Optional (e.g., "+61400000000")
    - **Password:** Strong password (e.g., "Manager@123")
 
@@ -112,7 +112,7 @@ http://localhost:3036/admin#/user-management
 # Click "Add Manager"
 # Fill form:
 Name: Test Manager
-Email: testmanager@anmc.org.au
+Email: testmanager@anmcinc.org.au
 Phone: +61400000000
 Password: TestManager@123
 
@@ -126,13 +126,13 @@ Password: TestManager@123
 # Check manager exists
 aws cognito-idp admin-get-user \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username testmanager@anmc.org.au \
+  --username testmanager@anmcinc.org.au \
   --region ap-southeast-2
 
 # Check manager is in AnmcManagers group
 aws cognito-idp admin-list-groups-for-user \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username testmanager@anmc.org.au \
+  --username testmanager@anmcinc.org.au \
   --region ap-southeast-2
 ```
 
@@ -143,7 +143,7 @@ aws cognito-idp admin-list-groups-for-user \
 http://localhost:3036/login
 
 # Enter:
-Email: testmanager@anmc.org.au
+Email: testmanager@anmcinc.org.au
 Password: TestManager@123
 
 # Expected: Login successful
@@ -171,7 +171,7 @@ Password: TestManager@123
 # Verify in Cognito
 aws cognito-idp admin-get-user \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username testmanager@anmc.org.au \
+  --username testmanager@anmcinc.org.au \
   --region ap-southeast-2
 
 # Expected: UserNotFoundException

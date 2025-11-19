@@ -108,7 +108,7 @@ const RegistrationSuccess = () => {
                 <div className="help-section">
                     <p className="help-text">
                         Need help? Email us at{' '}
-                        <a href="mailto:info@anmc.org.au">info@anmc.org.au</a>
+                        <a href="mailto:info@anmcinc.org.au">info@anmcinc.org.au</a>
                         {' '}or call{' '}
                         <a href="tel:+61234567890">+61 2 3456 7890</a>
                     </p>

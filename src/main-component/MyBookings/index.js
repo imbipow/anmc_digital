@@ -691,7 +691,7 @@ const MyBookings = () => {
                             </Typography>
                             {selectedBooking.paymentStatus === 'paid' && (
                                 <Alert severity="info" sx={{ mt: 2 }}>
-                                    Since you've already paid, please contact admin@anmc.org.au for refund processing.
+                                    Since you've already paid, please contact admin@anmcinc.org.au for refund processing.
                                 </Alert>
                             )}
                         </Box>

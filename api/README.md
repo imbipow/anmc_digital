@@ -184,7 +184,7 @@ Content-Type: application/json
   "category": "community",
   "maxAttendees": 200,
   "registrationRequired": true,
-  "contactEmail": "events@anmc.org.au",
+  "contactEmail": "events@anmcinc.org.au",
   "tags": ["picnic", "family"]
 }
 ```

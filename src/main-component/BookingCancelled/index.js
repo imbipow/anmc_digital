@@ -60,7 +60,7 @@ const BookingCancelled = () => {
 
                         <Alert severity="info" sx={{ textAlign: 'left', mb: 4 }}>
                             <Typography variant="body2">
-                                Need help? Contact us at admin@anmc.org.au or visit our office.
+                                Need help? Contact us at admin@anmcinc.org.au or visit our office.
                             </Typography>
                         </Alert>
 

@@ -235,7 +235,7 @@ Navigate to: `http://localhost:3036/admin#/user-management`
 1. Click "Add Manager" button
 2. Fill in form:
    - Name: Test Manager
-   - Email: testmanager@anmc.org.au
+   - Email: testmanager@anmcinc.org.au
    - Phone: +61400000000
    - Password: TestManager@123
 3. Click "Create Manager"
@@ -247,13 +247,13 @@ Navigate to: `http://localhost:3036/admin#/user-management`
 # Check manager was created
 aws cognito-idp admin-get-user \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username testmanager@anmc.org.au \
+  --username testmanager@anmcinc.org.au \
   --region ap-southeast-2
 
 # Check manager is in AnmcManagers group
 aws cognito-idp admin-list-groups-for-user \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username testmanager@anmc.org.au \
+  --username testmanager@anmcinc.org.au \
   --region ap-southeast-2
 ```
 
@@ -292,7 +292,7 @@ Expected output:
 ```bash
 aws cognito-idp admin-get-user \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username testmanager@anmc.org.au \
+  --username testmanager@anmcinc.org.au \
   --region ap-southeast-2
 
 # Should return: UserNotFoundException

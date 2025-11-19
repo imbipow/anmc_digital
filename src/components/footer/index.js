@@ -9,7 +9,7 @@ const Footer = (props) =>{
     const [contactInfo, setContactInfo] = useState({
         address: '123 Community Drive, Melbourne VIC 3000',
         phone: '03 9555 1234',
-        email: 'info@anmc.org.au'
+        email: 'info@anmcinc.org.au'
     });
 
     useEffect(() => {

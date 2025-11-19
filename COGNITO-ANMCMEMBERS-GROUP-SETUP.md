@@ -55,7 +55,7 @@ Access denied. You must be an ANMC member to access the member portal.
 
 **1. Go to Users Tab:**
 - In your user pool → Click **"Users"** tab
-- Find your user (e.g., `member@anmc.org.au`)
+- Find your user (e.g., `member@anmcinc.org.au`)
 
 **2. Click on User:**
 - Opens user details page
@@ -78,7 +78,7 @@ Access denied. You must be an ANMC member to access the member portal.
 ```bash
 aws cognito-idp admin-add-user-to-group \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --group-name AnmcMembers \
   --region ap-southeast-2
 ```
@@ -87,7 +87,7 @@ aws cognito-idp admin-add-user-to-group \
 ```bash
 aws cognito-idp admin-list-groups-for-user \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --region ap-southeast-2
 ```
 
@@ -160,7 +160,7 @@ await this.addUserToGroup(email, 'AnmcMembers');
 
 **2. Try to login:**
 - Go to: http://localhost:3036/login
-- Email: `member@anmc.org.au`
+- Email: `member@anmcinc.org.au`
 - Password: Your password
 - Click "Login"
 
@@ -181,7 +181,7 @@ await this.addUserToGroup(email, 'AnmcMembers');
 ```bash
 aws cognito-idp admin-remove-user-from-group \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --group-name AnmcMembers \
   --region ap-southeast-2
 ```
@@ -217,9 +217,9 @@ JSON.parse(localStorage.getItem('memberAuth'))
 **Should see:**
 ```javascript
 {
-  email: "member@anmc.org.au",
+  email: "member@anmcinc.org.au",
   attributes: {
-    email: "member@anmc.org.au",
+    email: "member@anmcinc.org.au",
     given_name: "Test",
     family_name: "Member",
     ...
@@ -278,13 +278,13 @@ aws cognito-idp create-group \
 # User can be in multiple groups
 aws cognito-idp admin-add-user-to-group \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --group-name AnmcMembers \
   --region ap-southeast-2
 
 aws cognito-idp admin-add-user-to-group \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --group-name LifeMembers \
   --region ap-southeast-2
 ```
@@ -308,7 +308,7 @@ aws cognito-idp admin-add-user-to-group \
    ```bash
    aws cognito-idp admin-list-groups-for-user \
      --user-pool-id ap-southeast-2_egMmxcO1M \
-     --username member@anmc.org.au \
+     --username member@anmcinc.org.au \
      --region ap-southeast-2
    ```
 
@@ -356,7 +356,7 @@ aws cognito-idp create-group \
 ```bash
 aws cognito-idp admin-add-user-to-group \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --group-name AnmcMembers \
   --region ap-southeast-2
 ```
@@ -365,7 +365,7 @@ aws cognito-idp admin-add-user-to-group \
 ```bash
 aws cognito-idp admin-remove-user-from-group \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --group-name AnmcMembers \
   --region ap-southeast-2
 ```
@@ -374,7 +374,7 @@ aws cognito-idp admin-remove-user-from-group \
 ```bash
 aws cognito-idp admin-list-groups-for-user \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --region ap-southeast-2
 ```
 

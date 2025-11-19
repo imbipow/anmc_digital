@@ -53,7 +53,7 @@ FROM email address: no-reply@verificationemail.com
 ### Option B: Using Amazon SES
 ```
 Email provider: Amazon SES
-FROM email address: noreply@anmc.org.au
+FROM email address: noreply@anmcinc.org.au
 Configuration set: (optional)
 ```
 
@@ -103,7 +103,7 @@ Configuration set: (optional)
 - Leave blank (Cognito default doesn't use ARN)
 
 **5. Reply-to email address (optional):**
-- Can add: `support@anmc.org.au`
+- Can add: `support@anmcinc.org.au`
 - This shows where users can reply
 
 **6. Click "Save changes"**
@@ -134,7 +134,7 @@ https://console.aws.amazon.com/ses
 - Left sidebar → **Verified identities**
 - Click **"Create identity"**
 - Identity type: **Email address**
-- Email address: `noreply@anmc.org.au` (or your email)
+- Email address: `noreply@anmcinc.org.au` (or your email)
 - Click **"Create identity"**
 - Check your email inbox
 - Click verification link in email
@@ -144,7 +144,7 @@ https://console.aws.amazon.com/ses
 - Left sidebar → **Verified identities**
 - Click **"Create identity"**
 - Identity type: **Domain**
-- Domain: `anmc.org.au`
+- Domain: `anmcinc.org.au`
 - Follow DNS verification steps
 - Add DKIM records to domain
 - Wait for verification (can take up to 72 hours)
@@ -165,7 +165,7 @@ https://console.aws.amazon.com/ses
 2. Click **"Request production access"**
 3. Fill out form:
    - Mail type: **Transactional** (password resets, etc.)
-   - Website URL: `https://anmc.org.au`
+   - Website URL: `https://anmcinc.org.au`
    - Use case description:
      ```
      Sending transactional emails for ANMC member portal:
@@ -186,17 +186,17 @@ https://console.aws.amazon.com/ses
 **3. Email Configuration:**
 - Email provider: **Send email with Amazon SES**
 - SES Region: **ap-southeast-2**
-- FROM email address: `noreply@anmc.org.au`
+- FROM email address: `noreply@anmcinc.org.au`
   - Must be verified in SES
 - Configuration set name: (leave blank for now)
-- Reply-to email address: `support@anmc.org.au` (optional)
+- Reply-to email address: `support@anmcinc.org.au` (optional)
 
 **4. Click "Save changes"**
 
 **5. Test:**
 - Try forgot password flow
 - Check email inbox
-- Should receive email from `noreply@anmc.org.au`
+- Should receive email from `noreply@anmcinc.org.au`
 
 ---
 
@@ -209,7 +209,7 @@ You can test if email sending works:
 ```bash
 aws cognito-idp forgot-password \
   --client-id 2h0bk9340rlmevdnsof7ml31ai \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --region ap-southeast-2
 ```
 
@@ -267,7 +267,7 @@ An error occurred (InvalidParameterException) when calling the ForgotPassword op
 
 **Fix (Quick - For Testing):**
 1. SES → Verified identities
-2. Verify recipient email (member@anmc.org.au)
+2. Verify recipient email (member@anmcinc.org.au)
 3. Click verification link
 4. Now can send to that email
 
@@ -335,17 +335,17 @@ An error occurred (InvalidParameterException) when calling the ForgotPassword op
 
 **Option B: Verify Email in SES**
 1. SES Console → Create identity → Email
-2. Enter: `noreply@anmc.org.au`
+2. Enter: `noreply@anmcinc.org.au`
 3. Check inbox and click verification link
 4. Cognito → Messaging → Edit
 5. Select "Send email with Amazon SES"
-6. FROM: `noreply@anmc.org.au`
+6. FROM: `noreply@anmcinc.org.au`
 7. Save
 8. Test forgot password
 
 ### For Production (1-2 days):
 
-1. ✅ Verify domain in SES (`anmc.org.au`)
+1. ✅ Verify domain in SES (`anmcinc.org.au`)
 2. ✅ Configure DKIM records
 3. ✅ Request production access
 4. ✅ Wait for approval
@@ -396,9 +396,9 @@ ANMC Team
 4. Emails may go to spam but will work
 
 **Option 2: Use SES (Better)**
-1. Go to SES → Verify email: `noreply@anmc.org.au`
+1. Go to SES → Verify email: `noreply@anmcinc.org.au`
 2. Click verification link in email
-3. Verify recipient email in SES: `member@anmc.org.au`
+3. Verify recipient email in SES: `member@anmcinc.org.au`
 4. Click verification link
 5. Configure Cognito to use SES
 6. Test - should work immediately

@@ -6,7 +6,7 @@ import './style.css'
 const HeaderTopbar = () => {
     const [contactInfo, setContactInfo] = useState({
         phone: '+61 3 9876 5432',
-        email: 'info@anmc.org.au'
+        email: 'info@anmcinc.org.au'
     });
 
     useEffect(() => {
@@ -16,7 +16,7 @@ const HeaderTopbar = () => {
                 if (data) {
                     setContactInfo({
                         phone: data.phone || '+61 3 9876 5432',
-                        email: data.email || 'info@anmc.org.au'
+                        email: data.email || 'info@anmcinc.org.au'
                     });
                 }
             } catch (error) {

@@ -144,7 +144,7 @@ const Contactpage = () => {
                                                 <h4>Email & Phone</h4>
                                                 <p>
                                                     <strong>General Inquiries:</strong><br/>
-                                                    <a href={`mailto:${contactInfo.email || 'info@anmc.org.au'}`}>{contactInfo.email || 'info@anmc.org.au'}</a><br/>
+                                                    <a href={`mailto:${contactInfo.email || 'info@anmcinc.org.au'}`}>{contactInfo.email || 'info@anmcinc.org.au'}</a><br/>
                                                     <a href={`tel:${contactInfo.phone || '+61398765432'}`}>{contactInfo.phone || '+61 3 9876 5432'}</a>
                                                 </p>
                                                 <p>

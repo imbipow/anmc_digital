@@ -35,8 +35,8 @@ function getSESClient() {
     return sesClient;
 }
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@anmc.org.au';
-const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@anmc.org.au';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@anmcinc.org.au';
+const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@anmcinc.org.au';
 
 /**
  * Send booking request notification to member
@@ -132,7 +132,7 @@ ${specialRequirements ? `Special Requirements:\n${specialRequirements}\n` : ''}
 
 Please review and approve this booking request in the admin panel.
 
-Login to Admin Panel: ${process.env.ADMIN_PANEL_URL || 'https://anmc.org.au/admin'}
+Login to Admin Panel: ${process.env.ADMIN_PANEL_URL || 'https://anmcinc.org.au/admin'}
     `.trim();
 
     const params = {
@@ -405,7 +405,7 @@ ${message}
 This email was sent by ANMC (Australian Nepalese Multicultural Centre)
 
 To unsubscribe from these emails, please visit:
-${process.env.FRONTEND_URL || 'https://anmc.org.au'}/unsubscribe
+${process.env.FRONTEND_URL || 'https://anmcinc.org.au'}/unsubscribe
 
 Best regards,
 ANMC Team
@@ -525,7 +525,7 @@ Status: Active
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 You can now login to the member portal and access all member features:
-${process.env.FRONTEND_URL || 'https://anmc.org.au'}/member-login
+${process.env.FRONTEND_URL || 'https://anmcinc.org.au'}/member-login
 
 Member Benefits:
 • Book temple services and puja
@@ -597,10 +597,10 @@ Your account has been created successfully. You can now:
 • Contact ANMC for information
 
 Login to your account:
-${process.env.FRONTEND_URL || 'https://anmc.org.au'}/login
+${process.env.FRONTEND_URL || 'https://anmcinc.org.au'}/login
 
 If you're interested in becoming a member to access exclusive benefits, please visit:
-${process.env.FRONTEND_URL || 'https://anmc.org.au'}/membership
+${process.env.FRONTEND_URL || 'https://anmcinc.org.au'}/membership
 
 If you have any questions, please contact us at ${ADMIN_EMAIL}.
 

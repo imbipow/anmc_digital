@@ -112,7 +112,7 @@ Click **"Next"**
 
 **FROM email address:**
 - For Cognito email: `no-reply@verificationemail.com` (default)
-- For SES: `noreply@anmc.org.au` (after verification)
+- For SES: `noreply@anmcinc.org.au` (after verification)
 
 Click **"Next"**
 
@@ -222,7 +222,7 @@ npm run dev
 3. Click **"Create user"**
 
 **User information:**
-- Email address: `member@anmc.org.au`
+- Email address: `member@anmcinc.org.au`
 - ❌ Send an email invitation (for testing)
 - ✅ Mark email address as verified
 
@@ -246,9 +246,9 @@ Click "Add attribute" for each:
 ```bash
 aws cognito-idp admin-create-user \
   --user-pool-id ap-southeast-2_xxxxxxxxx \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --user-attributes \
-    Name=email,Value=member@anmc.org.au \
+    Name=email,Value=member@anmcinc.org.au \
     Name=email_verified,Value=true \
     Name=given_name,Value=Test \
     Name=family_name,Value=Member \
@@ -266,7 +266,7 @@ aws cognito-idp admin-create-user \
 ```bash
 aws cognito-idp admin-set-user-password \
   --user-pool-id ap-southeast-2_xxxxxxxxx \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --password "Member123!" \
   --permanent \
   --region ap-southeast-2
@@ -302,7 +302,7 @@ aws cognito-idp admin-set-user-password \
 ### 5.2 Add User to Group
 
 1. Go to **"Users"** tab
-2. Click on `member@anmc.org.au`
+2. Click on `member@anmcinc.org.au`
 3. Click **"Groups"** section
 4. Click **"Add user to group"**
 5. Select `GeneralMembers`
@@ -325,7 +325,7 @@ Check browser console when you open the app - you should NOT see:
 1. Go to Cognito Console
 2. Click on your user pool
 3. Click "Users" tab
-4. You should see `member@anmc.org.au` listed
+4. You should see `member@anmcinc.org.au` listed
 5. Click on the user to see all attributes
 
 ---

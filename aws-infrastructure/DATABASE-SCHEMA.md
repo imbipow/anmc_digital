@@ -107,7 +107,7 @@ This document provides a complete reference of the DynamoDB database schema for 
   "category": "community",
   "maxAttendees": 200,
   "registrationRequired": true,
-  "contactEmail": "events@anmc.org.au",
+  "contactEmail": "events@anmcinc.org.au",
   "tags": ["picnic", "community", "family"]
 }
 ```
@@ -277,7 +277,7 @@ This document provides a complete reference of the DynamoDB database schema for 
         "name": "Rajesh Sharma",
         "title": "President",
         "position": "Executive Leadership",
-        "email": "president@anmc.org.au",
+        "email": "president@anmcinc.org.au",
         "phone": "+61 400 123 456",
         "description": "Leading the organization's strategic direction...",
         "image": "https://images.unsplash.com/...",
@@ -312,7 +312,7 @@ This document provides a complete reference of the DynamoDB database schema for 
   "id": "main",
   "address": "123 Community Street, Melbourne VIC 3001",
   "phone": "+61 3 9876 5432",
-  "email": "info@anmc.org.au",
+  "email": "info@anmcinc.org.au",
   "emergencyPhone": "+61 400 123 456",
   "officeHours": "Monday to Friday: 9:00 AM - 5:00 PM",
   "weekendHours": "Saturday: 10:00 AM - 2:00 PM",

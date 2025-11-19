@@ -185,7 +185,7 @@ Admin sees new member with:
 
   // Added after approval
   "approvedAt": "2024-01-16T09:00:00Z",
-  "approvedBy": "admin@anmc.org.au"
+  "approvedBy": "admin@anmcinc.org.au"
 }
 ```
 
@@ -250,7 +250,7 @@ POST /api/members/{id}/approve
 
 Request Body (optional):
 {
-  "approvedBy": "admin@anmc.org.au"
+  "approvedBy": "admin@anmcinc.org.au"
 }
 
 Response (200):
@@ -261,7 +261,7 @@ Response (200):
     "id": "mem_123456",
     "status": "active",
     "approvedAt": "2024-01-16T09:00:00Z",
-    "approvedBy": "admin@anmc.org.au",
+    "approvedBy": "admin@anmcinc.org.au",
     ...
   }
 }
@@ -275,7 +275,7 @@ POST /api/members/{id}/reject
 Request Body:
 {
   "reason": "Incomplete information",
-  "rejectedBy": "admin@anmc.org.au"
+  "rejectedBy": "admin@anmcinc.org.au"
 }
 
 Response (200):
@@ -286,7 +286,7 @@ Response (200):
     "id": "mem_123456",
     "status": "rejected",
     "rejectedAt": "2024-01-16T09:00:00Z",
-    "rejectedBy": "admin@anmc.org.au",
+    "rejectedBy": "admin@anmcinc.org.au",
     "rejectionReason": "Incomplete information",
     ...
   }
@@ -301,7 +301,7 @@ POST /api/members/{id}/suspend
 Request Body:
 {
   "reason": "Membership fee overdue",
-  "suspendedBy": "admin@anmc.org.au"
+  "suspendedBy": "admin@anmcinc.org.au"
 }
 
 Response (200):
@@ -322,7 +322,7 @@ POST /api/members/{id}/reactivate
 
 Request Body:
 {
-  "reactivatedBy": "admin@anmc.org.au"
+  "reactivatedBy": "admin@anmcinc.org.au"
 }
 
 Response (200):
@@ -606,7 +606,7 @@ Dear John Doe,
 Your ANMC membership has been approved!
 
 You can now login to the member portal:
-https://anmc.org.au/login
+https://anmcinc.org.au/login
 
 Member ID: ANMC-2024-001
 Login Email: john.doe@example.com
@@ -627,7 +627,7 @@ application at this time.
 Reason: [Admin provided reason]
 
 If you have questions, please contact us at:
-admin@anmc.org.au
+admin@anmcinc.org.au
 
 Best regards,
 ANMC Team

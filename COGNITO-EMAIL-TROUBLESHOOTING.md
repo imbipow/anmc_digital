@@ -61,7 +61,7 @@ If you're not receiving the verification code email, there are several common re
 ```bash
 aws cognito-idp admin-update-user-attributes \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --user-attributes Name=email_verified,Value=true \
   --region ap-southeast-2
 ```
@@ -104,7 +104,7 @@ Instead of email verification, admin can directly set password:
 # Set password directly without email
 aws cognito-idp admin-set-user-password \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --password "NewPassword123!" \
   --permanent \
   --region ap-southeast-2
@@ -130,20 +130,20 @@ For reliable email delivery, configure Amazon SES:
 **1. Verify Email Address in SES:**
 ```bash
 aws ses verify-email-identity \
-  --email-address noreply@anmc.org.au \
+  --email-address noreply@anmcinc.org.au \
   --region ap-southeast-2
 ```
 
 **2. Check Verification Email:**
-- AWS sends verification email to `noreply@anmc.org.au`
+- AWS sends verification email to `noreply@anmcinc.org.au`
 - Click the verification link
 
 **3. Configure Cognito to Use SES:**
 1. Cognito → User Pool → Messaging
 2. Email → Configure with Amazon SES
 3. Select verified email
-4. FROM address: `noreply@anmc.org.au`
-5. Reply-to: `support@anmc.org.au` (optional)
+4. FROM address: `noreply@anmcinc.org.au`
+5. Reply-to: `support@anmcinc.org.au` (optional)
 6. Save changes
 
 **4. Request Production Access:**
@@ -198,7 +198,7 @@ I can create a development-only password change page that doesn't require email 
 ```bash
 aws cognito-idp admin-set-user-password \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --password "TestPassword123!" \
   --permanent \
   --region ap-southeast-2
@@ -206,7 +206,7 @@ aws cognito-idp admin-set-user-password \
 
 **Step 3: Test Login:**
 - Go to: http://localhost:3036/login
-- Email: `member@anmc.org.au`
+- Email: `member@anmcinc.org.au`
 - Password: `TestPassword123!`
 - Should work immediately!
 
@@ -258,7 +258,7 @@ aws cognito-idp admin-set-user-password \
 ```bash
 aws cognito-idp admin-get-user \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --region ap-southeast-2
 ```
 
@@ -266,7 +266,7 @@ aws cognito-idp admin-get-user \
 ```bash
 aws cognito-idp admin-update-user-attributes \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --user-attributes Name=email_verified,Value=true \
   --region ap-southeast-2
 ```
@@ -275,7 +275,7 @@ aws cognito-idp admin-update-user-attributes \
 ```bash
 aws cognito-idp admin-set-user-password \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --password "YourNewPassword123!" \
   --permanent \
   --region ap-southeast-2
@@ -285,7 +285,7 @@ aws cognito-idp admin-set-user-password \
 ```bash
 aws cognito-idp admin-reset-user-password \
   --user-pool-id ap-southeast-2_egMmxcO1M \
-  --username member@anmc.org.au \
+  --username member@anmcinc.org.au \
   --region ap-southeast-2
 ```
 
@@ -318,7 +318,7 @@ aws cognito-idp admin-reset-user-password \
    ```bash
    aws cognito-idp admin-set-user-password \
      --user-pool-id ap-southeast-2_egMmxcO1M \
-     --username member@anmc.org.au \
+     --username member@anmcinc.org.au \
      --password "NewTest123!" \
      --permanent \
      --region ap-southeast-2
@@ -333,7 +333,7 @@ aws cognito-idp admin-reset-user-password \
 
 ### For Production (Before Launch):
 1. Configure Amazon SES
-2. Verify domain (anmc.org.au)
+2. Verify domain (anmcinc.org.au)
 3. Request production access
 4. Customize email templates
 5. Test thoroughly
