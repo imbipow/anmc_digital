@@ -1,9 +1,53 @@
 const { SESClient, SendEmailCommand } = require('@aws-sdk/client-ses');
 const { fromInstanceMetadata } = require('@aws-sdk/credential-providers');
 const config = require('../config');
+const secretsManager = require('./secretsManager');
 
 // Initialize SES client with proper credentials
 let sesClient = null;
+let awsCredentials = null;
+let emailConfig = {
+    adminEmail: process.env.ADMIN_EMAIL || 'admin@anmcinc.org.au',
+    fromEmail: process.env.FROM_EMAIL || 'noreply@anmcinc.org.au'
+};
+
+// Initialize email configuration from Secrets Manager in production
+async function initializeEmailConfig() {
+    if (process.env.NODE_ENV === 'production') {
+        try {
+            console.log('🔐 Loading email and AWS configuration from AWS Secrets Manager...');
+
+            // Load both application config and AWS credentials
+            const [appConfig, awsCreds] = await Promise.all([
+                secretsManager.getSecret('application-config'),
+                secretsManager.getSecret('aws-credentials')
+            ]);
+
+            // Set email configuration
+            if (appConfig.ADMIN_EMAIL) emailConfig.adminEmail = appConfig.ADMIN_EMAIL;
+            if (appConfig.FROM_EMAIL) emailConfig.fromEmail = appConfig.FROM_EMAIL;
+
+            // Store AWS credentials for SES client
+            if (awsCreds.AWS_ACCESS_KEY_ID && awsCreds.AWS_SECRET_ACCESS_KEY) {
+                awsCredentials = {
+                    accessKeyId: awsCreds.AWS_ACCESS_KEY_ID,
+                    secretAccessKey: awsCreds.AWS_SECRET_ACCESS_KEY
+                };
+                console.log('✅ AWS credentials loaded from Secrets Manager for SES');
+            }
+
+            console.log('✅ Email configuration loaded from Secrets Manager');
+            console.log(`   FROM_EMAIL: ${emailConfig.fromEmail}`);
+            console.log(`   ADMIN_EMAIL: ${emailConfig.adminEmail}`);
+        } catch (error) {
+            console.warn('⚠️  Failed to load config from Secrets Manager, using defaults:', error.message);
+        }
+    } else {
+        console.log('📧 Using email configuration from environment variables');
+        console.log(`   FROM_EMAIL: ${emailConfig.fromEmail}`);
+        console.log(`   ADMIN_EMAIL: ${emailConfig.adminEmail}`);
+    }
+}
 
 function getSESClient() {
     if (!sesClient) {
@@ -11,22 +55,31 @@ function getSESClient() {
             region: process.env.AWS_REGION || 'ap-southeast-2'
         };
 
-        // In production (Elastic Beanstalk), use EC2 instance metadata for credentials
-        // In development, use explicit credentials if provided
+        // In production (Elastic Beanstalk), use credentials from Secrets Manager or EC2 instance metadata
         if (process.env.NODE_ENV === 'production') {
-            // AWS SDK v3 requires explicit credential provider for EC2 instance metadata
-            clientConfig.credentials = fromInstanceMetadata({
-                timeout: 5000,
-                maxRetries: 10
-            });
-            console.log('🔐 Using EC2 instance profile credentials for SES (SDK v3)');
+            if (awsCredentials) {
+                // Use credentials loaded from Secrets Manager
+                clientConfig.credentials = awsCredentials;
+                console.log('🔐 Using AWS credentials from Secrets Manager for SES');
+            } else {
+                // Fallback to EC2 instance metadata
+                clientConfig.credentials = fromInstanceMetadata({
+                    timeout: 5000,
+                    maxRetries: 10
+                });
+                console.log('🔐 Using EC2 instance profile credentials for SES (SDK v3)');
+            }
         } else if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
-            // Development: use explicit credentials
+            // Development: use explicit credentials from environment variables
             clientConfig.credentials = {
                 accessKeyId: process.env.AWS_ACCESS_KEY_ID,
                 secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
             };
             console.log('🔐 Using explicit credentials for SES (development)');
+        } else {
+            // Development: use default AWS credential provider chain
+            // This will automatically use credentials from ~/.aws/credentials or environment
+            console.log('🔐 Using default AWS credential provider chain for SES (will check ~/.aws/credentials, env vars, etc.)');
         }
 
         sesClient = new SESClient(clientConfig);
@@ -34,9 +87,6 @@ function getSESClient() {
     }
     return sesClient;
 }
-
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@anmcinc.org.au';
-const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@anmcinc.org.au';
 
 /**
  * Send booking request notification to member
@@ -65,7 +115,7 @@ You will receive a confirmation email once your booking has been approved.
 
 Please note: Payment will be required to confirm your booking.
 
-If you have any questions, please contact us at ${ADMIN_EMAIL}.
+If you have any questions, please contact us at ${emailConfig.adminEmail}.
 
 Best regards,
 ANMC Team
@@ -73,7 +123,7 @@ Australian Nepalese Multicultural Centre
     `.trim();
 
     const params = {
-        Source: FROM_EMAIL,
+        Source: emailConfig.fromEmail,
         Destination: {
             ToAddresses: [memberEmail]
         },
@@ -136,9 +186,9 @@ Login to Admin Panel: ${process.env.ADMIN_PANEL_URL || 'https://anmcinc.org.au/a
     `.trim();
 
     const params = {
-        Source: FROM_EMAIL,
+        Source: emailConfig.fromEmail,
         Destination: {
-            ToAddresses: [ADMIN_EMAIL]
+            ToAddresses: [emailConfig.adminEmail]
         },
         Message: {
             Subject: {
@@ -199,7 +249,7 @@ Important Information:
 • Ensure you have adequate arrangements for the number of attendees
 • Contact us if you need to make any changes to your booking
 
-If you have any questions or need assistance, please contact us at ${ADMIN_EMAIL}.
+If you have any questions or need assistance, please contact us at ${emailConfig.adminEmail}.
 
 We look forward to serving you!
 
@@ -209,7 +259,7 @@ Australian Nepalese Multicultural Centre
     `.trim();
 
     const params = {
-        Source: FROM_EMAIL,
+        Source: emailConfig.fromEmail,
         Destination: {
             ToAddresses: [memberEmail]
         },
@@ -273,7 +323,7 @@ Location:
 Australian Nepalese Multicultural Centre
 [Address details]
 
-If you have any questions, please contact us at ${ADMIN_EMAIL}.
+If you have any questions, please contact us at ${emailConfig.adminEmail}.
 
 We look forward to serving you!
 
@@ -283,7 +333,7 @@ Australian Nepalese Multicultural Centre
     `.trim();
 
     const params = {
-        Source: FROM_EMAIL,
+        Source: emailConfig.fromEmail,
         Destination: {
             ToAddresses: [memberEmail]
         },
@@ -350,9 +400,9 @@ Reply to this contact via: ${email}
     `.trim();
 
     const params = {
-        Source: FROM_EMAIL,
+        Source: emailConfig.fromEmail,
         Destination: {
-            ToAddresses: [ADMIN_EMAIL]
+            ToAddresses: [emailConfig.adminEmail]
         },
         Message: {
             Subject: {
@@ -412,7 +462,7 @@ ANMC Team
         `.trim();
 
         const params = {
-            Source: FROM_EMAIL,
+            Source: emailConfig.fromEmail,
             Destination: {
                 BccAddresses: batch // Use BCC to hide recipient emails
             },
@@ -468,7 +518,7 @@ You will receive a confirmation email once your membership has been approved by 
 
 Please note: You will be able to login and access member features once your account is approved.
 
-If you have any questions, please contact us at ${ADMIN_EMAIL}.
+If you have any questions, please contact us at ${emailConfig.adminEmail}.
 
 Best regards,
 ANMC Team
@@ -476,7 +526,7 @@ Australian Nepalese Multicultural Centre
     `.trim();
 
     const params = {
-        Source: FROM_EMAIL,
+        Source: emailConfig.fromEmail,
         Destination: {
             ToAddresses: [email]
         },
@@ -533,7 +583,7 @@ Member Benefits:
 • Participate in ANMC events and programs
 • Connect with the Nepalese Australian community
 
-If you have any questions or need assistance, please contact us at ${ADMIN_EMAIL}.
+If you have any questions or need assistance, please contact us at ${emailConfig.adminEmail}.
 
 Welcome to the ANMC community!
 
@@ -543,7 +593,7 @@ Australian Nepalese Multicultural Centre
     `.trim();
 
     const params = {
-        Source: FROM_EMAIL,
+        Source: emailConfig.fromEmail,
         Destination: {
             ToAddresses: [email]
         },
@@ -602,7 +652,7 @@ ${process.env.FRONTEND_URL || 'https://anmcinc.org.au'}/login
 If you're interested in becoming a member to access exclusive benefits, please visit:
 ${process.env.FRONTEND_URL || 'https://anmcinc.org.au'}/membership
 
-If you have any questions, please contact us at ${ADMIN_EMAIL}.
+If you have any questions, please contact us at ${emailConfig.adminEmail}.
 
 Best regards,
 ANMC Team
@@ -610,7 +660,7 @@ Australian Nepalese Multicultural Centre
     `.trim();
 
     const params = {
-        Source: FROM_EMAIL,
+        Source: emailConfig.fromEmail,
         Destination: {
             ToAddresses: [email]
         },
@@ -641,6 +691,7 @@ Australian Nepalese Multicultural Centre
 };
 
 module.exports = {
+    initializeEmailConfig,
     sendBookingRequestEmail,
     sendBookingNotificationToAdmin,
     sendBookingConfirmationEmail,

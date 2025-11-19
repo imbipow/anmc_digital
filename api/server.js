@@ -6,6 +6,7 @@ const compression = require('compression');
 const rateLimit = require('express-rate-limit');
 const config = require('./config');
 const { initializeSecrets } = require('./config/initSecrets');
+const { initializeEmailConfig } = require('./services/emailService');
 
 // Import middleware
 const errorHandler = require('./middleware/errorHandler');
@@ -90,6 +91,9 @@ async function startServer() {
     // Initialize secrets from AWS Secrets Manager
     // This populates process.env with secret values
     await initializeSecrets();
+
+    // Initialize email configuration (loads from Secrets Manager in production)
+    await initializeEmailConfig();
 
     app.listen(PORT, () => {
       console.log('\n╔══════════════════════════════════════════════════════════╗');
