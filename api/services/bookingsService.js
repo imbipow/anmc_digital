@@ -270,11 +270,25 @@ class BookingsService {
         let membershipCategory = bookingData.membershipCategory || null;
 
         // Verify membership category from member record (server-side validation)
+        // Also populate member name and contact if not provided
         if (bookingData.memberEmail) {
             try {
                 const members = await membersService.getByEmail(bookingData.memberEmail);
                 if (members && members.length > 0) {
-                    membershipCategory = members[0].membershipCategory;
+                    const member = members[0];
+                    membershipCategory = member.membershipCategory;
+
+                    // Populate member details if not already provided in booking data
+                    if (!bookingData.memberName || bookingData.memberName === bookingData.memberEmail) {
+                        bookingData.memberName = member.firstName && member.lastName
+                            ? `${member.firstName} ${member.lastName}`.trim()
+                            : member.firstName || member.lastName || bookingData.memberEmail;
+                    }
+
+                    if (!bookingData.memberContact || bookingData.memberContact === 'Not provided') {
+                        bookingData.memberContact = member.phoneNumber || member.contactNumber || null;
+                    }
+
                     console.log(`📋 Member ${bookingData.memberEmail} has membership category: ${membershipCategory}`);
                 }
             } catch (memberError) {
