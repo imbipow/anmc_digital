@@ -200,17 +200,37 @@ jobs:
 
       - name: Deploy to S3
         run: |
-          aws s3 sync build/ s3://${{ secrets.S3_FRONTEND_BUCKET }} --delete --cache-control "public, max-age=31536000, immutable" --exclude "index.html" --exclude "service-worker.js"
-          aws s3 cp build/index.html s3://${{ secrets.S3_FRONTEND_BUCKET }}/index.html --cache-control "no-cache"
-          aws s3 cp build/service-worker.js s3://${{ secrets.S3_FRONTEND_BUCKET }}/service-worker.js --cache-control "no-cache" || true
+          # Sync all static assets with long cache
+          aws s3 sync build/ s3://${{ secrets.S3_FRONTEND_BUCKET }} \
+            --delete \
+            --cache-control "public, max-age=31536000, immutable" \
+            --exclude "index.html" \
+            --exclude "service-worker.js" \
+            --exclude "*.map"
 
-      - name: Invalidate CloudFront cache (if exists)
-        continue-on-error: true
+          # Upload index.html with no-cache (critical for SPA updates)
+          aws s3 cp build/index.html s3://${{ secrets.S3_FRONTEND_BUCKET }}/index.html \
+            --cache-control "no-cache, no-store, must-revalidate" \
+            --content-type "text/html"
+
+          # Upload service worker with no-cache (if exists)
+          if [ -f "build/service-worker.js" ]; then
+            aws s3 cp build/service-worker.js s3://${{ secrets.S3_FRONTEND_BUCKET }}/service-worker.js \
+              --cache-control "no-cache, no-store, must-revalidate"
+          fi
+
+      - name: Invalidate CloudFront cache
         run: |
-          if [ ! -z "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" ]; then
-            aws cloudfront create-invalidation \
+          if [ -n "${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}" ]; then
+            echo "Invalidating CloudFront cache..."
+            INVALIDATION_ID=$(aws cloudfront create-invalidation \
               --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-              --paths "/*"
+              --paths "/*" \
+              --query 'Invalidation.Id' \
+              --output text)
+            echo "CloudFront invalidation created: $INVALIDATION_ID"
+          else
+            echo "⚠️ CLOUDFRONT_DISTRIBUTION_ID not set, skipping cache invalidation"
           fi
 
       - name: Notify deployment status
@@ -218,7 +238,8 @@ jobs:
         run: |
           if [ ${{ job.status }} == 'success' ]; then
             echo "✅ Frontend deployment successful!"
-            echo "📱 Frontend URL: http://${{ secrets.S3_FRONTEND_BUCKET }}.s3-website-${{ env.AWS_REGION }}.amazonaws.com"
+            echo "📱 CloudFront URL: https://${{ secrets.CLOUDFRONT_DOMAIN }}"
+            echo "📱 S3 Bucket: ${{ secrets.S3_FRONTEND_BUCKET }}"
           else
             echo "❌ Frontend deployment failed!"
           fi
