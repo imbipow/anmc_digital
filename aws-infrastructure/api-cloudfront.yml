@@ -1,0 +1,109 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudFront distribution for ANMC API (HTTPS support)'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: prod
+    AllowedValues:
+      - dev
+      - staging
+      - prod
+    Description: Environment name
+
+  ApiEndpoint:
+    Type: String
+    Default: anmc-api-prod.eba-8kyprvvf.ap-southeast-2.elasticbeanstalk.com
+    Description: Elastic Beanstalk API endpoint (without http://)
+
+Resources:
+  # CloudFront Distribution for API
+  ApiCloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: !Sub 'ANMC API Distribution - ${Environment}'
+        PriceClass: PriceClass_100  # US, Canada, Europe only (lowest cost)
+        HttpVersion: http2
+
+        # Origin - Elastic Beanstalk API
+        Origins:
+          - Id: ApiOrigin
+            DomainName: !Ref ApiEndpoint
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: http-only  # EB only supports HTTP
+              OriginSSLProtocols:
+                - TLSv1.2
+              OriginReadTimeout: 30
+              OriginKeepaliveTimeout: 5
+
+        # Default cache behavior
+        DefaultCacheBehavior:
+          TargetOriginId: ApiOrigin
+          ViewerProtocolPolicy: redirect-to-https  # Force HTTPS for clients
+          AllowedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+            - PUT
+            - POST
+            - PATCH
+            - DELETE
+          CachedMethods:
+            - GET
+            - HEAD
+            - OPTIONS
+          Compress: true
+
+          # Forwarding configuration
+          ForwardedValues:
+            QueryString: true
+            Headers:
+              - Authorization
+              - Origin
+              - Access-Control-Request-Method
+              - Access-Control-Request-Headers
+            Cookies:
+              Forward: all
+
+          # Cache settings - minimal caching for API
+          MinTTL: 0
+          DefaultTTL: 0
+          MaxTTL: 31536000
+
+        # Custom error responses
+        CustomErrorResponses:
+          - ErrorCode: 500
+            ErrorCachingMinTTL: 0
+          - ErrorCode: 502
+            ErrorCachingMinTTL: 0
+          - ErrorCode: 503
+            ErrorCachingMinTTL: 0
+          - ErrorCode: 504
+            ErrorCachingMinTTL: 0
+
+        # Viewer certificate (uses default CloudFront certificate)
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+
+Outputs:
+  ApiCloudFrontURL:
+    Description: CloudFront URL for API (HTTPS)
+    Value: !Sub 'https://${ApiCloudFrontDistribution.DomainName}'
+    Export:
+      Name: !Sub '${AWS::StackName}-ApiURL'
+
+  ApiCloudFrontDomainName:
+    Description: CloudFront Domain Name
+    Value: !GetAtt ApiCloudFrontDistribution.DomainName
+    Export:
+      Name: !Sub '${AWS::StackName}-ApiDomainName'
+
+  ApiDistributionId:
+    Description: CloudFront Distribution ID
+    Value: !Ref ApiCloudFrontDistribution
+    Export:
+      Name: !Sub '${AWS::StackName}-DistributionId'
