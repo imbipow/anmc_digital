@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const donationsService = require('../services/donationsService');
+const emailService = require('../services/emailService');
 const { verifyToken, requireAdmin } = require('../middleware/auth');
 
 // Get all donations
@@ -70,6 +71,16 @@ router.post('/', async (req, res, next) => {
     }
 
     const newDonation = await donationsService.create(donationData);
+
+    // Send notification email to admin
+    try {
+      await emailService.sendDonationNotificationToAdmin(newDonation);
+      console.log('✅ Admin notification email sent for new donation:', newDonation.id);
+    } catch (emailError) {
+      // Don't fail donation if email fails
+      console.error('⚠️ Failed to send admin notification email:', emailError.message);
+    }
+
     res.status(201).json(newDonation);
   } catch (error) {
     next(error);

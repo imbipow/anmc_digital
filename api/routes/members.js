@@ -310,6 +310,28 @@ router.post('/register', async (req, res, next) => {
             console.error('⚠️ Failed to send welcome email:', emailError.message);
         }
 
+        // Send notification email to admin
+        try {
+            await emailService.sendNewMemberNotificationToAdmin({
+                firstName: newMember.firstName,
+                lastName: newMember.lastName,
+                email: newMember.email,
+                phone: newMember.mobile,
+                referenceNo: newMember.referenceNo,
+                membershipType: newMember.membershipType,
+                membershipCategory: newMember.membershipCategory,
+                address: newMember.address,
+                suburb: newMember.suburb,
+                state: newMember.state,
+                postcode: newMember.postcode,
+                familyMembers: familyMemberRecords
+            });
+            console.log('✅ Admin notification email sent for new member:', newMember.email);
+        } catch (emailError) {
+            // Don't fail registration if email fails
+            console.error('⚠️ Failed to send admin notification email:', emailError.message);
+        }
+
         // Return response without password fields
         const { password, confirmPassword, ...memberResponse } = newMember;
 
@@ -527,9 +549,14 @@ router.post('/:id/approve', verifyToken, requireAdmin, async (req, res, next) =>
                 const existingUser = await cognitoService.getUser(member.email);
 
                 if (existingUser) {
-                    // User exists, just enable them
+                    // User exists, enable them and ensure they're in the correct group
                     console.log('Enabling existing Cognito user:', member.email);
                     await cognitoService.enableUser(member.email);
+
+                    // Ensure user is in AnmcMembers group (in case it failed during registration)
+                    await cognitoService.addToAnmcMembersGroup(member.email);
+                    console.log(`✅ Ensured ${member.email} is in AnmcMembers group`);
+
                     cognitoResult = { userExists: true, created: false };
                 } else {
                     // User doesn't exist, create them
@@ -699,6 +726,10 @@ router.post('/:id/reactivate', verifyToken, requireAdmin, async (req, res, next)
         if (member.email && cognitoService.isConfigured()) {
             try {
                 await cognitoService.enableUser(member.email);
+
+                // Ensure user is in AnmcMembers group (in case it was never assigned)
+                await cognitoService.addToAnmcMembersGroup(member.email);
+                console.log(`✅ Ensured ${member.email} is in AnmcMembers group`);
             } catch (cognitoError) {
                 console.error('Failed to enable Cognito user:', cognitoError);
             }
@@ -826,6 +857,114 @@ router.delete('/:id', verifyToken, requireAdmin, async (req, res, next) => {
         if (error.message === 'Member not found') {
             return res.status(404).json({ error: error.message });
         }
+        next(error);
+    }
+});
+
+// Fix Cognito group for a specific member (admin utility endpoint)
+router.post('/:id/fix-cognito-group', verifyToken, requireAdmin, async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const member = await membersService.getById(id);
+
+        if (!member) {
+            return res.status(404).json({ error: 'Member not found' });
+        }
+
+        if (!member.email) {
+            return res.status(400).json({ error: 'Member has no email address' });
+        }
+
+        if (!cognitoService.isConfigured()) {
+            return res.status(500).json({ error: 'Cognito is not configured' });
+        }
+
+        // Check if Cognito user exists
+        const cognitoUser = await cognitoService.getUser(member.email);
+        if (!cognitoUser) {
+            return res.status(404).json({
+                error: 'Cognito user not found',
+                message: 'This member does not have a Cognito account. Please approve them first with a password.'
+            });
+        }
+
+        // Add user to AnmcMembers group
+        await cognitoService.addToAnmcMembersGroup(member.email);
+
+        // Ensure user is enabled if status is active
+        if (member.status === 'active') {
+            await cognitoService.enableUser(member.email);
+        }
+
+        console.log(`✅ Fixed Cognito group for member: ${member.email}`);
+
+        res.json({
+            success: true,
+            message: `Successfully added ${member.email} to AnmcMembers group`,
+            member: {
+                id: member.id,
+                email: member.email,
+                membershipCategory: member.membershipCategory,
+                status: member.status
+            }
+        });
+    } catch (error) {
+        console.error('Error fixing Cognito group:', error);
+        next(error);
+    }
+});
+
+// Bulk fix Cognito groups for all active members (admin utility endpoint)
+router.post('/fix-all-cognito-groups', verifyToken, requireAdmin, async (req, res, next) => {
+    try {
+        if (!cognitoService.isConfigured()) {
+            return res.status(500).json({ error: 'Cognito is not configured' });
+        }
+
+        const members = await membersService.getAll({ status: 'active' });
+        const results = {
+            success: [],
+            failed: [],
+            skipped: []
+        };
+
+        for (const member of members) {
+            if (!member.email) {
+                results.skipped.push({ id: member.id, reason: 'No email' });
+                continue;
+            }
+
+            try {
+                // Check if Cognito user exists
+                const cognitoUser = await cognitoService.getUser(member.email);
+                if (!cognitoUser) {
+                    results.skipped.push({ id: member.id, email: member.email, reason: 'No Cognito account' });
+                    continue;
+                }
+
+                // Add to AnmcMembers group
+                await cognitoService.addToAnmcMembersGroup(member.email);
+
+                // Ensure user is enabled
+                await cognitoService.enableUser(member.email);
+
+                results.success.push({ id: member.id, email: member.email });
+                console.log(`✅ Fixed: ${member.email}`);
+            } catch (error) {
+                results.failed.push({ id: member.id, email: member.email, error: error.message });
+                console.error(`❌ Failed: ${member.email} - ${error.message}`);
+            }
+        }
+
+        console.log(`\n📊 Bulk fix complete: ${results.success.length} success, ${results.failed.length} failed, ${results.skipped.length} skipped`);
+
+        res.json({
+            success: true,
+            message: 'Bulk Cognito group fix completed',
+            results
+        });
+    } catch (error) {
+        console.error('Error in bulk fix:', error);
         next(error);
     }
 });

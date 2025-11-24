@@ -2,6 +2,7 @@ const dynamoDBService = require('./dynamodb');
 const config = require('../config');
 const emailService = require('./emailService');
 const stripeService = require('./stripeService');
+const membersService = require('./membersService');
 
 class BookingsService {
     constructor() {
@@ -195,13 +196,43 @@ class BookingsService {
         );
     }
 
-    // Calculate total amount including cleaning fee if needed
-    async calculateTotalAmount(serviceAmount, numberOfPeople) {
-        let total = serviceAmount;
+    // Check if user qualifies for life member discount
+    isLifeMemberEligible(membershipCategory, userGroups = []) {
+        // Check membership category from database
+        if (membershipCategory === 'life') {
+            return true;
+        }
+
+        // Check Cognito groups for life member status
+        const lifeMemberGroups = ['AnmcLifeMembers', 'LifeMembers'];
+        if (userGroups && userGroups.some(group => lifeMemberGroups.includes(group))) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // Calculate total amount including cleaning fee and life member discount
+    async calculateTotalAmount(serviceAmount, numberOfPeople, membershipCategory = null, userGroups = []) {
+        let discountedServiceAmount = serviceAmount;
+        let lifeMemberDiscount = 0;
+        let isLifeMember = false;
+
+        // Apply 10% discount for life members (on service amount only, not cleaning fee)
+        // Check both database membership category AND Cognito groups
+        if (this.isLifeMemberEligible(membershipCategory, userGroups)) {
+            lifeMemberDiscount = serviceAmount * 0.1;
+            discountedServiceAmount = serviceAmount * 0.9;
+            isLifeMember = true;
+            console.log(`💎 Life member discount applied: $${lifeMemberDiscount.toFixed(2)} (10% of $${serviceAmount})`);
+            console.log(`   Membership category: ${membershipCategory}, Groups: ${userGroups.join(', ') || 'none'}`);
+        }
+
+        let total = discountedServiceAmount;
         let cleaningFeeApplied = false;
         let cleaningFeeAmount = 0;
 
-        // Add cleaning fee if more than 21 attendees
+        // Add cleaning fee if more than 21 attendees (no discount on cleaning fee)
         if (numberOfPeople > 21) {
             const cleaningFee = await this.getCleaningFee();
             if (cleaningFee) {
@@ -213,8 +244,11 @@ class BookingsService {
 
         return {
             serviceAmount,
+            discountedServiceAmount,
             cleaningFeeApplied,
             cleaningFeeAmount,
+            lifeMemberDiscount,
+            isLifeMember,
             totalAmount: total
         };
     }
@@ -232,16 +266,38 @@ class BookingsService {
             throw new Error('Selected time slot is not available. Please choose another time.');
         }
 
-        // Calculate total with cleaning fee if applicable
+        // Get the member's membership category to verify discount eligibility
+        let membershipCategory = bookingData.membershipCategory || null;
+
+        // Verify membership category from member record (server-side validation)
+        if (bookingData.memberEmail) {
+            try {
+                const members = await membersService.getByEmail(bookingData.memberEmail);
+                if (members && members.length > 0) {
+                    membershipCategory = members[0].membershipCategory;
+                    console.log(`📋 Member ${bookingData.memberEmail} has membership category: ${membershipCategory}`);
+                }
+            } catch (memberError) {
+                console.error('Error fetching member for discount verification:', memberError);
+                // Continue without discount if member lookup fails
+            }
+        }
+
+        // Calculate total with cleaning fee and life member discount if applicable
+        // Pass user groups from booking data (sent from frontend with authenticated user's groups)
+        const userGroups = bookingData.userGroups || [];
         const pricing = await this.calculateTotalAmount(
             bookingData.serviceAmount,
-            bookingData.numberOfPeople
+            bookingData.numberOfPeople,
+            membershipCategory,
+            userGroups
         );
 
         const newBooking = {
             id: Date.now().toString(),
             ...bookingData,
             ...pricing,
+            membershipCategory,
             status: bookingData.status || 'pending',
             paymentStatus: 'unpaid',
             paymentIntentId: null,
@@ -286,7 +342,9 @@ class BookingsService {
             const currentBooking = await this.getById(id);
             const pricing = await this.calculateTotalAmount(
                 currentBooking.serviceAmount,
-                bookingData.numberOfPeople
+                bookingData.numberOfPeople,
+                currentBooking.membershipCategory, // Preserve life member discount
+                currentBooking.userGroups || [] // Preserve user groups for life member check
             );
             Object.assign(bookingData, pricing);
         }
@@ -303,22 +361,32 @@ class BookingsService {
         const updatedBooking = await this.getById(id);
 
         // If status changed from 'pending' to 'confirmed', create payment session and send confirmation email
+        // Only do this if payment hasn't been completed yet
         if (previousStatus === 'pending' && bookingData.status === 'confirmed') {
             try {
-                // Create Stripe checkout session
-                const { url: paymentUrl, sessionId } = await stripeService.createCheckoutSession(updatedBooking);
+                // Check if payment is already completed
+                const isPaymentCompleted = updatedBooking.paymentStatus === 'paid';
 
-                // Update booking with stripe session ID
-                await dynamoDBService.updateItem(this.tableName, { id }, {
-                    stripeSessionId: sessionId,
-                    paymentUrl: paymentUrl
-                });
+                if (!isPaymentCompleted) {
+                    // Create Stripe checkout session
+                    const { url: paymentUrl, sessionId } = await stripeService.createCheckoutSession(updatedBooking);
 
-                // Send confirmation email with payment link
-                await emailService.sendBookingConfirmationEmail(updatedBooking, paymentUrl);
+                    // Update booking with stripe session ID
+                    await dynamoDBService.updateItem(this.tableName, { id }, {
+                        stripeSessionId: sessionId,
+                        paymentUrl: paymentUrl
+                    });
 
-                updatedBooking.stripeSessionId = sessionId;
-                updatedBooking.paymentUrl = paymentUrl;
+                    // Send confirmation email with payment link
+                    await emailService.sendBookingConfirmationEmail(updatedBooking, paymentUrl);
+
+                    updatedBooking.stripeSessionId = sessionId;
+                    updatedBooking.paymentUrl = paymentUrl;
+                } else {
+                    // Payment already completed, send payment success email instead
+                    console.log('Payment already completed for booking:', id);
+                    await emailService.sendPaymentSuccessEmail(updatedBooking);
+                }
             } catch (error) {
                 console.error('Error processing booking approval:', error);
                 // Don't throw - booking approval should succeed even if payment/email fails

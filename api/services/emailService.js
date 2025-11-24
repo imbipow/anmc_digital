@@ -690,6 +690,152 @@ Australian Nepalese Multicultural Centre
     }
 };
 
+/**
+ * Send new member registration notification to admin
+ */
+const sendNewMemberNotificationToAdmin = async (memberData) => {
+    const { firstName, lastName, email, phone, referenceNo, membershipType, membershipCategory, address, suburb, state, postcode, familyMembers } = memberData;
+
+    let emailBody = `
+New Member Registration
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+A new member has registered on the ANMC website.
+
+Member Details:
+- Reference No: ${referenceNo || 'Pending'}
+- Name: ${firstName} ${lastName}
+- Email: ${email}
+- Phone: ${phone || 'Not provided'}
+
+Membership Information:
+- Type: ${membershipType || 'Individual'}
+- Category: ${membershipCategory || 'Standard'}
+
+Address:
+${address || ''}
+${suburb || ''} ${state || ''} ${postcode || ''}
+`.trim();
+
+    // Add family members info if applicable
+    if (familyMembers && familyMembers.length > 0) {
+        emailBody += `
+
+Family Members (${familyMembers.length}):`;
+        familyMembers.forEach((fm, index) => {
+            emailBody += `
+  ${index + 1}. ${fm.firstName} ${fm.lastName} - ${fm.email}`;
+        });
+    }
+
+    emailBody += `
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Status: Pending Approval
+
+Please review and approve this member in the admin panel.
+Login to Admin Panel: ${process.env.ADMIN_PANEL_URL || 'https://anmcinc.org.au/admin'}
+
+Submitted: ${new Date().toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })}
+    `.trim();
+
+    const params = {
+        Source: emailConfig.fromEmail,
+        Destination: {
+            ToAddresses: [emailConfig.adminEmail]
+        },
+        Message: {
+            Subject: {
+                Data: `New Member Registration - ${firstName} ${lastName}`,
+                Charset: 'UTF-8'
+            },
+            Body: {
+                Text: {
+                    Data: emailBody,
+                    Charset: 'UTF-8'
+                }
+            }
+        }
+    };
+
+    try {
+        const command = new SendEmailCommand(params);
+        const client = getSESClient();
+        const response = await client.send(command);
+        console.log('New member admin notification sent successfully:', response.MessageId);
+        return { success: true, messageId: response.MessageId };
+    } catch (error) {
+        console.error('Error sending new member admin notification:', error);
+        throw error;
+    }
+};
+
+/**
+ * Send donation notification to admin
+ */
+const sendDonationNotificationToAdmin = async (donationData) => {
+    const { firstName, lastName, email, phone, amount, donationType, message, isRecurring, paymentStatus, id } = donationData;
+
+    const emailBody = `
+New Donation Received
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+A new donation has been received on the ANMC website.
+
+Donation ID: ${id || 'N/A'}
+
+Donor Information:
+- Name: ${firstName} ${lastName}
+- Email: ${email}
+- Phone: ${phone || 'Not provided'}
+
+Donation Details:
+- Amount: $${parseFloat(amount).toFixed(2)} AUD
+- Type: ${donationType || 'General Donation'}
+- Recurring: ${isRecurring ? 'Yes' : 'No'}
+- Payment Status: ${paymentStatus || 'Pending'}
+
+${message ? `Message from Donor:\n${message}\n` : ''}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+View donation details in the admin panel.
+Login to Admin Panel: ${process.env.ADMIN_PANEL_URL || 'https://anmcinc.org.au/admin'}
+
+Received: ${new Date().toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })}
+    `.trim();
+
+    const params = {
+        Source: emailConfig.fromEmail,
+        Destination: {
+            ToAddresses: [emailConfig.adminEmail]
+        },
+        Message: {
+            Subject: {
+                Data: `New Donation Received - $${parseFloat(amount).toFixed(2)} from ${firstName} ${lastName}`,
+                Charset: 'UTF-8'
+            },
+            Body: {
+                Text: {
+                    Data: emailBody,
+                    Charset: 'UTF-8'
+                }
+            }
+        }
+    };
+
+    try {
+        const command = new SendEmailCommand(params);
+        const client = getSESClient();
+        const response = await client.send(command);
+        console.log('Donation admin notification sent successfully:', response.MessageId);
+        return { success: true, messageId: response.MessageId };
+    } catch (error) {
+        console.error('Error sending donation admin notification:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     initializeEmailConfig,
     sendBookingRequestEmail,
@@ -700,5 +846,7 @@ module.exports = {
     sendBroadcastEmail,
     sendMemberWelcomeEmail,
     sendMemberApprovalEmail,
-    sendUserWelcomeEmail
+    sendUserWelcomeEmail,
+    sendNewMemberNotificationToAdmin,
+    sendDonationNotificationToAdmin
 };

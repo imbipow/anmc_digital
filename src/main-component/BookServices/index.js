@@ -82,6 +82,8 @@ const BookServices = () => {
     const [activeStep, setActiveStep] = useState(0);
     const [createdBookingId, setCreatedBookingId] = useState(null);
     const [clientSecret, setClientSecret] = useState(null);
+    const [memberData, setMemberData] = useState(null);
+    const [isLifeMember, setIsLifeMember] = useState(false);
     const steps = ['Booking Details', 'Payment'];
 
     useEffect(() => {
@@ -106,6 +108,39 @@ const BookServices = () => {
                 contactPerson: user.name || user.email || '',
                 contactPhone: user.phone_number || ''
             }));
+
+            // Check for life member status from Cognito groups first
+            const userGroups = user.groups || [];
+            const lifeMemberGroups = ['AnmcLifeMembers', 'LifeMembers'];
+            const isLifeMemberByGroup = userGroups.some(group => lifeMemberGroups.includes(group));
+
+            if (isLifeMemberByGroup) {
+                setIsLifeMember(true);
+                console.log('✅ Life member detected (via Cognito group) - 10% discount will be applied');
+                console.log('   User groups:', userGroups.join(', '));
+            }
+
+            // Fetch member data to check for life membership (also check database)
+            try {
+                const memberResponse = await authenticatedFetch(
+                    API_CONFIG.getURL(API_CONFIG.endpoints.members) + `?email=${user.email}`
+                );
+                if (memberResponse.ok) {
+                    const members = await memberResponse.json();
+                    if (members && members.length > 0) {
+                        const member = members[0];
+                        setMemberData(member);
+                        // Check if life member for 10% discount (from database membership category)
+                        if (member.membershipCategory === 'life') {
+                            setIsLifeMember(true);
+                            console.log('✅ Life member detected (via database) - 10% discount will be applied');
+                        }
+                    }
+                }
+            } catch (memberError) {
+                console.error('Error fetching member data:', memberError);
+                // Continue - discount may still apply if detected via Cognito group
+            }
 
             // Fetch services
             await fetchServices();
@@ -205,15 +240,27 @@ const BookServices = () => {
     const calculateTotalAmount = () => {
         if (!selectedService) return 0;
 
-        let total = selectedService.amount;
+        let serviceAmount = selectedService.amount;
         const numPeople = parseInt(bookingData.numberOfPeople) || 0;
 
-        // Add cleaning fee if more than 21 people
+        // Apply 10% discount for life members (on service amount only, not cleaning fee)
+        if (isLifeMember) {
+            serviceAmount = serviceAmount * 0.9; // 10% discount
+        }
+
+        let total = serviceAmount;
+
+        // Add cleaning fee if more than 21 people (no discount on cleaning fee)
         if (numPeople > 21 && cleaningFee) {
             total += cleaningFee.amount;
         }
 
         return total;
+    };
+
+    const getLifeMemberDiscount = () => {
+        if (!selectedService || !isLifeMember) return 0;
+        return selectedService.amount * 0.1; // 10% of original service amount
     };
 
     const shouldApplyCleaningFee = () => {
@@ -270,6 +317,8 @@ const BookServices = () => {
             const totalAmount = calculateTotalAmount();
             const cleaningFeeApplied = shouldApplyCleaningFee();
 
+            const lifeMemberDiscount = getLifeMemberDiscount();
+
             const bookingPayload = {
                 serviceId: selectedService.id,
                 serviceName: selectedService.anusthanName,
@@ -277,6 +326,8 @@ const BookServices = () => {
                 serviceDuration: selectedService.durationHours,
                 memberEmail: currentUser.email,
                 memberName: currentUser.name || currentUser.email,
+                membershipCategory: memberData?.membershipCategory || 'standard',
+                userGroups: currentUser.groups || [], // Include Cognito groups for life member discount check
                 preferredDate: selectedDate.toISOString(),
                 startTime: bookingData.startTime,
                 numberOfPeople: parseInt(bookingData.numberOfPeople),
@@ -288,6 +339,8 @@ const BookServices = () => {
                 totalAmount: totalAmount,
                 cleaningFeeApplied: cleaningFeeApplied,
                 cleaningFeeAmount: cleaningFeeApplied ? cleaningFee.amount : 0,
+                lifeMemberDiscount: lifeMemberDiscount,
+                isLifeMember: isLifeMember,
                 status: 'pending'
             };
 
@@ -582,6 +635,17 @@ const BookServices = () => {
                                                     <Typography variant="body1" gutterBottom>
                                                         <strong>Base Price:</strong> ${selectedService.amount.toFixed(2)}
                                                     </Typography>
+
+                                                    {isLifeMember && (
+                                                        <Alert severity="success" sx={{ mt: 2, mb: 2 }}>
+                                                            <Typography variant="body2">
+                                                                <strong>Life Member Discount (10%)</strong>
+                                                            </Typography>
+                                                            <Typography variant="body2">
+                                                                -${getLifeMemberDiscount().toFixed(2)}
+                                                            </Typography>
+                                                        </Alert>
+                                                    )}
 
                                                     {cleaningFeeApplied && (
                                                         <Alert severity="warning" icon={<WarningIcon />} sx={{ mt: 2, mb: 2 }}>

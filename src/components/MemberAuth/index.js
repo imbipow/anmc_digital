@@ -3,6 +3,21 @@ import cognitoAuthService from '../../services/cognitoAuth';
 
 const MemberAuthContext = createContext(null);
 
+// Groups that are allowed to access the member portal
+const ALLOWED_MEMBER_GROUPS = [
+    'AnmcMembers',
+    'AnmcUsers',
+    'AnmcLifeMembers',
+    'LifeMembers',
+    'GeneralMembers',
+    'FamilyMembers'
+];
+
+// Helper function to check if user has any allowed group
+const hasAllowedGroup = (groups) => {
+    return groups.some(group => ALLOWED_MEMBER_GROUPS.includes(group));
+};
+
 export const useMemberAuth = () => {
     const context = useContext(MemberAuthContext);
     if (!context) {
@@ -24,9 +39,9 @@ export const MemberAuthProvider = ({ children }) => {
         try {
             const user = await cognitoAuthService.getCurrentUser();
 
-            // Check if user is in AnmcMembers or AnmcUsers group
+            // Check if user is in any allowed member group
             const groups = user.groups || [];
-            if (groups.includes('AnmcMembers') || groups.includes('AnmcUsers')) {
+            if (hasAllowedGroup(groups)) {
                 setCurrentUser(user);
             } else {
                 setCurrentUser(null);
@@ -42,9 +57,11 @@ export const MemberAuthProvider = ({ children }) => {
         try {
             const result = await cognitoAuthService.signIn(email, password);
 
-            // Check if user is in AnmcMembers or AnmcUsers group
+            // Check if user is in any allowed member group
             const groups = result.groups || [];
-            if (!groups.includes('AnmcMembers') && !groups.includes('AnmcUsers')) {
+            console.log('User groups:', groups); // Debug log to see what groups the user has
+
+            if (!hasAllowedGroup(groups)) {
                 return {
                     success: false,
                     error: 'Access denied. Only ANMC members and registered users can access the portal.'
