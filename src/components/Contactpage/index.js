@@ -202,8 +202,8 @@ const Contactpage = () => {
                                                         <h4>{member.name}</h4>
                                                         <span className="position">{member.position}</span>
                                                         <div className="member-contact">
-                                                            <p><a href={`mailto:${member.email}`}>{member.email}</a></p>
-                                                            <p><a href={`tel:${member.phone.replace(/\s+/g, '')}`}>{member.phone}</a></p>
+                                                            {member.email && <p><a href={`mailto:${member.email}`}>{member.email}</a></p>}
+                                                            {member.phone && <p><a href={`tel:${member.phone.replace(/\s+/g, '')}`}>{member.phone}</a></p>}
                                                         </div>
                                                     </div>
                                                 </div>
