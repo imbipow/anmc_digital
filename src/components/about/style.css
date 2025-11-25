@@ -226,6 +226,123 @@
     font-size: 16px;
     line-height: 1.6;
     color: #666;
+    margin-bottom: 20px;
+}
+
+.governance-members,
+.governance-responsibilities {
+    text-align: left;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.governance-members h5,
+.governance-responsibilities h5 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e3c72;
+    margin-bottom: 12px;
+}
+
+.governance-members ul,
+.governance-responsibilities ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.governance-members ul li,
+.governance-responsibilities ul li {
+    font-size: 14px;
+    color: #666;
+    padding: 6px 0;
+    padding-left: 20px;
+    position: relative;
+}
+
+.governance-members ul li:before {
+    content: "•";
+    color: #ff6b35;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.governance-responsibilities ul li:before {
+    content: "✓";
+    color: #28a745;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+/* Sub-committees Section */
+.committees-section {
+    background: #f8f9fa;
+    padding: 80px 0;
+    margin: 80px 0;
+    border-radius: 20px;
+}
+
+.committee-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 30px;
+    height: 100%;
+}
+
+.committee-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.committee-header {
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.committee-header h4 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.committee-header .chairperson {
+    font-size: 14px;
+    color: #ff6b35;
+    font-weight: 500;
+    display: block;
+}
+
+.committee-header .chairperson i {
+    margin-right: 5px;
+}
+
+.committee-details p {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.committee-details p i {
+    color: #1e3c72;
+    margin-right: 8px;
+}
+
+.committee-details .purpose {
+    text-align: justify;
+}
+
+.committee-details .meeting-frequency,
+.committee-details .member-count {
+    font-size: 14px;
 }
 
 .wpo-event-area-2 .wpo-event-item {
@@ -250,7 +367,8 @@
         padding-top: 50px;
     }
 
-    .executive-committee-section {
+    .executive-committee-section,
+    .committees-section {
         padding: 60px 30px;
         margin: 60px 0;
     }
@@ -261,7 +379,7 @@
     }
 
     .mission-card, .vision-card, .history-card,
-    .governance-card {
+    .governance-card, .committee-card {
         padding: 30px 20px;
     }
 
@@ -278,7 +396,8 @@
 }
 
 @media(max-width: 767px) {
-    .executive-committee-section {
+    .executive-committee-section,
+    .committees-section {
         padding: 40px 20px;
         margin: 40px 0;
     }
@@ -289,7 +408,7 @@
     }
 
     .mission-card h3, .vision-card h3, .history-card h3,
-    .governance-card h3 {
+    .governance-card h3, .committee-header h4 {
         font-size: 20px;
     }
 
@@ -309,5 +428,14 @@
         width: 80px;
         height: 80px;
         font-size: 35px;
+    }
+
+    .governance-members ul li,
+    .governance-responsibilities ul li {
+        font-size: 13px;
+    }
+
+    .committee-details p {
+        font-size: 14px;
     }
 }

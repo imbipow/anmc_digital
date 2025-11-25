@@ -197,6 +197,26 @@ const About = () => {
                                         </div>
                                         <h3>{item.title}</h3>
                                         <p>{item.description}</p>
+                                        {item.members && item.members.length > 0 && (
+                                            <div className="governance-members">
+                                                <h5>Members:</h5>
+                                                <ul>
+                                                    {item.members.map((member, idx) => (
+                                                        <li key={idx}>{member}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                        {item.responsibilities && item.responsibilities.length > 0 && (
+                                            <div className="governance-responsibilities">
+                                                <h5>Key Responsibilities:</h5>
+                                                <ul>
+                                                    {item.responsibilities.map((resp, idx) => (
+                                                        <li key={idx}>{resp}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             ))
@@ -234,6 +254,47 @@ const About = () => {
                         )}
                     </div>
                 </div>
+
+                {/* Sub-committees Section */}
+                {aboutData.committees && aboutData.committees.length > 0 && (
+                    <div className="committees-section section-padding">
+                        <div className="wpo-section-title text-center">
+                            <h2>Sub-committees</h2>
+                            <p>Specialized committees working on various aspects of our organization</p>
+                        </div>
+                        <div className="row">
+                            {aboutData.committees.map((committee, index) => (
+                                <div key={committee.id || index} className="col-lg-6 col-md-6 col-sm-12">
+                                    <div className="committee-card">
+                                        <div className="committee-header">
+                                            <h4>{committee.name}</h4>
+                                            {committee.chairperson && (
+                                                <span className="chairperson">
+                                                    <i className="fa fa-user-tie"></i> Chairperson: {committee.chairperson}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="committee-details">
+                                            {committee.purpose && (
+                                                <p className="purpose"><strong>Purpose:</strong> {committee.purpose}</p>
+                                            )}
+                                            {committee.meetingFrequency && (
+                                                <p className="meeting-frequency">
+                                                    <i className="fa fa-calendar"></i> <strong>Meetings:</strong> {committee.meetingFrequency}
+                                                </p>
+                                            )}
+                                            {committee.members && (
+                                                <p className="member-count">
+                                                    <i className="fa fa-users"></i> <strong>Members:</strong> {committee.members}
+                                                </p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )
