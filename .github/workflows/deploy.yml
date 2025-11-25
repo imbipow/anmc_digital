@@ -138,7 +138,7 @@ jobs:
         if: steps.check-env.outputs.exists == 'true'
         run: |
           # Invalidate API CloudFront distribution
-          API_CF_DIST_ID="d140ihn2kmroxe"
+          API_CF_DIST_ID="ERV6IVUVM9BD1"
           echo "Invalidating API CloudFront cache (${API_CF_DIST_ID})..."
           INVALIDATION_ID=$(aws cloudfront create-invalidation \
             --distribution-id ${API_CF_DIST_ID} \
