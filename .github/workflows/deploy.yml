@@ -134,6 +134,19 @@ jobs:
             --application-name anmc-api \
             --environment-name anmc-api-prod
 
+      - name: Invalidate API CloudFront cache
+        if: steps.check-env.outputs.exists == 'true'
+        run: |
+          # Invalidate API CloudFront distribution
+          API_CF_DIST_ID="d140ihn2kmroxe"
+          echo "Invalidating API CloudFront cache (${API_CF_DIST_ID})..."
+          INVALIDATION_ID=$(aws cloudfront create-invalidation \
+            --distribution-id ${API_CF_DIST_ID} \
+            --paths "/*" \
+            --query 'Invalidation.Id' \
+            --output text)
+          echo "API CloudFront invalidation created: $INVALIDATION_ID"
+
       - name: Notify deployment status
         if: always()
         run: |
@@ -186,7 +199,7 @@ jobs:
       - name: Create production env file
         run: |
           cat > .env.production << EOF
-          REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
+          REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL || 'https://d140ihn2kmroxe.cloudfront.net/api' }}
           REACT_APP_COGNITO_USER_POOL_ID=${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }}
           REACT_APP_COGNITO_CLIENT_ID=${{ secrets.REACT_APP_COGNITO_CLIENT_ID }}
           REACT_APP_COGNITO_REGION=${{ env.AWS_REGION }}
