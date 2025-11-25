@@ -38,6 +38,7 @@ const resourceToEndpoint = {
     about_us: API_CONFIG.endpoints.aboutUs,
     contact: API_CONFIG.endpoints.contact,
     master_plan: API_CONFIG.endpoints.masterPlan,
+    achievements: API_CONFIG.endpoints.achievements,
     project_achievements: API_CONFIG.endpoints.achievements,
     faqs: API_CONFIG.endpoints.faqs,
     donations: API_CONFIG.endpoints.donations,
@@ -67,6 +68,14 @@ const dataProvider = {
             // Ensure data is an array
             if (!Array.isArray(data)) {
                 data = [data];
+            }
+
+            // Special handling for achievements - map year to id
+            if (resource === 'achievements') {
+                data = data.map(item => ({
+                    ...item,
+                    id: item.year || item.id
+                }));
             }
 
             const { page, perPage } = params.pagination;
@@ -170,6 +179,11 @@ const dataProvider = {
                 data.id = 'main';
             }
 
+            // Special handling for achievements - map year to id
+            if (resource === 'achievements' && data.year && !data.id) {
+                data.id = data.year;
+            }
+
             return { data };
         } catch (error) {
             console.error('Error fetching record:', error);
@@ -221,7 +235,12 @@ const dataProvider = {
                 body: JSON.stringify(dataToSend),
             });
 
-            return { data: { ...params.data, id: response.json.id } };
+            // Special handling for achievements - use year as id
+            const createdId = resource === 'achievements' && dataToSend.year
+                ? dataToSend.year
+                : response.json.id;
+
+            return { data: { ...params.data, id: createdId } };
         } catch (error) {
             console.error('Error creating record:', error);
             throw error;

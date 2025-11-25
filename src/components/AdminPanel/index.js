@@ -17,7 +17,8 @@ import {
     DescriptionOutlined,
     InboxOutlined,
     SendOutlined,
-    SlideshowOutlined
+    SlideshowOutlined,
+    EmojiEventsOutlined
 } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import cognitoAuthService from '../../services/cognitoAuth';
@@ -58,6 +59,9 @@ import BroadcastMessages from './BroadcastMessages';
 import HeroSlidesList from './HeroSlidesList';
 import HeroSlideEdit from './HeroSlideEdit';
 import HeroSlideCreate from './HeroSlideCreate';
+import AchievementsList from './AchievementsList';
+import AchievementsEdit from './AchievementsEdit';
+import AchievementsCreate from './AchievementsCreate';
 import { ManageAccountsOutlined, BookOnlineOutlined } from '@mui/icons-material';
 import StandaloneAdminLayout from './StandaloneAdminLayout';
 import dataProvider from './dataProvider';
@@ -163,6 +167,14 @@ const AdminPanel = () => {
                             create={FaqCreate}
                             icon={HelpOutlineOutlined}
                             options={{ label: 'FAQs' }}
+                        />
+                        <Resource
+                            name="achievements"
+                            list={AchievementsList}
+                            edit={AchievementsEdit}
+                            create={AchievementsCreate}
+                            icon={EmojiEventsOutlined}
+                            options={{ label: 'Project Achievements' }}
                         />
                         <Resource
                             name="user-management"
