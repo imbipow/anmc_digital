@@ -65,6 +65,7 @@ const CustomMenu = () => {
         { name: 'about_us', label: 'About Us' },
         { name: 'contact', label: 'Contact Info' },
         { name: 'faqs', label: 'FAQs' },
+        { name: 'achievements', label: 'Project achievements' },
     ];
 
     // Top-level menu items (not in Content submenu)
