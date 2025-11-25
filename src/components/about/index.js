@@ -262,9 +262,9 @@ const About = () => {
                             <h2>Sub-committees</h2>
                             <p>Specialized committees working on various aspects of our organization</p>
                         </div>
-                        <div className="row">
+                        <div className="row g-4">
                             {aboutData.committees.map((committee, index) => (
-                                <div key={committee.id || index} className="col-lg-6 col-md-6 col-sm-12">
+                                <div key={committee.id || index} className="col-lg-6 col-md-6 col-sm-12 mb-4">
                                     <div className="committee-card">
                                         <div className="committee-header">
                                             <h4>{committee.name}</h4>
@@ -284,9 +284,20 @@ const About = () => {
                                                 </p>
                                             )}
                                             {committee.members && (
-                                                <p className="member-count">
-                                                    <i className="fa fa-users"></i> <strong>Members:</strong> {committee.members}
-                                                </p>
+                                                Array.isArray(committee.members) ? (
+                                                    <div className="committee-members">
+                                                        <h5><i className="fa fa-users"></i> Members:</h5>
+                                                        <ul>
+                                                            {committee.members.map((member, idx) => (
+                                                                <li key={idx}>{member}</li>
+                                                            ))}
+                                                        </ul>
+                                                    </div>
+                                                ) : (
+                                                    <p className="member-count">
+                                                        <i className="fa fa-users"></i> <strong>Members:</strong> {committee.members}
+                                                    </p>
+                                                )
                                             )}
                                         </div>
                                     </div>

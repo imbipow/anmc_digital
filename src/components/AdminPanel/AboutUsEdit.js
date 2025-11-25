@@ -268,8 +268,13 @@ const AboutUsEdit = () => (
                             <TextInput source="name" fullWidth required label="Committee Name" />
                             <TextInput source="purpose" fullWidth multiline rows={2} label="Purpose & Objectives" />
                             <TextInput source="chairperson" fullWidth label="Chairperson" />
-                            <TextInput source="members" fullWidth label="Number of Members" type="number" />
                             <TextInput source="meetingFrequency" fullWidth label="Meeting Frequency" />
+
+                            <ArrayInput source="members" label="Committee Members">
+                                <SimpleFormIterator inline>
+                                    <TextInput source="" label="Member Name" />
+                                </SimpleFormIterator>
+                            </ArrayInput>
                         </SimpleFormIterator>
                     </ArrayInput>
                 </CardContent>

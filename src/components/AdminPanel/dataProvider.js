@@ -153,10 +153,10 @@ const dataProvider = {
 
             const endpoint = resourceToEndpoint[resource] || `/${resource}`;
 
-            // Special handling for About Us - it doesn't use ID in the URL
+            // Special handling for singleton resources (About Us, Contact) - they don't use ID in the URL
             let url;
-            if (resource === 'about_us') {
-                // About Us is a singleton resource, fetch without ID
+            if (resource === 'about_us' || resource === 'contact') {
+                // Singleton resources, fetch without ID
                 url = API_CONFIG.getURL(endpoint);
             } else {
                 url = `${API_CONFIG.getURL(endpoint)}/${params.id}`;
@@ -164,9 +164,9 @@ const dataProvider = {
 
             const response = await httpClient(url);
 
-            // For About Us, ensure the response has an id field for react-admin
+            // For singleton resources, ensure the response has an id field for react-admin
             let data = response.json;
-            if (resource === 'about_us' && !data.id) {
+            if ((resource === 'about_us' || resource === 'contact') && !data.id) {
                 data.id = 'main';
             }
 
@@ -232,9 +232,9 @@ const dataProvider = {
         try {
             const endpoint = resourceToEndpoint[resource] || `/${resource}`;
 
-            // Special handling for About Us - it doesn't use ID in the URL
+            // Special handling for singleton resources (About Us, Contact) - they don't use ID in the URL
             let url;
-            if (resource === 'about_us') {
+            if (resource === 'about_us' || resource === 'contact') {
                 url = API_CONFIG.getURL(endpoint);
             } else {
                 url = `${API_CONFIG.getURL(endpoint)}/${params.id}`;
@@ -256,8 +256,8 @@ const dataProvider = {
                 if (!dataToSend.component) {
                     dataToSend.component = params.previousData?.component || 'hero';
                 }
-            } else if (resource === 'about_us') {
-                // For About Us, keep the id field as it's needed by the API
+            } else if (resource === 'about_us' || resource === 'contact') {
+                // For singleton resources, keep the id field as it's needed by the API
                 if (!dataToSend.id) {
                     dataToSend.id = params.id || 'main';
                 }

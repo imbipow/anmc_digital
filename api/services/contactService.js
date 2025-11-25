@@ -11,10 +11,13 @@ class ContactService {
   }
 
   async update(updates) {
+    // Remove id from updates as it's a key attribute and can't be updated
+    const { id, ...updateData } = updates;
+
     return await dynamoDBService.updateItem(
       this.tableName,
       { id: 'main' },
-      updates
+      updateData
     );
   }
 }

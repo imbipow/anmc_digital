@@ -30,6 +30,7 @@ import CounterEdit from './CounterEdit';
 import CounterCreate from './CounterCreate';
 import HomepageList from './HomepageList';
 import HomepageEdit from './HomepageEdit';
+import ContactEdit from './ContactEdit';
 import AboutUsEdit from './AboutUsEdit';
 import NewsEdit from './NewsEdit';
 import EventList from './EventList';
@@ -151,7 +152,7 @@ const AdminPanel = () => {
                         <Resource
                             name="contact"
                             list={HomepageList}
-                            edit={HomepageEdit}
+                            edit={ContactEdit}
                             icon={ContactsOutlined}
                             options={{ label: 'Contact Info' }}
                         />
