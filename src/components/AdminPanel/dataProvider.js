@@ -162,9 +162,9 @@ const dataProvider = {
 
             const endpoint = resourceToEndpoint[resource] || `/${resource}`;
 
-            // Special handling for singleton resources (About Us, Contact) - they don't use ID in the URL
+            // Special handling for singleton resources (About Us, Contact, Master Plan) - they don't use ID in the URL
             let url;
-            if (resource === 'about_us' || resource === 'contact') {
+            if (resource === 'about_us' || resource === 'contact' || resource === 'master_plan') {
                 // Singleton resources, fetch without ID
                 url = API_CONFIG.getURL(endpoint);
             } else {
@@ -175,8 +175,15 @@ const dataProvider = {
 
             // For singleton resources, ensure the response has an id field for react-admin
             let data = response.json;
-            if ((resource === 'about_us' || resource === 'contact') && !data.id) {
-                data.id = 'main';
+            if (resource === 'about_us' || resource === 'contact') {
+                if (!data.id) {
+                    data.id = 'main';
+                }
+            } else if (resource === 'master_plan') {
+                // Master plan uses its actual DynamoDB id
+                if (!data.id) {
+                    data.id = 'master-plan-2025-2030';
+                }
             }
 
             // Special handling for achievements - map year to id
@@ -251,9 +258,9 @@ const dataProvider = {
         try {
             const endpoint = resourceToEndpoint[resource] || `/${resource}`;
 
-            // Special handling for singleton resources (About Us, Contact) - they don't use ID in the URL
+            // Special handling for singleton resources (About Us, Contact, Master Plan) - they don't use ID in the URL
             let url;
-            if (resource === 'about_us' || resource === 'contact') {
+            if (resource === 'about_us' || resource === 'contact' || resource === 'master_plan') {
                 url = API_CONFIG.getURL(endpoint);
             } else {
                 url = `${API_CONFIG.getURL(endpoint)}/${params.id}`;
@@ -280,6 +287,9 @@ const dataProvider = {
                 if (!dataToSend.id) {
                     dataToSend.id = params.id || 'main';
                 }
+            } else if (resource === 'master_plan') {
+                // Master plan - remove id from updates (backend service handles it)
+                delete dataToSend.id;
             } else {
                 // For all other resources, remove id from updates
                 // id is a key attribute and cannot be updated in DynamoDB

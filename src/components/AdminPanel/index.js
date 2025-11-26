@@ -18,7 +18,8 @@ import {
     InboxOutlined,
     SendOutlined,
     SlideshowOutlined,
-    EmojiEventsOutlined
+    EmojiEventsOutlined,
+    AccountTreeOutlined
 } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import cognitoAuthService from '../../services/cognitoAuth';
@@ -62,6 +63,11 @@ import HeroSlideCreate from './HeroSlideCreate';
 import AchievementsList from './AchievementsList';
 import AchievementsEdit from './AchievementsEdit';
 import AchievementsCreate from './AchievementsCreate';
+import ProjectList from './ProjectList';
+import ProjectEdit from './ProjectEdit';
+import ProjectCreate from './ProjectCreate';
+import ProjectsWithMasterPlan from './ProjectsWithMasterPlan';
+import MasterPlanEdit from './MasterPlanEdit';
 import { ManageAccountsOutlined, BookOnlineOutlined } from '@mui/icons-material';
 import StandaloneAdminLayout from './StandaloneAdminLayout';
 import dataProvider from './dataProvider';
@@ -140,11 +146,18 @@ const AdminPanel = () => {
                         />
                         <Resource
                             name="projects"
-                            list={BlogList}
-                            edit={BlogEdit}
-                            create={BlogCreate}
+                            list={ProjectsWithMasterPlan}
+                            edit={ProjectEdit}
+                            create={ProjectCreate}
                             icon={WorkOutlined}
                             options={{ label: 'Projects' }}
+                        />
+                        <Resource
+                            name="master_plan"
+                            list={HomepageList}
+                            edit={MasterPlanEdit}
+                            icon={AccountTreeOutlined}
+                            options={{ label: 'Master Plan' }}
                         />
                         <Resource
                             name="about_us"

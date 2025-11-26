@@ -14,10 +14,13 @@ class MasterPlanService {
   }
 
   async update(updates) {
+    // Remove id from updates as it's a key attribute and can't be updated
+    const { id, ...updateData } = updates;
+
     return await dynamoDBService.updateItem(
       this.tableName,
       { id: 'master-plan-2025-2030' },
-      updates
+      updateData
     );
   }
 }
