@@ -169,7 +169,7 @@ router.delete('/:id', verifyToken, requireManager, async (req, res) => {
 // Broadcast message to recipients
 router.post('/broadcast', verifyToken, requireAdmin, async (req, res) => {
     try {
-        const { subject, message, recipients } = req.body;
+        const { subject, message, recipients, isHtml, customEmails } = req.body;
 
         if (!subject || !message || !recipients) {
             return res.status(400).json({ error: 'Subject, message, and recipients are required' });
@@ -178,7 +178,10 @@ router.post('/broadcast', verifyToken, requireAdmin, async (req, res) => {
         // Get recipient emails based on selection
         let emailList = [];
 
-        if (recipients === 'all') {
+        if (recipients === 'custom' && customEmails && Array.isArray(customEmails)) {
+            // Use custom email list (for replies)
+            emailList = customEmails.filter(email => email && email.trim());
+        } else if (recipients === 'all') {
             // Get all members and subscribers
             const [members, subscribers] = await Promise.all([
                 dynamoDBService.getAllItems(MEMBERS_TABLE),
@@ -216,6 +219,7 @@ router.post('/broadcast', verifyToken, requireAdmin, async (req, res) => {
             type: 'broadcast',
             subject,
             message,
+            isHtml: isHtml || false,
             recipients,
             recipientCount: emailList.length,
             status: 'sent',
@@ -229,7 +233,9 @@ router.post('/broadcast', verifyToken, requireAdmin, async (req, res) => {
             await emailService.sendBroadcastEmail({
                 subject,
                 message,
-                recipients: emailList
+                isHtml: isHtml || false,
+                recipients: emailList,
+                isReply: recipients === 'custom' // Mark as reply if using custom recipients
             });
         } catch (emailError) {
             console.error('Error sending broadcast emails:', emailError);

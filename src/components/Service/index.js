@@ -120,6 +120,111 @@ const Service = (props) => {
                 </div>
             </div>
 
+            {/* Kalash Booking Priority Section */}
+            <div className="kalash-booking-section" style={{ backgroundColor: '#fff3e0', padding: '60px 0', marginBottom: '40px' }}>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-10 col-md-12 offset-lg-1">
+                            <div className="kalash-card" style={{
+                                background: 'linear-gradient(135deg, #ff9800 0%, #f57c00 100%)',
+                                borderRadius: '15px',
+                                padding: '40px',
+                                boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+                                color: 'white',
+                                position: 'relative',
+                                overflow: 'hidden'
+                            }}>
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '-50px',
+                                    right: '-50px',
+                                    width: '200px',
+                                    height: '200px',
+                                    background: 'rgba(255,255,255,0.1)',
+                                    borderRadius: '50%'
+                                }}></div>
+                                <div style={{
+                                    position: 'absolute',
+                                    bottom: '-30px',
+                                    left: '-30px',
+                                    width: '150px',
+                                    height: '150px',
+                                    background: 'rgba(255,255,255,0.1)',
+                                    borderRadius: '50%'
+                                }}></div>
+
+                                <div className="row align-items-center" style={{ position: 'relative', zIndex: 1 }}>
+                                    <div className="col-lg-8 col-md-12">
+                                        <div className="kalash-icon" style={{ marginBottom: '20px' }}>
+                                            <i className="fa fa-star" style={{ fontSize: '48px', color: 'rgba(255,255,255,0.9)' }}></i>
+                                        </div>
+                                        <h2 style={{ color: 'white', marginBottom: '15px', fontSize: '32px', fontWeight: 'bold' }}>
+                                            Kalash Booking
+                                        </h2>
+                                        <p style={{ fontSize: '18px', marginBottom: '20px', lineHeight: '1.6', color: 'rgba(255,255,255,0.95)' }}>
+                                            Book your sacred Kalash for special ceremonies and occasions. Choose between 1 or 2 Kalash with special pricing.
+                                        </p>
+                                        <div className="kalash-pricing" style={{ marginBottom: '25px' }}>
+                                            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
+                                                <div style={{
+                                                    backgroundColor: 'rgba(255,255,255,0.2)',
+                                                    padding: '12px 20px',
+                                                    borderRadius: '8px',
+                                                    backdropFilter: 'blur(10px)'
+                                                }}>
+                                                    <div style={{ fontSize: '14px', opacity: 0.9 }}>1 Kalash</div>
+                                                    <div style={{ fontSize: '24px', fontWeight: 'bold' }}>$111 AUD</div>
+                                                </div>
+                                                <div style={{
+                                                    backgroundColor: 'rgba(255,255,255,0.2)',
+                                                    padding: '12px 20px',
+                                                    borderRadius: '8px',
+                                                    backdropFilter: 'blur(10px)'
+                                                }}>
+                                                    <div style={{ fontSize: '14px', opacity: 0.9 }}>2 Kalash</div>
+                                                    <div style={{ fontSize: '24px', fontWeight: 'bold' }}>$151 AUD</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="col-lg-4 col-md-12 text-center">
+                                        <Link
+                                            to="/book-kalash"
+                                            style={{
+                                                display: 'inline-block',
+                                                backgroundColor: 'white',
+                                                color: '#ff9800',
+                                                padding: '18px 40px',
+                                                borderRadius: '50px',
+                                                fontSize: '18px',
+                                                fontWeight: 'bold',
+                                                textDecoration: 'none',
+                                                boxShadow: '0 5px 15px rgba(0,0,0,0.2)',
+                                                transition: 'all 0.3s ease',
+                                                border: '3px solid white'
+                                            }}
+                                            onMouseOver={(e) => {
+                                                e.target.style.backgroundColor = '#fff8e1';
+                                                e.target.style.transform = 'translateY(-3px)';
+                                                e.target.style.boxShadow = '0 8px 20px rgba(0,0,0,0.3)';
+                                            }}
+                                            onMouseOut={(e) => {
+                                                e.target.style.backgroundColor = 'white';
+                                                e.target.style.transform = 'translateY(0)';
+                                                e.target.style.boxShadow = '0 5px 15px rgba(0,0,0,0.2)';
+                                            }}
+                                        >
+                                            <i className="fa fa-calendar-check" style={{ marginRight: '10px' }}></i>
+                                            Book Kalash Now
+                                        </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Service Cards Section */}
             <div className="facility-cards-section">
                 <div className="container">

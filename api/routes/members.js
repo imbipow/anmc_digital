@@ -54,6 +54,26 @@ router.get('/', verifyToken, requireMember, async (req, res, next) => {
     }
 });
 
+// Check if email exists (public endpoint for signup validation)
+router.get('/check-email', async (req, res, next) => {
+    try {
+        const { email } = req.query;
+
+        if (!email) {
+            return res.status(400).json({ error: 'Email is required' });
+        }
+
+        const existingMember = await membersService.getByEmail(email);
+
+        res.json({
+            exists: !!existingMember,
+            message: existingMember ? 'Email already registered' : 'Email available'
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
 // Get member statistics
 router.get('/stats', verifyToken, requireAdmin, async (req, res, next) => {
     try {

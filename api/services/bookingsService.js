@@ -10,10 +10,12 @@ class BookingsService {
         this.servicesTable = config.tables.services;
     }
 
-    // Get all bookings
+    // Get all bookings (excludes Kalash bookings - they have their own service)
     async getAll() {
         const bookings = await dynamoDBService.getAllItems(this.tableName);
-        return bookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        // Filter out Kalash bookings - they have their own management interface
+        const serviceBookings = bookings.filter(b => b.bookingType !== 'kalash');
+        return serviceBookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     }
 
     // Get booking by ID

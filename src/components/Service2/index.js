@@ -62,7 +62,7 @@ const Service2 = (props) => {
         }
     ];
 
-    const currentProjects = projects.length > 0 ? projects.filter(p => p.status === 'active').slice(0, 3).map(project => ({
+    const currentProjects = projects.length > 0 ? projects.filter(p => p.status === 'active').map(project => ({
         icon: project.category === 'sustainability' ? 'fa fa-leaf' :
               project.category === 'youth' ? 'fa fa-users' :
               project.category === 'culture' ? 'fa fa-building' :

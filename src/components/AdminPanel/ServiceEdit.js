@@ -5,6 +5,7 @@ import {
     TextInput,
     NumberInput,
     SelectInput,
+    BooleanInput,
     required,
     Toolbar,
     SaveButton,
@@ -66,6 +67,13 @@ export const ServiceEdit = (props) => (
                 ]}
                 validate={[required()]}
                 fullWidth
+            />
+
+            <BooleanInput
+                source="requiresSlotBooking"
+                label="Requires Slot Booking"
+                helperText="Enable this if the service requires date and time slot selection"
+                defaultValue={true}
             />
 
             <TextInput

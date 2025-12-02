@@ -82,6 +82,7 @@ const SignUpPage = () => {
     const [clientSecret, setClientSecret] = useState('');
     const [membershipFee, setMembershipFee] = useState(0);
     const [memberId, setMemberId] = useState(null);
+    const [checkingEmail, setCheckingEmail] = useState(false);
 
     // Calculate membership fee based on category and type
     const calculateFee = (category, type) => {
@@ -181,10 +182,67 @@ const SignUpPage = () => {
                 i === index ? { ...member, [field]: value } : member
             )
         }));
+
+        // Clear error when user starts typing
+        if (field === 'email' && errors[`family${index}Email`]) {
+            setErrors(prev => ({ ...prev, [`family${index}Email`]: '' }));
+        }
+    };
+
+    // Check if email exists in database
+    const checkEmailExists = async (email) => {
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
+            return false;
+        }
+
+        try {
+            const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.memberCheckEmail(email)));
+            const data = await response.json();
+            return data.exists;
+        } catch (error) {
+            console.error('Error checking email:', error);
+            return false;
+        }
+    };
+
+    // Handle email blur - check if email exists
+    const handleEmailBlur = async (e) => {
+        const email = e.target.value.trim();
+
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
+            return;
+        }
+
+        setCheckingEmail(true);
+        const exists = await checkEmailExists(email);
+        setCheckingEmail(false);
+
+        if (exists) {
+            setErrors(prev => ({
+                ...prev,
+                email: 'This email is already registered. Please use a different email or login.'
+            }));
+        }
+    };
+
+    // Handle family member email blur
+    const handleFamilyEmailBlur = async (index, email) => {
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
+            return;
+        }
+
+        const exists = await checkEmailExists(email);
+
+        if (exists) {
+            setErrors(prev => ({
+                ...prev,
+                [`family${index}Email`]: 'This email is already registered. Please use a different email.'
+            }));
+        }
     };
 
     // Validate form
-    const validateForm = () => {
+    const validateForm = async () => {
         const newErrors = {};
 
         // Personal Information
@@ -192,6 +250,13 @@ const SignUpPage = () => {
         if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
         if (!formData.email.trim()) newErrors.email = 'Email is required';
         else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Invalid email format';
+        else {
+            // Check if email already exists
+            const emailExists = await checkEmailExists(formData.email);
+            if (emailExists) {
+                newErrors.email = 'This email is already registered. Please use a different email or login.';
+            }
+        }
 
         // Australian phone validation
         const phoneError = getPhoneValidationError(formData.mobile);
@@ -218,11 +283,31 @@ const SignUpPage = () => {
             if (formData.familyMembers.length === 0) {
                 newErrors.familyMembers = 'At least one family member is required for family membership';
             } else {
-                formData.familyMembers.forEach((member, index) => {
+                // Check for duplicate emails within family members
+                const familyEmails = formData.familyMembers.map(fm => fm.email?.toLowerCase()).filter(Boolean);
+                const duplicates = familyEmails.filter((email, index) => familyEmails.indexOf(email) !== index);
+
+                for (let index = 0; index < formData.familyMembers.length; index++) {
+                    const member = formData.familyMembers[index];
+
                     if (!member.firstName.trim()) newErrors[`family${index}FirstName`] = 'First name required';
                     if (!member.lastName.trim()) newErrors[`family${index}LastName`] = 'Last name required';
-                    if (!member.email || !member.email.trim()) newErrors[`family${index}Email`] = 'Email required';
-                    else if (!/\S+@\S+\.\S+/.test(member.email)) newErrors[`family${index}Email`] = 'Invalid email format';
+
+                    if (!member.email || !member.email.trim()) {
+                        newErrors[`family${index}Email`] = 'Email required';
+                    } else if (!/\S+@\S+\.\S+/.test(member.email)) {
+                        newErrors[`family${index}Email`] = 'Invalid email format';
+                    } else if (member.email.toLowerCase() === formData.email.toLowerCase()) {
+                        newErrors[`family${index}Email`] = 'Family member email cannot be the same as main member email';
+                    } else if (duplicates.includes(member.email.toLowerCase())) {
+                        newErrors[`family${index}Email`] = 'Duplicate email found in family members';
+                    } else {
+                        // Check if email already exists in database
+                        const emailExists = await checkEmailExists(member.email);
+                        if (emailExists) {
+                            newErrors[`family${index}Email`] = 'This email is already registered. Please use a different email.';
+                        }
+                    }
 
                     // Australian phone validation for family members
                     const familyPhoneError = getPhoneValidationError(member.mobile);
@@ -231,7 +316,7 @@ const SignUpPage = () => {
                     if (!member.relationship) newErrors[`family${index}Relationship`] = 'Relationship required';
                     if (!member.age) newErrors[`family${index}Age`] = 'Age required';
                     else if (parseInt(member.age) < 18) newErrors[`family${index}Age`] = 'Must be 18 or above';
-                });
+                }
             }
         }
 
@@ -258,12 +343,20 @@ const SignUpPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!validateForm()) {
+        setLoading(true);
+
+        // Validate form (now async)
+        const isValid = await validateForm();
+        if (!isValid) {
+            setLoading(false);
             toast.error('Please fix the errors in the form');
+            // Scroll to first error
+            const firstError = document.querySelector('.Mui-error');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
             return;
         }
-
-        setLoading(true);
 
         try {
             // For upfront payment, create payment intent first
@@ -387,7 +480,7 @@ const SignUpPage = () => {
                     </IconButton>
                     <div className="header-text">
                         <h2>ANMC Membership Registration</h2>
-                        <p>Join the Australian Nepalese Muslim Community</p>
+                        <p>Join the Australian Nepalese Multicultural Centre</p>
                     </div>
                 </div>
 
@@ -432,9 +525,11 @@ const SignUpPage = () => {
                                 type="email"
                                 value={formData.email}
                                 onChange={handleChange}
+                                onBlur={handleEmailBlur}
                                 error={!!errors.email}
-                                helperText={errors.email}
+                                helperText={errors.email || (checkingEmail ? 'Checking email...' : '')}
                                 variant="outlined"
+                                disabled={checkingEmail}
                             />
                         </Grid>
 
@@ -578,6 +673,7 @@ const SignUpPage = () => {
                                                         type="email"
                                                         value={member.email || ''}
                                                         onChange={(e) => handleFamilyMemberChange(index, 'email', e.target.value)}
+                                                        onBlur={(e) => handleFamilyEmailBlur(index, e.target.value)}
                                                         error={!!errors[`family${index}Email`]}
                                                         helperText={errors[`family${index}Email`]}
                                                         variant="outlined"

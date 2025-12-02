@@ -32,6 +32,8 @@ import UpdateDetails from '../UpdateDetails'
 import MyBookings from '../MyBookings'
 import MemberDocuments from '../MemberDocuments'
 import BookServices from '../BookServices'
+import BookKalash from '../BookKalash'
+import KalashBookingSuccess from '../KalashBookingSuccess'
 import BookingSuccess from '../BookingSuccess'
 import BookingCancelled from '../BookingCancelled'
 import AdminPage from '../AdminPage'
@@ -79,6 +81,8 @@ const AllRoute = () => {
           {/* Member donate route removed - donate functionality available at /donate */}
           <Route path='member/bookings' element={<ProtectedRoute><MyBookings/></ProtectedRoute>} />
           <Route path='member/documents' element={<ProtectedRoute><MemberDocuments/></ProtectedRoute>} />
+          <Route path='book-kalash' element={<BookKalash/>} />
+          <Route path='kalash-booking-success' element={<KalashBookingSuccess/>} />
           <Route path='booking-success' element={<BookingSuccess/>} />
           <Route path='booking-cancelled' element={<BookingCancelled/>} />
           <Route path='admin' element={<AdminPage/>} />

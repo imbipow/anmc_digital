@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import {
     Box,
     Button,
@@ -15,7 +17,9 @@ import {
     Card,
     CardContent,
     Chip,
-    Divider
+    Divider,
+    FormControlLabel,
+    Switch
 } from '@mui/material';
 import {
     Send,
@@ -48,7 +52,8 @@ const BroadcastMessages = () => {
     const [formData, setFormData] = useState({
         subject: '',
         message: '',
-        recipients: 'all'
+        recipients: 'all',
+        isHtml: true
     });
     const [sending, setSending] = useState(false);
     const [stats, setStats] = useState({
@@ -107,10 +112,18 @@ const BroadcastMessages = () => {
     };
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        const { name, value, checked } = e.target;
+        const newValue = e.target.type === 'checkbox' ? checked : value;
         setFormData(prev => ({
             ...prev,
-            [name]: value
+            [name]: newValue
+        }));
+    };
+
+    const handleMessageChange = (value) => {
+        setFormData(prev => ({
+            ...prev,
+            message: value
         }));
     };
 
@@ -284,19 +297,71 @@ const BroadcastMessages = () => {
                         placeholder="Enter email subject"
                     />
 
-                    <TextField
-                        fullWidth
-                        label="Message"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        required
-                        disabled={sending}
-                        multiline
-                        rows={10}
-                        sx={{ mb: 3 }}
-                        placeholder="Enter your message here..."
-                    />
+                    <Box sx={{ mb: 3 }}>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                            <Typography variant="body2" fontWeight="bold">
+                                Message *
+                            </Typography>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={formData.isHtml}
+                                        onChange={handleChange}
+                                        name="isHtml"
+                                        disabled={sending}
+                                    />
+                                }
+                                label="HTML Email"
+                            />
+                        </Box>
+                        {formData.isHtml ? (
+                            <Box sx={{
+                                '& .quill': {
+                                    backgroundColor: 'white',
+                                    borderRadius: '4px'
+                                },
+                                '& .ql-container': {
+                                    minHeight: '300px',
+                                    fontSize: '14px'
+                                },
+                                '& .ql-editor': {
+                                    minHeight: '300px'
+                                }
+                            }}>
+                                <ReactQuill
+                                    theme="snow"
+                                    value={formData.message}
+                                    onChange={handleMessageChange}
+                                    readOnly={sending}
+                                    placeholder="Enter your message here..."
+                                    modules={{
+                                        toolbar: [
+                                            [{ 'header': [1, 2, 3, false] }],
+                                            ['bold', 'italic', 'underline', 'strike'],
+                                            [{ 'color': [] }, { 'background': [] }],
+                                            [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                            [{ 'align': [] }],
+                                            ['link', 'image'],
+                                            ['clean']
+                                        ]
+                                    }}
+                                />
+                            </Box>
+                        ) : (
+                            <TextField
+                                fullWidth
+                                name="message"
+                                value={formData.message}
+                                onChange={handleChange}
+                                required
+                                disabled={sending}
+                                multiline
+                                rows={15}
+                                placeholder="Enter your message here..."
+                                variant="outlined"
+                            />
+                        )}
+                    </Box>
 
                     <Divider sx={{ mb: 2 }} />
 

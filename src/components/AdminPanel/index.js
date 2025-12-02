@@ -19,7 +19,9 @@ import {
     SendOutlined,
     SlideshowOutlined,
     EmojiEventsOutlined,
-    AccountTreeOutlined
+    AccountTreeOutlined,
+    PaymentOutlined,
+    LocalFloristOutlined
 } from '@mui/icons-material';
 import { Box } from '@mui/material';
 import cognitoAuthService from '../../services/cognitoAuth';
@@ -46,6 +48,7 @@ import DonationEdit from './DonationEdit';
 import { MemberList } from './MemberList';
 import { MemberShow } from './MemberShow';
 import { MemberEdit } from './MemberEdit';
+import PaymentList from './PaymentList';
 import UserManagementList from './UserManagementResource';
 import ServiceList from './ServiceList';
 import ServiceEdit from './ServiceEdit';
@@ -53,6 +56,8 @@ import ServiceCreate from './ServiceCreate';
 import BookingList from './BookingList';
 import BookingShow from './BookingShow';
 import BookingEdit from './BookingEdit';
+import KalashBookingList from './KalashBookingList';
+import KalashBookingEdit from './KalashBookingEdit';
 import MediaList from './MediaList';
 import DocumentList from './DocumentList';
 import MessageInbox from './MessageInbox';
@@ -247,6 +252,12 @@ const AdminPanel = () => {
                     icon={PeopleOutlined}
                     options={{ label: 'Members' }}
                 />
+                <Resource
+                    name="payments"
+                    list={PaymentList}
+                    icon={PaymentOutlined}
+                    options={{ label: 'Member Payments' }}
+                />
 
                 {/* Bookings - Admin and Manager can view/edit */}
                 <Resource
@@ -256,6 +267,15 @@ const AdminPanel = () => {
                     edit={BookingEdit}
                     icon={BookOnlineOutlined}
                     options={{ label: 'Bookings' }}
+                />
+
+                {/* Kalash Bookings - Admin and Manager can view/edit */}
+                <Resource
+                    name="kalash-bookings"
+                    list={KalashBookingList}
+                    edit={KalashBookingEdit}
+                    icon={LocalFloristOutlined}
+                    options={{ label: 'Kalash Bookings' }}
                 />
             </Admin>
         </Box>

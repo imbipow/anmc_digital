@@ -435,7 +435,7 @@ Reply to this contact via: ${email}
  * Send broadcast email to multiple recipients
  */
 const sendBroadcastEmail = async (broadcastData) => {
-    const { subject, message, recipients } = broadcastData;
+    const { subject, message, recipients, isHtml, isReply } = broadcastData;
 
     // Send emails in batches of 50 (SES limit)
     const batchSize = 50;
@@ -448,18 +448,80 @@ const sendBroadcastEmail = async (broadcastData) => {
     const results = [];
 
     for (const batch of batches) {
-        const emailBody = `
-${message}
+        const unsubscribeLink = `${process.env.FRONTEND_URL || 'https://anmcinc.org.au'}/unsubscribe`;
 
+        let emailBody, htmlBody;
+
+        if (isHtml) {
+            // HTML email with footer
+            // Only include unsubscribe link for bulk broadcasts, not for replies
+            const footer = isReply ? `
+    <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #e0e0e0; color: #666; font-size: 12px;">
+        <p>This email was sent by ANMC (Australian Nepalese Multicultural Centre)</p>
+        <p>Best regards,<br>ANMC Team</p>
+    </div>` : `
+    <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #e0e0e0; color: #666; font-size: 12px;">
+        <p>This email was sent by ANMC (Australian Nepalese Multicultural Centre)</p>
+        <p>To unsubscribe from these emails, please visit: <a href="${unsubscribeLink}" style="color: #1976d2;">Unsubscribe</a></p>
+        <p>Best regards,<br>ANMC Team</p>
+    </div>`;
+
+            htmlBody = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+    ${message}
+${footer}
+</body>
+</html>
+            `.trim();
+
+            // Plain text version (fallback)
+            const plainFooter = isReply ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+This email was sent by ANMC (Australian Nepalese Multicultural Centre)
+
+Best regards,
+ANMC Team` : `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 This email was sent by ANMC (Australian Nepalese Multicultural Centre)
 
 To unsubscribe from these emails, please visit:
-${process.env.FRONTEND_URL || 'https://anmcinc.org.au'}/unsubscribe
+${unsubscribeLink}
 
 Best regards,
-ANMC Team
-        `.trim();
+ANMC Team`;
+
+            emailBody = `
+${message.replace(/<[^>]*>/g, '')}
+${plainFooter}
+            `.trim();
+        } else {
+            // Plain text email
+            const plainFooter = isReply ? `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+This email was sent by ANMC (Australian Nepalese Multicultural Centre)
+
+Best regards,
+ANMC Team` : `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+This email was sent by ANMC (Australian Nepalese Multicultural Centre)
+
+To unsubscribe from these emails, please visit:
+${unsubscribeLink}
+
+Best regards,
+ANMC Team`;
+
+            emailBody = `
+${message}
+${plainFooter}
+            `.trim();
+        }
 
         const params = {
             Source: emailConfig.fromEmail,
@@ -471,7 +533,16 @@ ANMC Team
                     Data: subject,
                     Charset: 'UTF-8'
                 },
-                Body: {
+                Body: isHtml ? {
+                    Text: {
+                        Data: emailBody,
+                        Charset: 'UTF-8'
+                    },
+                    Html: {
+                        Data: htmlBody,
+                        Charset: 'UTF-8'
+                    }
+                } : {
                     Text: {
                         Data: emailBody,
                         Charset: 'UTF-8'
@@ -836,6 +907,82 @@ Received: ${new Date().toLocaleString('en-AU', { timeZone: 'Australia/Sydney' })
     }
 };
 
+/**
+ * Send Kalash booking confirmation email
+ */
+const sendKalashBookingConfirmation = async (bookingData) => {
+    const { id, name, email, phone, numberOfKalash, amount } = bookingData;
+
+    const emailBody = `
+Dear ${name},
+
+Thank you for your Kalash booking! Your payment has been successfully received and your booking is confirmed.
+
+Kalash Booking Confirmation:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Booking ID: ${id}
+Number of Kalash: ${numberOfKalash}
+Amount Paid: $${amount.toFixed(2)} AUD
+
+Contact Details:
+Name: ${name}
+Email: ${email}
+Phone: ${phone}
+
+Status: CONFIRMED & PAID ✓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Your Kalash booking has been confirmed. We will prepare your sacred Kalash for the ceremony.
+
+Important Information:
+• Please keep this booking ID for your records
+• Contact us if you need any special arrangements
+• Reach out at least 24 hours in advance for any changes
+
+Location:
+Australian Nepalese Multicultural Centre
+[Address details]
+
+If you have any questions, please contact us at ${emailConfig.adminEmail}.
+
+We look forward to serving you!
+
+Best regards,
+ANMC Team
+Australian Nepalese Multicultural Centre
+    `.trim();
+
+    const params = {
+        Source: emailConfig.fromEmail,
+        Destination: {
+            ToAddresses: [email]
+        },
+        Message: {
+            Subject: {
+                Data: `ANMC Kalash Booking Confirmed - ${id}`,
+                Charset: 'UTF-8'
+            },
+            Body: {
+                Text: {
+                    Data: emailBody,
+                    Charset: 'UTF-8'
+                }
+            }
+        }
+    };
+
+    try {
+        const command = new SendEmailCommand(params);
+        const client = getSESClient();
+        const response = await client.send(command);
+        console.log('Kalash booking confirmation email sent successfully:', response.MessageId);
+        return { success: true, messageId: response.MessageId };
+    } catch (error) {
+        console.error('Error sending Kalash booking confirmation email:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     initializeEmailConfig,
     sendBookingRequestEmail,
@@ -848,5 +995,6 @@ module.exports = {
     sendMemberApprovalEmail,
     sendUserWelcomeEmail,
     sendNewMemberNotificationToAdmin,
-    sendDonationNotificationToAdmin
+    sendDonationNotificationToAdmin,
+    sendKalashBookingConfirmation
 };

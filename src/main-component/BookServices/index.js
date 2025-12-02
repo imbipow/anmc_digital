@@ -91,7 +91,8 @@ const BookServices = () => {
     }, []);
 
     useEffect(() => {
-        if (selectedService && selectedDate) {
+        // Only fetch slots if the service requires slot booking
+        if (selectedService && selectedDate && selectedService.requiresSlotBooking !== false) {
             fetchAvailableSlots();
         }
     }, [selectedService, selectedDate]);
@@ -300,7 +301,8 @@ const BookServices = () => {
             return;
         }
 
-        if (!bookingData.startTime) {
+        // Only require time slot if service requires slot booking
+        if (selectedService.requiresSlotBooking !== false && !bookingData.startTime) {
             toast.error('Please select a time slot');
             return;
         }
@@ -681,59 +683,71 @@ const BookServices = () => {
                                                         </Typography>
                                                     </Grid>
 
-                                                    <Grid item xs={12} sm={6}>
-                                                        <Box className="date-picker-container">
-                                                            <label className="date-picker-label">Select Date *</label>
-                                                            <DatePicker
-                                                                selected={selectedDate}
-                                                                onChange={handleDateChange}
-                                                                minDate={(() => {
-                                                                    const tomorrow = new Date();
-                                                                    tomorrow.setDate(tomorrow.getDate() + 1);
-                                                                    return tomorrow;
-                                                                })()}
-                                                                className="date-picker"
-                                                                dateFormat="dd/MM/yyyy"
-                                                                placeholderText="Select a future date"
-                                                                required
-                                                            />
-                                                            <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
-                                                                Only future dates can be booked
-                                                            </Typography>
-                                                        </Box>
-                                                    </Grid>
+                                                    {selectedService && selectedService.requiresSlotBooking !== false && (
+                                                        <>
+                                                            <Grid item xs={12} sm={6}>
+                                                                <Box className="date-picker-container">
+                                                                    <label className="date-picker-label">Select Date *</label>
+                                                                    <DatePicker
+                                                                        selected={selectedDate}
+                                                                        onChange={handleDateChange}
+                                                                        minDate={(() => {
+                                                                            const tomorrow = new Date();
+                                                                            tomorrow.setDate(tomorrow.getDate() + 1);
+                                                                            return tomorrow;
+                                                                        })()}
+                                                                        className="date-picker"
+                                                                        dateFormat="dd/MM/yyyy"
+                                                                        placeholderText="Select a future date"
+                                                                        required
+                                                                    />
+                                                                    <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5, display: 'block' }}>
+                                                                        Only future dates can be booked
+                                                                    </Typography>
+                                                                </Box>
+                                                            </Grid>
 
-                                                    <Grid item xs={12} sm={6}>
-                                                        <FormControl fullWidth required>
-                                                            <InputLabel>Select Time Slot *</InputLabel>
-                                                            <Select
-                                                                name="startTime"
-                                                                value={bookingData.startTime}
-                                                                onChange={handleChange}
-                                                                label="Select Time Slot *"
-                                                                disabled={loadingSlots || availableSlots.length === 0}
-                                                            >
-                                                                {loadingSlots ? (
-                                                                    <MenuItem disabled>
-                                                                        <CircularProgress size={20} /> Loading slots...
-                                                                    </MenuItem>
-                                                                ) : availableSlots.length === 0 ? (
-                                                                    <MenuItem disabled>No slots available for this day</MenuItem>
-                                                                ) : (
-                                                                    availableSlots.map((slot, index) => (
-                                                                        <MenuItem key={index} value={slot.startTime}>
-                                                                            {slot.display}
-                                                                        </MenuItem>
-                                                                    ))
-                                                                )}
-                                                            </Select>
-                                                        </FormControl>
-                                                    </Grid>
+                                                            <Grid item xs={12} sm={6}>
+                                                                <FormControl fullWidth required>
+                                                                    <InputLabel>Select Time Slot *</InputLabel>
+                                                                    <Select
+                                                                        name="startTime"
+                                                                        value={bookingData.startTime}
+                                                                        onChange={handleChange}
+                                                                        label="Select Time Slot *"
+                                                                        disabled={loadingSlots || availableSlots.length === 0}
+                                                                    >
+                                                                        {loadingSlots ? (
+                                                                            <MenuItem disabled>
+                                                                                <CircularProgress size={20} /> Loading slots...
+                                                                            </MenuItem>
+                                                                        ) : availableSlots.length === 0 ? (
+                                                                            <MenuItem disabled>No slots available for this day</MenuItem>
+                                                                        ) : (
+                                                                            availableSlots.map((slot, index) => (
+                                                                                <MenuItem key={index} value={slot.startTime}>
+                                                                                    {slot.display}
+                                                                                </MenuItem>
+                                                                            ))
+                                                                        )}
+                                                                    </Select>
+                                                                </FormControl>
+                                                            </Grid>
 
-                                                    {!loadingSlots && availableSlots.length === 0 && (
+                                                            {!loadingSlots && availableSlots.length === 0 && (
+                                                                <Grid item xs={12}>
+                                                                    <Alert severity="warning">
+                                                                        <strong>No time slots available for this date.</strong> All slots are fully booked. Please select another date to see available time slots.
+                                                                    </Alert>
+                                                                </Grid>
+                                                            )}
+                                                        </>
+                                                    )}
+
+                                                    {selectedService && selectedService.requiresSlotBooking === false && (
                                                         <Grid item xs={12}>
-                                                            <Alert severity="warning">
-                                                                <strong>No time slots available for this date.</strong> All slots are fully booked. Please select another date to see available time slots.
+                                                            <Alert severity="info">
+                                                                This service does not require slot booking. You can submit your booking request directly.
                                                             </Alert>
                                                         </Grid>
                                                     )}
@@ -825,7 +839,7 @@ const BookServices = () => {
                                                             variant="contained"
                                                             fullWidth
                                                             size="large"
-                                                            disabled={submitting || !bookingData.startTime}
+                                                            disabled={submitting || (selectedService?.requiresSlotBooking !== false && !bookingData.startTime)}
                                                             sx={{
                                                                 backgroundColor: '#1e3c72',
                                                                 '&:hover': { backgroundColor: '#2a5298' },
@@ -859,12 +873,16 @@ const BookServices = () => {
                                                 <Typography variant="body1">
                                                     <strong>Service:</strong> {selectedService.anusthanName}
                                                 </Typography>
-                                                <Typography variant="body1">
-                                                    <strong>Date:</strong> {selectedDate.toLocaleDateString('en-AU')}
-                                                </Typography>
-                                                <Typography variant="body1">
-                                                    <strong>Time:</strong> {bookingData.startTime}
-                                                </Typography>
+                                                {selectedService.requiresSlotBooking !== false && (
+                                                    <>
+                                                        <Typography variant="body1">
+                                                            <strong>Date:</strong> {selectedDate.toLocaleDateString('en-AU')}
+                                                        </Typography>
+                                                        <Typography variant="body1">
+                                                            <strong>Time:</strong> {bookingData.startTime}
+                                                        </Typography>
+                                                    </>
+                                                )}
                                                 <Typography variant="body1">
                                                     <strong>Attendees:</strong> {bookingData.numberOfPeople}
                                                 </Typography>

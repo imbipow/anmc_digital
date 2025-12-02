@@ -2,10 +2,22 @@ const express = require('express');
 const router = express.Router();
 const servicesService = require('../services/servicesService');
 
-// Get all services
+// Get all services (with optional filtering)
 router.get('/', async (req, res, next) => {
     try {
-        const services = await servicesService.getAll();
+        const { status, category } = req.query;
+        let services = await servicesService.getAll();
+
+        // Filter by status if provided
+        if (status) {
+            services = services.filter(service => service.status === status);
+        }
+
+        // Filter by category if provided
+        if (category) {
+            services = services.filter(service => service.category === category);
+        }
+
         res.json(services);
     } catch (error) {
         next(error);

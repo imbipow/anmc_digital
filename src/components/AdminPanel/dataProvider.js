@@ -43,9 +43,11 @@ const resourceToEndpoint = {
     faqs: API_CONFIG.endpoints.faqs,
     donations: API_CONFIG.endpoints.donations,
     members: API_CONFIG.endpoints.members,
+    payments: API_CONFIG.endpoints.members, // Use members endpoint
     users: '/users',
     services: API_CONFIG.endpoints.services,
     bookings: API_CONFIG.endpoints.bookings,
+    'kalash-bookings': API_CONFIG.endpoints.kalashBookings,
     documents: '/documents',
     inbox: API_CONFIG.endpoints.messages,
     broadcast: API_CONFIG.endpoints.messages,
@@ -76,6 +78,13 @@ const dataProvider = {
                     ...item,
                     id: item.year || item.id
                 }));
+            }
+
+            // Special handling for payments - show all members (they all have payment info)
+            if (resource === 'payments') {
+                // Don't filter out any members - show all of them
+                // Members with 0 fee are family members covered by primary member
+                data = data;
             }
 
             const { page, perPage } = params.pagination;

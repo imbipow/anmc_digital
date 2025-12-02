@@ -4,6 +4,7 @@ import {
     Datagrid,
     TextField,
     NumberField,
+    BooleanField,
     EditButton,
     DeleteButton,
     Filter,
@@ -56,6 +57,7 @@ export const ServiceList = (props) => (
             />
             <NumberField source="durationHours" label="Duration (hrs)" />
             <TextField source="category" label="Category" />
+            <BooleanField source="requiresSlotBooking" label="Slot Booking" />
             <TextField source="status" label="Status" />
             <EditButton />
             <DeleteButton />

@@ -178,11 +178,11 @@ const GroupedBookingList = () => {
                             <th style={{ padding: '12px 8px', textAlign: 'left', width: '120px' }}>Date</th>
                             <th style={{ padding: '12px 8px', textAlign: 'left', width: '60px' }}>ID</th>
                             <th style={{ padding: '12px 8px', textAlign: 'left', width: '100px' }}>Status</th>
+                            <th style={{ padding: '12px 8px', textAlign: 'left', width: '150px' }}>Member Name</th>
                             <th style={{ padding: '12px 8px', textAlign: 'left', width: '150px' }}>Service</th>
                             <th style={{ padding: '12px 8px', textAlign: 'left', width: '90px' }}>Time</th>
                             <th style={{ padding: '12px 8px', textAlign: 'left', width: '60px' }}>Hrs</th>
                             <th style={{ padding: '12px 8px', textAlign: 'left', width: '60px' }}>Ppl</th>
-                            <th style={{ padding: '12px 8px', textAlign: 'left', width: '180px' }}>Email</th>
                             <th style={{ padding: '12px 8px', textAlign: 'left', width: '90px' }}>Total</th>
                             {showApproveButton && (
                                 <th style={{ padding: '12px 8px', textAlign: 'left', width: '110px' }}>Action</th>
@@ -285,11 +285,17 @@ const GroupedBookingList = () => {
                                         <td style={{ padding: '12px 8px' }}>
                                             <StatusField record={booking} />
                                         </td>
+                                        <td style={{ padding: '12px 8px', fontWeight: '500' }}>
+                                            {booking.memberName || '-'}
+                                            <br />
+                                            <Typography variant="caption" color="text.secondary" sx={{ fontSize: '0.75rem' }}>
+                                                {booking.memberEmail}
+                                            </Typography>
+                                        </td>
                                         <td style={{ padding: '12px 8px' }}>{serviceName}</td>
                                         <td style={{ padding: '12px 8px' }}>{timeDisplay}</td>
                                         <td style={{ padding: '12px 8px' }}>{booking.serviceDuration}</td>
                                         <td style={{ padding: '12px 8px' }}>{booking.numberOfPeople}</td>
-                                        <td style={{ padding: '12px 8px' }}>{booking.memberEmail}</td>
                                         <td style={{ padding: '12px 8px' }}>
                                             ${booking.totalAmount.toFixed(2)}
                                         </td>

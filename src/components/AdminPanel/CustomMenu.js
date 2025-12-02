@@ -71,8 +71,10 @@ const CustomMenu = () => {
     // Top-level menu items (not in Content submenu)
     const topLevelItems = [
         { name: 'bookings', label: 'Bookings' },
+        { name: 'kalash-bookings', label: 'Kalash Bookings' },
         { name: 'donations', label: 'Donations' },
         { name: 'members', label: 'Members' },
+        { name: 'payments', label: 'Member Payments' },
         { name: 'user-management', label: 'User Management' },
     ];
 

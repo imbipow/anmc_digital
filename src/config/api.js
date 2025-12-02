@@ -44,6 +44,7 @@ const API_CONFIG = {
     // Members
     members: '/members',
     memberRegister: '/members/register',
+    memberCheckEmail: (email) => `/members/check-email?email=${encodeURIComponent(email)}`,
     memberStats: '/members/stats',
     memberSearch: (query) => `/members/search?q=${query}`,
     membersByCategory: (category) => `/members/category/${category}`,
@@ -62,6 +63,12 @@ const API_CONFIG = {
     bookingsByMember: (email) => `/bookings?memberEmail=${email}`,
     bookingStats: '/bookings/stats',
     availableSlots: (date, duration) => `/bookings/available-slots?date=${date}&duration=${duration}`,
+
+    // Kalash Bookings
+    kalashBookings: '/kalash-bookings',
+    kalashBookingById: (id) => `/kalash-bookings/${id}`,
+    kalashBookingStats: '/kalash-bookings/stats',
+    kalashVerifyPayment: '/kalash-bookings/verify-payment',
 
     // Media & Documents
     media: '/media',

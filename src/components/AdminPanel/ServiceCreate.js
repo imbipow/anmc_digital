@@ -5,6 +5,7 @@ import {
     TextInput,
     NumberInput,
     SelectInput,
+    BooleanInput,
     required
 } from 'react-admin';
 import { Box } from '@mui/material';
@@ -71,6 +72,13 @@ export const ServiceCreate = (props) => (
                 validate={[required()]}
                 defaultValue="small"
                 fullWidth
+            />
+
+            <BooleanInput
+                source="requiresSlotBooking"
+                label="Requires Slot Booking"
+                helperText="Enable this if the service requires date and time slot selection"
+                defaultValue={true}
             />
 
             <TextInput
