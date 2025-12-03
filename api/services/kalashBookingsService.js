@@ -116,6 +116,14 @@ class KalashBookingsService {
 
         await dynamoDBService.putItem(this.tableName, newBooking);
 
+        // Send admin notification email (non-blocking)
+        try {
+            await emailService.sendKalashBookingNotificationToAdmin(newBooking);
+        } catch (emailError) {
+            console.error('Error sending Kalash booking admin notification:', emailError);
+            // Don't throw - booking should still be created even if email fails
+        }
+
         return {
             booking: newBooking,
             clientSecret

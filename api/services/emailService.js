@@ -932,7 +932,19 @@ Phone: ${phone}
 Status: CONFIRMED & PAID ✓
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Your Kalash booking has been confirmed. We will prepare your sacred Kalash for the ceremony.
+📍 COLLECTION INSTRUCTIONS:
+
+You can collect your Kalash from the Mandir during the event.
+
+⚠️ IMPORTANT: Please bring proof of payment when collecting your Kalash.
+
+What to bring for collection:
+• Your Booking ID: ${id}
+• Printed confirmation email or show on your phone
+• Valid ID (Driver's License or Passport)
+• Payment receipt (this email)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Important Information:
 • Please keep this booking ID for your records
@@ -983,6 +995,72 @@ Australian Nepalese Multicultural Centre
     }
 };
 
+/**
+ * Send Kalash booking notification to admin
+ */
+const sendKalashBookingNotificationToAdmin = async (bookingData) => {
+    const { id, name, email, phone, numberOfKalash, amount, createdAt } = bookingData;
+
+    const emailBody = `
+New Kalash Booking Received!
+
+A new Kalash booking has been made through the website.
+
+Booking Details:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Booking ID: ${id}
+Date & Time: ${new Date(createdAt).toLocaleString('en-AU', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+
+Customer Information:
+Name: ${name}
+Email: ${email}
+Phone: ${phone}
+
+Order Details:
+Number of Kalash: ${numberOfKalash}
+Amount: $${amount.toFixed(2)} AUD
+
+Status: Payment Pending
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Please monitor this booking in the admin panel for payment confirmation.
+
+Admin Panel: ${process.env.FRONTEND_URL || 'https://anmcinc.org.au'}/admin#/kalash-bookings/${id}
+
+This is an automated notification from the ANMC website.
+    `.trim();
+
+    const params = {
+        Source: emailConfig.fromEmail,
+        Destination: {
+            ToAddresses: [emailConfig.adminEmail]
+        },
+        Message: {
+            Subject: {
+                Data: `🔔 New Kalash Booking - ${id}`,
+                Charset: 'UTF-8'
+            },
+            Body: {
+                Text: {
+                    Data: emailBody,
+                    Charset: 'UTF-8'
+                }
+            }
+        }
+    };
+
+    try {
+        const command = new SendEmailCommand(params);
+        const client = getSESClient();
+        const response = await client.send(command);
+        console.log('Kalash booking admin notification sent successfully:', response.MessageId);
+        return { success: true, messageId: response.MessageId };
+    } catch (error) {
+        console.error('Error sending Kalash booking admin notification:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     initializeEmailConfig,
     sendBookingRequestEmail,
@@ -996,5 +1074,6 @@ module.exports = {
     sendUserWelcomeEmail,
     sendNewMemberNotificationToAdmin,
     sendDonationNotificationToAdmin,
-    sendKalashBookingConfirmation
+    sendKalashBookingConfirmation,
+    sendKalashBookingNotificationToAdmin
 };
