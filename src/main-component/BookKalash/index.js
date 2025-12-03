@@ -117,6 +117,7 @@ const KalashPaymentForm = ({ formData, onSuccess }) => {
                 >
                     <CardElement
                         options={{
+                            hidePostalCode: true,
                             style: {
                                 base: {
                                     fontSize: '16px',

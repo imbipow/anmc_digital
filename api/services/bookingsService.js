@@ -292,10 +292,31 @@ class BookingsService {
                     }
 
                     console.log(`📋 Member ${bookingData.memberEmail} has membership category: ${membershipCategory}`);
+                } else {
+                    // Member not found in database, use email username as fallback
+                    console.log(`⚠️ Member ${bookingData.memberEmail} not found in members table`);
+                    if (!bookingData.memberName || bookingData.memberName === bookingData.memberEmail) {
+                        // Extract name from email (part before @)
+                        const emailUsername = bookingData.memberEmail.split('@')[0];
+                        // Convert to title case and replace dots/underscores with spaces
+                        bookingData.memberName = emailUsername
+                            .replace(/[._]/g, ' ')
+                            .split(' ')
+                            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                            .join(' ');
+                    }
                 }
             } catch (memberError) {
                 console.error('Error fetching member for discount verification:', memberError);
-                // Continue without discount if member lookup fails
+                // Use email username as fallback if member lookup fails
+                if (!bookingData.memberName || bookingData.memberName === bookingData.memberEmail) {
+                    const emailUsername = bookingData.memberEmail.split('@')[0];
+                    bookingData.memberName = emailUsername
+                        .replace(/[._]/g, ' ')
+                        .split(' ')
+                        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                        .join(' ');
+                }
             }
         }
 
