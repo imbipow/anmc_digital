@@ -4,10 +4,13 @@ const path = require('path');
 
 class CertificateService {
     constructor() {
-        // Build absolute path to template
+        // Build absolute paths to templates
         // __dirname is api/services, so we go up 2 levels to project root, then into public
-        this.templatePath = path.resolve(__dirname, '..', '..', 'public', 'anmc-certificate-template.pdf');
-        console.log('🔍 Certificate template path:', this.templatePath);
+        this.templatePaths = {
+            general: path.resolve(__dirname, '..', '..', 'public', 'ANMC Membership Certificate-general.pdf'),
+            life: path.resolve(__dirname, '..', '..', 'public', 'ANMC Membership Certificate-life.pdf')
+        };
+        console.log('🔍 Certificate template paths:', this.templatePaths);
 
         // Text position configuration - ADJUST THESE VALUES TO MATCH YOUR TEMPLATE
         this.positions = {
@@ -21,9 +24,11 @@ class CertificateService {
             detailsSize: 12,      // Font size for details
             detailsLineSpacing: 25,  // Space between detail lines
 
-            // Issue date
-            issueDateY: 150,      // Distance from BOTTOM of page (moved up by 100pts)
-            issueDateSize: 10
+            // Reference number and issue date (centered)
+            referenceNoY: 190,    // Distance from BOTTOM of page
+            issueDateY: 170,      // Distance from BOTTOM of page
+            expiryDateY: 150,     // Distance from BOTTOM of page (for general members)
+            bottomTextSize: 10
         };
     }
 
@@ -39,23 +44,31 @@ class CertificateService {
                 lastName,
                 membershipNumber,
                 referenceNo,
-                joinDate
+                joinDate,
+                membershipCategory,
+                expiryDate
             } = memberData;
 
             console.log('📄 Generating certificate for:', firstName, lastName);
-            console.log('📁 Template path:', this.templatePath);
+            console.log('📋 Membership category:', membershipCategory);
+
+            // Determine which template to use based on membership category
+            const templateType = membershipCategory === 'life' ? 'life' : 'general';
+            const templatePath = this.templatePaths[templateType];
+
+            console.log('📁 Template path:', templatePath);
 
             // Check if template exists
             try {
-                await fs.access(this.templatePath);
+                await fs.access(templatePath);
                 console.log('✅ Template file exists');
             } catch (err) {
-                console.error('❌ Template file NOT found at:', this.templatePath);
-                throw new Error(`Certificate template not found at: ${this.templatePath}`);
+                console.error('❌ Template file NOT found at:', templatePath);
+                throw new Error(`Certificate template not found at: ${templatePath}`);
             }
 
             // Load the template PDF
-            const templateBytes = await fs.readFile(this.templatePath);
+            const templateBytes = await fs.readFile(templatePath);
             console.log('✅ Template loaded, size:', templateBytes.length, 'bytes');
 
             const pdfDoc = await PDFDocument.load(templateBytes);
@@ -134,30 +147,58 @@ class CertificateService {
                 currentY -= this.positions.detailsLineSpacing;
             }
 
-            // Reference Number - above issue date
+            // Reference Number - centered at bottom
             if (referenceNo) {
-                firstPage.drawText(`Reference No: ${referenceNo}`, {
-                    x: this.positions.detailsLeftMargin,
-                    y: this.positions.issueDateY + 20, // 20pts above issue date
-                    size: this.positions.issueDateSize,
+                const refText = `Reference No: ${referenceNo}`;
+                const refWidth = regularFont.widthOfTextAtSize(refText, this.positions.bottomTextSize);
+                const refX = (width - refWidth) / 2;
+
+                firstPage.drawText(refText, {
+                    x: refX,
+                    y: this.positions.referenceNoY,
+                    size: this.positions.bottomTextSize,
                     font: regularFont,
                     color: rgb(0.4, 0.4, 0.4),
                 });
             }
 
-            // Issue Date (today) - smaller, lighter text at bottom
+            // Issue Date (today) - centered at bottom
             const issueDate = new Date().toLocaleDateString('en-AU', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
             });
-            firstPage.drawText(`Issued: ${issueDate}`, {
-                x: this.positions.detailsLeftMargin,
+            const issueDateText = `Issued: ${issueDate}`;
+            const issueDateWidth = regularFont.widthOfTextAtSize(issueDateText, this.positions.bottomTextSize);
+            const issueDateX = (width - issueDateWidth) / 2;
+
+            firstPage.drawText(issueDateText, {
+                x: issueDateX,
                 y: this.positions.issueDateY,
-                size: this.positions.issueDateSize,
+                size: this.positions.bottomTextSize,
                 font: regularFont,
                 color: rgb(0.4, 0.4, 0.4),
             });
+
+            // Expiry Date - centered at bottom (only for general members)
+            if (membershipCategory === 'general' && expiryDate) {
+                const formattedExpiryDate = new Date(expiryDate).toLocaleDateString('en-AU', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                const expiryText = `Valid Until: ${formattedExpiryDate}`;
+                const expiryWidth = regularFont.widthOfTextAtSize(expiryText, this.positions.bottomTextSize);
+                const expiryX = (width - expiryWidth) / 2;
+
+                firstPage.drawText(expiryText, {
+                    x: expiryX,
+                    y: this.positions.expiryDateY,
+                    size: this.positions.bottomTextSize,
+                    font: regularFont,
+                    color: rgb(0.4, 0.4, 0.4),
+                });
+            }
 
             console.log('✅ All text added to certificate');
 
