@@ -9,7 +9,13 @@ const Footer = (props) =>{
     const [contactInfo, setContactInfo] = useState({
         address: '123 Community Drive, Melbourne VIC 3000',
         phone: '03 9555 1234',
-        email: 'info@anmcinc.org.au'
+        email: 'info@anmcinc.org.au',
+        socialMedia: {
+            facebook: '',
+            twitter: '',
+            instagram: '',
+            youtube: ''
+        }
     });
 
     useEffect(() => {
@@ -21,7 +27,8 @@ const Footer = (props) =>{
                     setContactInfo({
                         address: data.address || contactInfo.address,
                         phone: data.phone || contactInfo.phone,
-                        email: data.email || contactInfo.email
+                        email: data.email || contactInfo.email,
+                        socialMedia: data.socialMedia || contactInfo.socialMedia
                     });
                 }
             })
@@ -49,10 +56,18 @@ const Footer = (props) =>{
                                 </div>
                                 <p>Place to showcase Nepalese culture and heritage, social gathering and celebrating functions, worship- Hindu and Buddhist temple  </p>
                                 <ul>
-                                    <li><Link onClick={ClickHandler} to="/"><i className="ti-facebook"></i></Link></li>
-                                    <li><Link onClick={ClickHandler} to="/"><i className="ti-twitter-alt"></i></Link></li>
-                                    <li><Link onClick={ClickHandler} to="/"><i className="ti-instagram"></i></Link></li>
-                                    <li><Link onClick={ClickHandler} to="/"><i className="ti-google"></i></Link></li>
+                                    {contactInfo.socialMedia.facebook && (
+                                        <li><a href={contactInfo.socialMedia.facebook} target="_blank" rel="noopener noreferrer"><i className="ti-facebook"></i></a></li>
+                                    )}
+                                    {contactInfo.socialMedia.twitter && (
+                                        <li><a href={contactInfo.socialMedia.twitter} target="_blank" rel="noopener noreferrer"><i className="ti-twitter-alt"></i></a></li>
+                                    )}
+                                    {contactInfo.socialMedia.instagram && (
+                                        <li><a href={contactInfo.socialMedia.instagram} target="_blank" rel="noopener noreferrer"><i className="ti-instagram"></i></a></li>
+                                    )}
+                                    {contactInfo.socialMedia.youtube && (
+                                        <li><a href={contactInfo.socialMedia.youtube} target="_blank" rel="noopener noreferrer"><i className="ti-youtube"></i></a></li>
+                                    )}
                                 </ul>
                             </div>
                         </div>

@@ -36,9 +36,10 @@ const ContactEdit = () => (
                     <Typography variant="h6" gutterBottom style={{ marginTop: '20px' }}>
                         Social Media Links
                     </Typography>
-                    <TextInput source="socialMedia.facebook" fullWidth label="Facebook URL" />
-                    <TextInput source="socialMedia.twitter" fullWidth label="Twitter URL" />
-                    <TextInput source="socialMedia.instagram" fullWidth label="Instagram URL" />
+                    <TextInput source="socialMedia.facebook" fullWidth label="Facebook URL" placeholder="https://facebook.com/yourpage" />
+                    <TextInput source="socialMedia.twitter" fullWidth label="Twitter URL" placeholder="https://twitter.com/yourprofile" />
+                    <TextInput source="socialMedia.instagram" fullWidth label="Instagram URL" placeholder="https://instagram.com/yourprofile" />
+                    <TextInput source="socialMedia.youtube" fullWidth label="YouTube URL" placeholder="https://youtube.com/@yourchannel" />
 
                     <Typography variant="h6" gutterBottom style={{ marginTop: '20px' }}>
                         Map Coordinates

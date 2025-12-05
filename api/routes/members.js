@@ -4,6 +4,7 @@ const membersService = require('../services/membersService');
 const { verifyToken, requireAdmin, requireMember } = require('../middleware/auth');
 const cognitoService = require('../services/cognitoService');
 const emailService = require('../services/emailService');
+const certificateService = require('../services/certificateService');
 
 // Get all members with optional filters
 // Members can view their own data by email, admins can view all
@@ -985,6 +986,35 @@ router.post('/fix-all-cognito-groups', verifyToken, requireAdmin, async (req, re
         });
     } catch (error) {
         console.error('Error in bulk fix:', error);
+        next(error);
+    }
+});
+
+// Generate certificate for a member
+router.get('/:id/certificate', verifyToken, requireAdmin, async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Get member data
+        const member = await membersService.getById(id);
+
+        if (!member) {
+            return res.status(404).json({ error: 'Member not found' });
+        }
+
+        // Generate certificate
+        const pdfBuffer = await certificateService.generateMembershipCertificate(member);
+        const filename = certificateService.getCertificateFilename(member);
+
+        // Set response headers for PDF download
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('Content-Length', pdfBuffer.length);
+
+        // Send the PDF
+        res.send(pdfBuffer);
+    } catch (error) {
+        console.error('Error generating certificate:', error);
         next(error);
     }
 });

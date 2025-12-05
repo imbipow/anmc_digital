@@ -22,17 +22,17 @@ import {
     Block as SuspendIcon,
     PlayArrow as ReactivateIcon,
     Autorenew as RenewIcon,
-    Print as PrintIcon
+    Print as PrintIcon,
+    Download as DownloadIcon
 } from '@mui/icons-material';
-import MembershipCertificate from './MembershipCertificate';
 import {
+    Box,
     Dialog,
     DialogTitle,
     DialogContent,
     DialogActions,
     TextField as MuiTextField,
-    Button as MuiButton,
-    Box
+    Button as MuiButton
 } from '@mui/material';
 import cognitoAuthService from '../../services/cognitoAuth';
 
@@ -51,7 +51,6 @@ const MemberActions = () => {
     const [requiresPassword, setRequiresPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [userRole, setUserRole] = useState(null);
-    const [certificateDialogOpen, setCertificateDialogOpen] = useState(false);
 
     useEffect(() => {
         const getUserRole = async () => {
@@ -304,6 +303,57 @@ const MemberActions = () => {
         }
     };
 
+    const handleDownloadCertificate = async () => {
+        setLoading(true);
+        try {
+            const token = await cognitoAuthService.getIdToken();
+            if (!token) {
+                notify('Authentication required. Please log in again.', { type: 'error' });
+                setLoading(false);
+                return;
+            }
+
+            // Download PDF certificate
+            const response = await fetch(`${API_BASE_URL}/members/${record.id}/certificate`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to generate certificate');
+            }
+
+            // Get the PDF blob
+            const blob = await response.blob();
+
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            // Sanitize filename by removing special characters
+            const sanitizedName = `${record.firstName}_${record.lastName}`.replace(/[^a-zA-Z0-9_]/g, '_');
+            link.download = `ANMC_Certificate_${sanitizedName}_${record.referenceNo || 'MEMBER'}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+
+            // Cleanup
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+            notify('Certificate downloaded successfully!', { type: 'success' });
+        } catch (error) {
+            console.error('Error downloading certificate:', error);
+            notify('Failed to download certificate: ' + error.message, { type: 'error' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handlePrintMemberDetails = () => {
+        window.print();
+    };
+
     return (
         <>
             <Box sx={{ mt: 2, mb: 2, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -371,25 +421,29 @@ const MemberActions = () => {
                     </MuiButton>
                 )}
 
-                {/* Print Certificate button */}
+                {/* Download Certificate button */}
                 {(record.status === 'active' || record.status === 'pending_approval') && (
                     <MuiButton
-                        variant="outlined"
+                        variant="contained"
                         color="secondary"
-                        startIcon={<PrintIcon />}
-                        onClick={() => setCertificateDialogOpen(true)}
+                        startIcon={<DownloadIcon />}
+                        onClick={handleDownloadCertificate}
+                        disabled={loading}
                     >
-                        Print Certificate
+                        Download Certificate
                     </MuiButton>
                 )}
-            </Box>
 
-            {/* Membership Certificate Dialog */}
-            <MembershipCertificate
-                memberId={record.id}
-                open={certificateDialogOpen}
-                onClose={() => setCertificateDialogOpen(false)}
-            />
+                {/* Print Member Details button */}
+                <MuiButton
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<PrintIcon />}
+                    onClick={handlePrintMemberDetails}
+                >
+                    Print Member Details
+                </MuiButton>
+            </Box>
 
             {/* Reject Dialog */}
             <Dialog open={rejectDialogOpen} onClose={() => setRejectDialogOpen(false)}>
@@ -490,6 +544,167 @@ const MemberActions = () => {
 export const MemberShow = (props) => (
     <Show {...props}>
         <SimpleShowLayout>
+            <style>{`
+                @media print {
+                    /* Hide non-printable elements */
+                    .no-print,
+                    .RaAppBar-appBar,
+                    .RaSidebar-root,
+                    .RaLayout-appFrame aside,
+                    header,
+                    nav,
+                    .MuiAppBar-root,
+                    .MuiDrawer-root,
+                    button,
+                    .RaButton-button,
+                    .RaTopToolbar-root,
+                    .RaShowActions-root {
+                        display: none !important;
+                        visibility: hidden !important;
+                    }
+
+                    /* Reset page layout for printing */
+                    @page {
+                        size: A4;
+                        margin: 1cm;
+                    }
+
+                    body,
+                    html {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        overflow: visible !important;
+                        height: auto !important;
+                        width: 100% !important;
+                        background: white !important;
+                    }
+
+                    /* Force all containers to be visible and flow naturally */
+                    #root,
+                    .RaLayout-root,
+                    .RaLayout-appFrame,
+                    .RaLayout-content,
+                    .RaLayout-contentWithSidebar,
+                    main,
+                    .RaShow-main,
+                    .RaShow-card,
+                    .MuiPaper-root,
+                    .RaSimpleShowLayout-root {
+                        display: block !important;
+                        position: relative !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        width: 100% !important;
+                        max-width: 100% !important;
+                        height: auto !important;
+                        min-height: auto !important;
+                        box-shadow: none !important;
+                        background: white !important;
+                        overflow: visible !important;
+                        page-break-inside: auto !important;
+                    }
+
+                    /* Ensure content flows properly */
+                    .RaSimpleShowLayout-root > * {
+                        page-break-inside: avoid !important;
+                    }
+
+                    /* Headings */
+                    h3 {
+                        page-break-after: avoid !important;
+                        page-break-inside: avoid !important;
+                        margin-top: 15px !important;
+                        margin-bottom: 8px !important;
+                        font-size: 14pt !important;
+                        font-weight: bold !important;
+                        border-bottom: 1px solid #333 !important;
+                        padding-bottom: 3px !important;
+                        color: black !important;
+                    }
+
+                    /* Labels and fields */
+                    .RaLabeled-root {
+                        display: flex !important;
+                        margin-bottom: 8px !important;
+                        page-break-inside: avoid !important;
+                    }
+
+                    .RaLabeled-label {
+                        font-weight: bold !important;
+                        display: inline-block !important;
+                        margin-right: 10px !important;
+                        min-width: 150px !important;
+                        color: black !important;
+                    }
+
+                    .RaLabeled-field {
+                        display: inline-block !important;
+                        color: black !important;
+                    }
+
+                    /* Text fields */
+                    span,
+                    div,
+                    p {
+                        color: black !important;
+                    }
+
+                    /* Tables */
+                    table {
+                        page-break-inside: auto !important;
+                        width: 100% !important;
+                        border-collapse: collapse !important;
+                        margin: 10px 0 !important;
+                    }
+
+                    thead {
+                        display: table-header-group !important;
+                    }
+
+                    tbody {
+                        display: table-row-group !important;
+                    }
+
+                    tr {
+                        page-break-inside: avoid !important;
+                        page-break-after: auto !important;
+                    }
+
+                    th, td {
+                        border: 1px solid #333 !important;
+                        padding: 6px !important;
+                        text-align: left !important;
+                        color: black !important;
+                    }
+
+                    th {
+                        background-color: #e0e0e0 !important;
+                        font-weight: bold !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                    }
+
+                    /* Chips */
+                    .MuiChip-root {
+                        display: inline-block !important;
+                        border: 1px solid #666 !important;
+                        padding: 2px 6px !important;
+                        border-radius: 3px !important;
+                        background: white !important;
+                        color: black !important;
+                    }
+
+                    .MuiChip-label {
+                        color: black !important;
+                    }
+                }
+            `}</style>
+
+            <Box className="no-print">
+                <h3>Actions</h3>
+                <MemberActions />
+            </Box>
+
             <TextField source="id" />
             <TextField source="referenceNo" label="Reference Number" />
 
@@ -518,19 +733,18 @@ export const MemberShow = (props) => (
             <TextField source="lastRenewalDate" label="Last Renewal Date" />
             <NumberField source="renewalCount" label="Renewals" />
 
-            <h3>Member Status</h3>
-            <ChipField source="status" />
-            <DateField source="approvedAt" label="Approved Date" showTime />
-            <TextField source="approvedBy" label="Approved By" />
-            <DateField source="rejectedAt" label="Rejected Date" showTime />
-            <TextField source="rejectedBy" label="Rejected By" />
-            <TextField source="rejectionReason" label="Rejection Reason" />
-            <DateField source="suspendedAt" label="Suspended Date" showTime />
-            <TextField source="suspendedBy" label="Suspended By" />
-            <TextField source="suspensionReason" label="Suspension Reason" />
-
-            <h3>Actions</h3>
-            <MemberActions />
+            <Box className="no-print">
+                <h3>Member Status</h3>
+                <ChipField source="status" />
+                <DateField source="approvedAt" label="Approved Date" showTime />
+                <TextField source="approvedBy" label="Approved By" />
+                <DateField source="rejectedAt" label="Rejected Date" showTime />
+                <TextField source="rejectedBy" label="Rejected By" />
+                <TextField source="rejectionReason" label="Rejection Reason" />
+                <DateField source="suspendedAt" label="Suspended Date" showTime />
+                <TextField source="suspendedBy" label="Suspended By" />
+                <TextField source="suspensionReason" label="Suspension Reason" />
+            </Box>
 
             <h3>Address</h3>
             <TextField source="residentialAddress.street" label="Street" />
@@ -561,11 +775,13 @@ export const MemberShow = (props) => (
             {/* Show primary member if this is a family member */}
             {/* Note: This will be handled via primaryMember field */}
 
-            <h3>Additional Information</h3>
-            <RichTextField source="comments" />
-            <TextField source="cognitoUserId" label="Cognito User ID" />
-            <DateField source="createdAt" label="Registration Date" showTime />
-            <DateField source="updatedAt" label="Last Updated" showTime />
+            <Box className="no-print">
+                <h3>Additional Information</h3>
+                <RichTextField source="comments" />
+                <TextField source="cognitoUserId" label="Cognito User ID" />
+                <DateField source="createdAt" label="Registration Date" showTime />
+                <DateField source="updatedAt" label="Last Updated" showTime />
+            </Box>
         </SimpleShowLayout>
     </Show>
 );
