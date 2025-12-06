@@ -3,32 +3,7 @@ import API_CONFIG from '../../config/api';
 import './style.css';
 
 const ProjectAchievements = (props) => {
-    const [projectMetrics, setProjectMetrics] = useState([
-        {
-            icon: "fa fa-dollar-sign",
-            number: "$4.3M",
-            label: "Funds Raised",
-            description: "Total funds secured through donations and grants"
-        },
-        {
-            icon: "fa fa-map",
-            number: "52",
-            label: "Acres Acquired",
-            description: "Land secured for the multicultural centre"
-        },
-        {
-            icon: "fa fa-heart",
-            number: "750+",
-            label: "Supporting Members",
-            description: "Community members actively supporting the project"
-        },
-        {
-            icon: "fa fa-landmark",
-            number: "$1.8M",
-            label: "Government Funding",
-            description: "Secured funding from government initiatives"
-        }
-    ]);
+    const [projectMetrics, setProjectMetrics] = useState([]);
 
     useEffect(() => {
         const loadAchievements = async () => {
