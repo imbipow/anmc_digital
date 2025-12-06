@@ -39,6 +39,60 @@ import cognitoAuthService from '../../services/cognitoAuth';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
+// Component to display direct debit bank account details for installment payments
+const InstallmentBankDetails = () => {
+    const record = useRecordContext();
+
+    if (!record || record.paymentType !== 'installments') {
+        return null;
+    }
+
+    return (
+        <Box sx={{ mt: 2, p: 2, bgcolor: '#fff3cd', borderRadius: 1, border: '1px solid #ffc107' }}>
+            <h3 style={{ marginTop: 0, color: '#856404' }}>Installment Payment Details</h3>
+
+            {/* Payment Summary */}
+            <div style={{ marginBottom: '16px', paddingBottom: '12px', borderBottom: '1px solid #ffc107' }}>
+                <p style={{ margin: '8px 0', fontSize: '14px' }}>
+                    <strong>Total Membership Fee:</strong> ${record.membershipFee || 0} AUD
+                </p>
+                {record.installmentAmount && (
+                    <p style={{ margin: '8px 0', fontSize: '14px' }}>
+                        <strong>Upfront Payment (Paid):</strong> ${record.installmentAmount} AUD
+                    </p>
+                )}
+                {record.remainingBalance && (
+                    <p style={{ margin: '8px 0', fontSize: '14px' }}>
+                        <strong>Remaining Balance:</strong> ${record.remainingBalance} AUD
+                    </p>
+                )}
+            </div>
+
+            {/* Direct Debit Details */}
+            <h4 style={{ marginTop: '12px', marginBottom: '8px', color: '#856404', fontSize: '15px' }}>
+                Direct Debit Account (Member's Bank Account)
+            </h4>
+            <p style={{ margin: '8px 0', fontSize: '14px' }}>
+                <strong>Account Name:</strong> {record.directDebitAccountName || <em style={{ color: '#999' }}>Not provided</em>}
+            </p>
+            <p style={{ margin: '8px 0', fontSize: '14px' }}>
+                <strong>BSB:</strong> {record.directDebitBsb || <em style={{ color: '#999' }}>Not provided</em>}
+            </p>
+            <p style={{ margin: '8px 0', fontSize: '14px' }}>
+                <strong>Account Number:</strong> {record.directDebitAccountNumber || <em style={{ color: '#999' }}>Not provided</em>}
+            </p>
+            {record.directDebitAuthorityAccepted && (
+                <p style={{ margin: '8px 0', fontSize: '13px', color: '#28a745' }}>
+                    ✓ Direct Debit Authority Accepted
+                </p>
+            )}
+            <p style={{ margin: '12px 0 0 0', fontSize: '13px', color: '#856404', fontStyle: 'italic' }}>
+                This bank account will be used for automatic installment debits.
+            </p>
+        </Box>
+    );
+};
+
 const MemberActions = () => {
     const record = useRecordContext();
     const refresh = useRefresh();
@@ -783,6 +837,9 @@ export const MemberShow = (props) => (
             <DateField source="expiryDate" label="Expiry Date" showTime />
             <TextField source="lastRenewalDate" label="Last Renewal Date" />
             <NumberField source="renewalCount" label="Renewals" />
+
+            {/* BSB Account Details for Installment Payments */}
+            <InstallmentBankDetails />
 
             <Box className="no-print">
                 <h3>Member Status</h3>

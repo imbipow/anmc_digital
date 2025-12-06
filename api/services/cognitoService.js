@@ -413,15 +413,39 @@ class CognitoService {
 
     /**
      * Generate a temporary password for initial user creation
+     * Ensures password meets all Cognito requirements:
+     * - At least 8 characters
+     * - Contains uppercase letter
+     * - Contains lowercase letter
+     * - Contains number
+     * - Contains special character
      * @returns {string} Temporary password
      */
     generateTemporaryPassword() {
-        const length = 12;
-        const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+        // Define character sets
+        const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+        const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const numbers = '0123456789';
+        const special = '!@#$%^&*';
+
+        // Ensure at least one character from each required set
         let password = '';
-        for (let i = 0; i < length; i++) {
-            password += charset.charAt(Math.floor(Math.random() * charset.length));
+        password += lowercase.charAt(Math.floor(Math.random() * lowercase.length));
+        password += uppercase.charAt(Math.floor(Math.random() * uppercase.length));
+        password += numbers.charAt(Math.floor(Math.random() * numbers.length));
+        password += special.charAt(Math.floor(Math.random() * special.length));
+
+        // Fill remaining characters randomly from all sets
+        const allChars = lowercase + uppercase + numbers + special;
+        const remainingLength = 12 - 4; // Total 12 characters, 4 already added
+
+        for (let i = 0; i < remainingLength; i++) {
+            password += allChars.charAt(Math.floor(Math.random() * allChars.length));
         }
+
+        // Shuffle the password to avoid predictable pattern
+        password = password.split('').sort(() => Math.random() - 0.5).join('');
+
         return password;
     }
 

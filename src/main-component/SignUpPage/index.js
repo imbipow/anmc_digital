@@ -467,8 +467,18 @@ const SignUpPage = () => {
                 ...formData,
                 membershipFee,
                 paymentIntentId,
-                paymentStatus: paymentIntentId ? 'succeeded' : 'pending'
+                paymentStatus: paymentIntentId ? 'succeeded' : 'pending',
+                // Flatten direct debit fields for installment payments
+                ...(formData.paymentType === 'installments' && {
+                    directDebitBsb: formData.directDebit.bsb,
+                    directDebitAccountName: formData.directDebit.accountName,
+                    directDebitAccountNumber: formData.directDebit.accountNumber,
+                    directDebitAuthorityAccepted: String(formData.directDebit.authorityAccepted)
+                })
             };
+
+            // Remove nested directDebit object to avoid confusion
+            delete memberData.directDebit;
 
             const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.memberRegister), {
                 method: 'POST',

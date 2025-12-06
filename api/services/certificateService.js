@@ -128,24 +128,6 @@ class CertificateService {
                 currentY -= this.positions.detailsLineSpacing;
             }
 
-            // Join Date - use membershipStartDate if available, fallback to joinDate
-            const dateToUse = membershipStartDate || joinDate;
-            if (dateToUse) {
-                const formattedJoinDate = new Date(dateToUse).toLocaleDateString('en-AU', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-                firstPage.drawText(`Member Since: ${formattedJoinDate}`, {
-                    x: this.positions.detailsLeftMargin,
-                    y: currentY,
-                    size: this.positions.detailsSize,
-                    font: regularFont,
-                    color: rgb(0, 0, 0),
-                });
-                currentY -= this.positions.detailsLineSpacing;
-            }
-
             // Reference Number - centered at bottom
             if (referenceNo) {
                 const refText = `Reference No: ${referenceNo}`;

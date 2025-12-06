@@ -270,6 +270,38 @@ router.post('/register', async (req, res, next) => {
                     const createdFamilyMember = await membersService.create(familyMemberData);
                     familyMemberRecords.push(createdFamilyMember);
                     console.log(`✅ Created family member record: ${createdFamilyMember.email} (${createdFamilyMember.referenceNo})`);
+
+                    // Create Cognito user for family member if email is provided and valid
+                    if (familyMember.email && familyMember.email.includes('@') && cognitoService.isConfigured()) {
+                        try {
+                            // Generate a temporary password for family member
+                            const tempPassword = cognitoService.generateTemporaryPassword();
+
+                            console.log(`Creating Cognito user for family member: ${familyMember.email}`);
+                            const familyCognitoResult = await cognitoService.createUser({
+                                email: familyMember.email,
+                                password: tempPassword,
+                                firstName: familyMember.firstName,
+                                lastName: familyMember.lastName,
+                                phone: familyMember.mobile,
+                                membershipType: memberData.membershipCategory,
+                                membershipCategory: 'family',
+                                memberId: createdFamilyMember.referenceNo
+                            }, false); // false = disabled by default, requires admin approval
+
+                            console.log(`✅ Cognito user created for family member: ${familyMember.email}`);
+
+                            // Update family member with Cognito user ID
+                            await membersService.update(createdFamilyMember.id, {
+                                cognitoUserId: familyCognitoResult.userSub,
+                                cognitoEnabled: familyCognitoResult.cognitoEnabled,
+                                status: familyCognitoResult.status
+                            });
+                        } catch (familyCognitoError) {
+                            console.error(`⚠️ Failed to create Cognito user for family member ${familyMember.email}:`, familyCognitoError.message);
+                            // Continue even if Cognito creation fails
+                        }
+                    }
                 } catch (familyError) {
                     console.error(`⚠️ Failed to create family member record for ${familyMember.email}:`, familyError.message);
                     // Continue with other family members even if one fails
@@ -650,13 +682,62 @@ router.post('/:id/approve', verifyToken, requireAdmin, async (req, res, next) =>
             console.error('⚠️ Failed to send approval email:', emailError.message);
         }
 
+        // If this is a primary family member, approve and enable all linked family members
+        const familyMembersApproved = [];
+        if (member.isPrimaryMember === true) {
+            try {
+                const familyMembers = await membersService.getFamilyMembers(id);
+                console.log(`Found ${familyMembers.length} family members to approve`);
+
+                for (const familyMember of familyMembers) {
+                    try {
+                        // Enable Cognito user for family member if exists
+                        if (familyMember.email && familyMember.cognitoUserId && cognitoService.isConfigured()) {
+                            await cognitoService.enableUser(familyMember.email);
+                            await cognitoService.addToAnmcMembersGroup(familyMember.email);
+                            console.log(`✅ Enabled Cognito user for family member: ${familyMember.email}`);
+                        }
+
+                        // Update family member status
+                        await membersService.update(familyMember.id, {
+                            status: 'active',
+                            approvedAt: new Date().toISOString(),
+                            approvedBy: req.body.approvedBy || 'admin',
+                            cognitoEnabled: true
+                        });
+
+                        familyMembersApproved.push(familyMember.email);
+
+                        // Send approval email to family member
+                        try {
+                            await emailService.sendMemberApprovalEmail({
+                                email: familyMember.email,
+                                firstName: familyMember.firstName,
+                                lastName: familyMember.lastName,
+                                referenceNo: familyMember.referenceNo
+                            });
+                        } catch (emailError) {
+                            console.error(`⚠️ Failed to send approval email to family member ${familyMember.email}:`, emailError.message);
+                        }
+                    } catch (familyApprovalError) {
+                        console.error(`⚠️ Failed to approve family member ${familyMember.email}:`, familyApprovalError.message);
+                        // Continue with other family members
+                    }
+                }
+            } catch (familyError) {
+                console.error('⚠️ Failed to process family members:', familyError.message);
+                // Continue even if family member processing fails
+            }
+        }
+
         res.json({
             success: true,
             message: cognitoResult?.created
                 ? 'Member approved successfully. Cognito user created and enabled. User can now login.'
                 : 'Member approved successfully. User can now login.',
             member: updatedMember,
-            cognitoStatus: cognitoResult
+            cognitoStatus: cognitoResult,
+            familyMembersApproved: familyMembersApproved.length > 0 ? familyMembersApproved : undefined
         });
     } catch (error) {
         next(error);
