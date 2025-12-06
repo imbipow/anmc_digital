@@ -1,6 +1,6 @@
 import React from 'react'
 import Logo from '../../images/logo.png'
-import {Link}  from 'react-router-dom'
+import {Link, useLocation}  from 'react-router-dom'
 import HeaderTopbar from '../HeaderTopbar'
 import MobileMenu from '../../components/MobileMenu'
 import min1 from '../../images/shop/mini-cart/img-1.jpg'
@@ -8,6 +8,8 @@ import min2 from '../../images/shop/mini-cart/img-2.jpg'
 import './style.css'
 
 const Header = () => {
+    const location = useLocation();
+
     const SubmitHandler = (e) =>{
         e.preventDefault()
      }
@@ -16,7 +18,15 @@ const Header = () => {
         window.scrollTo(10, 0);
      }
 
-    return(	
+     const isActive = (path) => {
+        // For home, match both /home and / (base URL)
+        if (path === '/home') {
+            return (location.pathname === '/home' || location.pathname === '/') ? 'active' : '';
+        }
+        return location.pathname === path ? 'active' : '';
+     }
+
+    return(
         <div className="middle-header">
             <HeaderTopbar/>
             <div className="header-style-3">
@@ -31,14 +41,14 @@ const Header = () => {
                         <div className="col-lg-9 d-lg-block d-none">
                             <nav>
                                 <ul>
-                                    <li><Link onClick={ClickHandler} className="active" to="/home" title="">Home</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/about" title="">About</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/news" title="">News</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/projects" title="">Projects</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/event" title="">Events</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/facilities" title="">Facilities</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/faq" title="">FAQ</Link></li>
-                                    <li><Link onClick={ClickHandler} to="/contact" title="">Contact</Link></li>
+                                    <li><Link onClick={ClickHandler} className={isActive('/home')} to="/home" title="">Home</Link></li>
+                                    <li><Link onClick={ClickHandler} className={isActive('/about')} to="/about" title="">About</Link></li>
+                                    <li><Link onClick={ClickHandler} className={isActive('/news')} to="/news" title="">News</Link></li>
+                                    <li><Link onClick={ClickHandler} className={isActive('/projects')} to="/projects" title="">Projects</Link></li>
+                                    <li><Link onClick={ClickHandler} className={isActive('/event')} to="/event" title="">Events</Link></li>
+                                    <li><Link onClick={ClickHandler} className={isActive('/facilities')} to="/facilities" title="">Facilities</Link></li>
+                                    <li><Link onClick={ClickHandler} className={isActive('/faq')} to="/faq" title="">FAQ</Link></li>
+                                    <li><Link onClick={ClickHandler} className={isActive('/contact')} to="/contact" title="">Contact</Link></li>
                                 </ul>
                             </nav>
                         </div>
@@ -46,10 +56,10 @@ const Header = () => {
                             <MobileMenu/>
                         </div>
                     </div>
-                    
+
                         <div className="clearfix"></div>
                     </div>
-                    
+
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import { toast } from "react-toastify";
 import './style.scss';
 
-const MembershipPayment = ({ clientSecret, formData, membershipFee, onSuccess, onCancel }) => {
+const MembershipPayment = ({ clientSecret, formData, membershipFee, totalMembershipFee, onSuccess, onCancel }) => {
     const stripe = useStripe();
     const elements = useElements();
     const [loading, setLoading] = useState(false);
@@ -89,8 +89,29 @@ const MembershipPayment = ({ clientSecret, formData, membershipFee, onSuccess, o
                             <span>{formData.familyMembers.length}</span>
                         </div>
                     )}
+                    {formData.paymentType === 'installments' && totalMembershipFee && (
+                        <>
+                            <div className="summary-item">
+                                <span>Total Membership Fee:</span>
+                                <span>${totalMembershipFee} AUD</span>
+                            </div>
+                            <div className="summary-item">
+                                <span>Upfront Payment:</span>
+                                <span>${membershipFee} AUD</span>
+                            </div>
+                            <div className="summary-item">
+                                <span>Remaining Balance:</span>
+                                <span>${totalMembershipFee - membershipFee} AUD</span>
+                            </div>
+                            <div className="summary-item" style={{ fontSize: '13px', color: '#666', marginTop: '10px' }}>
+                                <span colSpan="2" style={{ fontStyle: 'italic' }}>
+                                    The remaining balance will be automatically debited from your account via direct debit.
+                                </span>
+                            </div>
+                        </>
+                    )}
                     <div className="summary-item total">
-                        <span>Total Amount:</span>
+                        <span>{formData.paymentType === 'installments' ? 'Amount Due Now:' : 'Total Amount:'}</span>
                         <span className="amount">${membershipFee} AUD</span>
                     </div>
                 </div>

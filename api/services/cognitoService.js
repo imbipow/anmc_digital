@@ -102,9 +102,11 @@ class CognitoService {
      * @param {Object} userData - User data including email, password, and attributes
      * @param {boolean} enabledByDefault - Whether to enable user immediately (default: false)
      * @param {string} userType - Type of user: 'member' or 'user' (default: 'member')
+     * @param {boolean} forcePasswordReset - Whether to force password reset on first login (default: false)
+     * @param {boolean} sendCognitoEmail - Whether to let Cognito generate password and send email (default: false)
      * @returns {Promise<Object>} Created user data
      */
-    async createUser(userData, enabledByDefault = false, userType = 'member') {
+    async createUser(userData, enabledByDefault = false, userType = 'member', forcePasswordReset = false, sendCognitoEmail = false) {
         if (!this.isConfigured()) {
             console.warn('Cognito is not configured. User will be created in database only.');
             return {
@@ -125,12 +127,23 @@ class CognitoService {
                 UserAttributes: [
                     { Name: 'email', Value: email },
                     { Name: 'email_verified', Value: 'true' },
+                    { Name: 'name', Value: `${firstName} ${lastName}`.trim() || 'User' },
                     { Name: 'given_name', Value: firstName },
                     { Name: 'family_name', Value: lastName }
-                ],
-                MessageAction: 'SUPPRESS', // Don't send welcome email, we'll handle it
-                TemporaryPassword: this.generateTemporaryPassword()
+                ]
             };
+
+            // If sendCognitoEmail is true, let Cognito generate password and send email
+            // Otherwise, suppress email and we'll handle it manually
+            if (sendCognitoEmail) {
+                // Cognito will generate a random password and send welcome email
+                createUserParams.DesiredDeliveryMediums = ['EMAIL'];
+                // Don't specify MessageAction - let Cognito send the default welcome email
+            } else {
+                // Suppress Cognito's email, we'll send our own custom email
+                createUserParams.MessageAction = 'SUPPRESS';
+                createUserParams.TemporaryPassword = this.generateTemporaryPassword();
+            }
 
             // Add optional attributes
             if (phone) {
@@ -144,6 +157,16 @@ class CognitoService {
                 createUserParams.UserAttributes.push({ Name: 'phone_number', Value: formattedPhone });
             }
 
+            // Add address attribute if it's required by the user pool
+            // Use suburb if provided, otherwise use a default value
+            const addressValue = userData.suburb || 'Not provided';
+            createUserParams.UserAttributes.push({ Name: 'address', Value: addressValue });
+
+            // Add gender attribute if it's required by the user pool
+            // Use gender if provided, otherwise use a default value
+            const genderValue = userData.gender || 'Not specified';
+            createUserParams.UserAttributes.push({ Name: 'gender', Value: genderValue });
+
             // Note: Custom attributes (membership_type, membership_category, member_id) are not added
             // because they don't exist in the User Pool schema. These are tracked in DynamoDB instead.
             // If needed in the future, custom attributes must be created when the User Pool is created.
@@ -152,17 +175,22 @@ class CognitoService {
             const cognitoClient = this.getCognitoClient();
             const createResult = await cognitoClient.send(createCommand);
 
-            // Set permanent password
-            const setPasswordParams = {
-                UserPoolId: this.userPoolId,
-                Username: email,
-                Password: password,
-                Permanent: true
-            };
+            // Only set password manually if we're not using Cognito's email
+            if (!sendCognitoEmail && password) {
+                // Set password (temporary if forcePasswordReset is true)
+                const setPasswordParams = {
+                    UserPoolId: this.userPoolId,
+                    Username: email,
+                    Password: password,
+                    Permanent: !forcePasswordReset // If forcePasswordReset is true, password is temporary
+                };
 
-            const setPasswordCommand = new AdminSetUserPasswordCommand(setPasswordParams);
-            await cognitoClient.send(setPasswordCommand);
-            console.log(`✅ Password set for user: ${email}`);
+                const setPasswordCommand = new AdminSetUserPasswordCommand(setPasswordParams);
+                await cognitoClient.send(setPasswordCommand);
+                console.log(`✅ Password set for user: ${email} (${forcePasswordReset ? 'temporary - requires reset' : 'permanent'})`);
+            } else if (sendCognitoEmail) {
+                console.log(`✅ Cognito will generate password and send email to: ${email}`);
+            }
 
             // Add user to appropriate group based on userType
             if (userType === 'user') {

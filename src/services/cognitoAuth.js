@@ -236,6 +236,100 @@ class CognitoAuthService {
     }
 
     /**
+     * Complete new password challenge for temporary passwords
+     */
+    completeNewPasswordChallenge(email, temporaryPassword, newPassword) {
+        return new Promise((resolve, reject) => {
+            if (!this.isConfigured()) {
+                reject(new Error('Cognito is not configured'));
+                return;
+            }
+
+            const authenticationData = {
+                Username: email,
+                Password: temporaryPassword,
+            };
+
+            const authenticationDetails = new AuthenticationDetails(authenticationData);
+
+            const userData = {
+                Username: email,
+                Pool: userPool
+            };
+
+            const cognitoUser = new CognitoUser(userData);
+
+            cognitoUser.authenticateUser(authenticationDetails, {
+                onSuccess: (result) => {
+                    // Password was already permanent, no challenge needed
+                    resolve({
+                        success: true,
+                        message: 'Already authenticated with permanent password'
+                    });
+                },
+                onFailure: (err) => {
+                    reject(err);
+                },
+                newPasswordRequired: (userAttributes, requiredAttributes) => {
+                    // User needs to set a new password
+                    // Remove attributes that cannot be modified or are system-managed
+                    delete userAttributes.email_verified;
+                    delete userAttributes.phone_number_verified;
+                    delete userAttributes.email;
+                    delete userAttributes.sub;
+
+                    // Check which attributes are required and set defaults if missing
+                    console.log('Required attributes:', requiredAttributes);
+                    console.log('User attributes:', userAttributes);
+
+                    // Provide default values for required attributes that are missing
+                    if (requiredAttributes && requiredAttributes.includes('address')) {
+                        if (!userAttributes.address) {
+                            userAttributes.address = 'Not provided';
+                        }
+                    }
+                    if (requiredAttributes && requiredAttributes.includes('gender')) {
+                        if (!userAttributes.gender) {
+                            userAttributes.gender = 'Not specified';
+                        }
+                    }
+                    if (requiredAttributes && requiredAttributes.includes('name')) {
+                        if (!userAttributes.name) {
+                            // Construct name from given_name and family_name if available
+                            const firstName = userAttributes.given_name || '';
+                            const lastName = userAttributes.family_name || '';
+                            userAttributes.name = (firstName + ' ' + lastName).trim() || 'User';
+                        }
+                    }
+
+                    // Only keep attributes that are actually set and not empty
+                    const cleanedAttributes = {};
+                    for (const key in userAttributes) {
+                        if (userAttributes[key] && userAttributes[key] !== '') {
+                            cleanedAttributes[key] = userAttributes[key];
+                        }
+                    }
+
+                    console.log('Cleaned attributes:', cleanedAttributes);
+
+                    cognitoUser.completeNewPasswordChallenge(newPassword, cleanedAttributes, {
+                        onSuccess: (result) => {
+                            resolve({
+                                success: true,
+                                message: 'Password changed successfully',
+                                result: result
+                            });
+                        },
+                        onFailure: (err) => {
+                            reject(err);
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    /**
      * Get current user's ID token
      */
     getIdToken() {

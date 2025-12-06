@@ -68,6 +68,15 @@ const SignUpPage = () => {
 
         // Payment
         paymentType: 'upfront', // upfront or installments
+        installmentAmount: '', // For life member installments (minimum $300)
+
+        // Direct Debit Information (for installments)
+        directDebit: {
+            bsb: '',
+            accountName: '',
+            accountNumber: '',
+            authorityAccepted: false
+        },
 
         // Declaration
         acceptDeclaration: false,
@@ -111,7 +120,7 @@ const SignUpPage = () => {
                 ...prev,
                 [parent]: {
                     ...prev[parent],
-                    [child]: value
+                    [child]: type === 'checkbox' ? checked : value
                 }
             }));
         } else {
@@ -330,6 +339,39 @@ const SignUpPage = () => {
             newErrors.confirmPassword = 'Passwords do not match';
         }
 
+        // Payment validation for life member installments
+        if (formData.membershipCategory === 'life' && formData.paymentType === 'installments') {
+            // Validate installment amount (minimum $300)
+            if (!formData.installmentAmount) {
+                newErrors.installmentAmount = 'Upfront payment amount is required for installments';
+            } else if (parseFloat(formData.installmentAmount) < 300) {
+                newErrors.installmentAmount = 'Minimum upfront payment is $300';
+            } else if (parseFloat(formData.installmentAmount) >= membershipFee) {
+                newErrors.installmentAmount = `Upfront payment must be less than total fee ($${membershipFee})`;
+            }
+
+            // Validate direct debit fields
+            if (!formData.directDebit.bsb.trim()) {
+                newErrors.directDebitBsb = 'BSB is required for direct debit';
+            } else if (!/^\d{3}-?\d{3}$/.test(formData.directDebit.bsb.trim())) {
+                newErrors.directDebitBsb = 'BSB must be 6 digits (format: XXX-XXX or XXXXXX)';
+            }
+
+            if (!formData.directDebit.accountName.trim()) {
+                newErrors.directDebitAccountName = 'Account name is required for direct debit';
+            }
+
+            if (!formData.directDebit.accountNumber.trim()) {
+                newErrors.directDebitAccountNumber = 'Account number is required for direct debit';
+            } else if (!/^\d{6,10}$/.test(formData.directDebit.accountNumber.trim())) {
+                newErrors.directDebitAccountNumber = 'Account number must be 6-10 digits';
+            }
+
+            if (!formData.directDebit.authorityAccepted) {
+                newErrors.directDebitAuthority = 'You must accept the Direct Debit Authority';
+            }
+        }
+
         // Declaration
         if (!formData.acceptDeclaration) {
             newErrors.acceptDeclaration = 'You must accept the declaration';
@@ -359,13 +401,18 @@ const SignUpPage = () => {
         }
 
         try {
-            // For upfront payment, create payment intent first
-            if (formData.paymentType === 'upfront') {
+            // For upfront payment or installments with upfront amount, create payment intent first
+            if (formData.paymentType === 'upfront' || (formData.paymentType === 'installments' && formData.installmentAmount)) {
+                // For installments, use the installment amount; for upfront, use full membership fee
+                const paymentAmount = formData.paymentType === 'installments'
+                    ? parseFloat(formData.installmentAmount)
+                    : membershipFee;
+
                 const paymentResponse = await fetch(API_CONFIG.getURL('/stripe/create-payment-intent'), {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        amount: membershipFee,
+                        amount: paymentAmount,
                         currency: 'aud',
                         metadata: {
                             firstName: formData.firstName,
@@ -373,7 +420,16 @@ const SignUpPage = () => {
                             email: formData.email,
                             mobile: formData.mobile,
                             membershipCategory: formData.membershipCategory,
-                            membershipType: formData.membershipType
+                            membershipType: formData.membershipType,
+                            paymentType: formData.paymentType,
+                            ...(formData.paymentType === 'installments' && {
+                                installmentAmount: String(formData.installmentAmount),
+                                remainingBalance: String(membershipFee - paymentAmount),
+                                directDebitBsb: formData.directDebit.bsb,
+                                directDebitAccountName: formData.directDebit.accountName,
+                                directDebitAccountNumber: formData.directDebit.accountNumber,
+                                directDebitAuthorityAccepted: String(formData.directDebit.authorityAccepted)
+                            })
                         }
                     })
                 });
@@ -393,7 +449,7 @@ const SignUpPage = () => {
                 setClientSecret(paymentData.clientSecret);
                 setShowPayment(true);
             } else {
-                // For installments, register member without payment
+                // This case shouldn't happen as installments now require upfront payment
                 await registerMember();
             }
         } catch (error) {
@@ -451,12 +507,18 @@ const SignUpPage = () => {
     };
 
     if (showPayment && clientSecret) {
+        // Calculate the actual payment amount
+        const paymentAmount = formData.paymentType === 'installments'
+            ? parseFloat(formData.installmentAmount)
+            : membershipFee;
+
         return (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
                 <MembershipPayment
                     clientSecret={clientSecret}
                     formData={formData}
-                    membershipFee={membershipFee}
+                    membershipFee={paymentAmount}
+                    totalMembershipFee={membershipFee}
                     onSuccess={handlePaymentSuccess}
                     onCancel={() => {
                         setShowPayment(false);
@@ -932,11 +994,123 @@ const SignUpPage = () => {
                                             <FormControlLabel
                                                 value="installments"
                                                 control={<Radio />}
-                                                label="Installments (Contact Admin)"
+                                                label="Installment Payment (Direct Debit)"
                                             />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
+
+                                {/* Installment Payment Fields */}
+                                {formData.paymentType === 'installments' && (
+                                    <>
+                                        <Grid item xs={12}>
+                                            <div className="installment-info">
+                                                <p style={{ color: '#666', fontSize: '14px', marginBottom: '15px' }}>
+                                                    <strong>Note:</strong> Minimum upfront payment of $300 is required.
+                                                    The remaining balance will be automatically debited from your account monthly.
+                                                </p>
+                                            </div>
+                                        </Grid>
+
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                fullWidth
+                                                label="Upfront Payment Amount *"
+                                                name="installmentAmount"
+                                                type="number"
+                                                value={formData.installmentAmount}
+                                                onChange={handleChange}
+                                                error={!!errors.installmentAmount}
+                                                helperText={errors.installmentAmount || `Minimum $300, Maximum $${membershipFee - 1}`}
+                                                variant="outlined"
+                                                inputProps={{ min: 300, max: membershipFee - 1, step: 1 }}
+                                            />
+                                        </Grid>
+
+                                        <Grid item xs={12}>
+                                            <h4 className="section-subtitle">Direct Debit Details</h4>
+                                            <p style={{ color: '#666', fontSize: '13px', marginTop: '5px' }}>
+                                                Please provide your bank account details for automatic monthly payments
+                                            </p>
+                                        </Grid>
+
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                fullWidth
+                                                label="BSB *"
+                                                name="directDebit.bsb"
+                                                value={formData.directDebit.bsb}
+                                                onChange={handleChange}
+                                                error={!!errors.directDebitBsb}
+                                                helperText={errors.directDebitBsb || 'Format: XXX-XXX or XXXXXX'}
+                                                variant="outlined"
+                                                placeholder="012-345"
+                                            />
+                                        </Grid>
+
+                                        <Grid item xs={12} sm={6}>
+                                            <TextField
+                                                fullWidth
+                                                label="Account Number *"
+                                                name="directDebit.accountNumber"
+                                                value={formData.directDebit.accountNumber}
+                                                onChange={handleChange}
+                                                error={!!errors.directDebitAccountNumber}
+                                                helperText={errors.directDebitAccountNumber || '6-10 digits'}
+                                                variant="outlined"
+                                                placeholder="12345678"
+                                            />
+                                        </Grid>
+
+                                        <Grid item xs={12}>
+                                            <TextField
+                                                fullWidth
+                                                label="Account Name *"
+                                                name="directDebit.accountName"
+                                                value={formData.directDebit.accountName}
+                                                onChange={handleChange}
+                                                error={!!errors.directDebitAccountName}
+                                                helperText={errors.directDebitAccountName || 'Name as shown on bank account'}
+                                                variant="outlined"
+                                                placeholder="John Smith"
+                                            />
+                                        </Grid>
+
+                                        <Grid item xs={12}>
+                                            <div style={{
+                                                backgroundColor: '#f5f5f5',
+                                                padding: '15px',
+                                                borderRadius: '5px',
+                                                border: errors.directDebitAuthority ? '1px solid #d32f2f' : '1px solid #ddd'
+                                            }}>
+                                                <FormControlLabel
+                                                    control={
+                                                        <Checkbox
+                                                            checked={formData.directDebit.authorityAccepted}
+                                                            onChange={handleChange}
+                                                            name="directDebit.authorityAccepted"
+                                                        />
+                                                    }
+                                                    label={
+                                                        <span style={{ fontSize: '14px' }}>
+                                                            <strong>Direct Debit Authority *</strong><br/>
+                                                            I/We authorize ANMC to arrange for funds to be debited from my/our account
+                                                            through the Bulk Electronic Clearing System (BECS) in accordance with this request.
+                                                            I/We acknowledge that monthly installments will be automatically deducted until
+                                                            the full membership fee is paid. I/We understand that I/we can cancel this
+                                                            authority by giving ANMC 14 days written notice.
+                                                        </span>
+                                                    }
+                                                />
+                                                {errors.directDebitAuthority &&
+                                                    <div className="error-text" style={{ marginTop: '10px' }}>
+                                                        {errors.directDebitAuthority}
+                                                    </div>
+                                                }
+                                            </div>
+                                        </Grid>
+                                    </>
+                                )}
                             </>
                         )}
 
@@ -980,11 +1154,16 @@ const SignUpPage = () => {
                         {membershipFee > 0 && (
                             <Grid item xs={12}>
                                 <div className="fee-display">
-                                    <h4>Membership Fee: ${membershipFee} AUD</h4>
-                                    {formData.paymentType === 'installments' && (
-                                        <p className="helper-text">
-                                            You selected installments. Admin will contact you for payment arrangements.
-                                        </p>
+                                    {formData.paymentType === 'installments' ? (
+                                        <>
+                                            <h4>Total Membership Fee: ${membershipFee} AUD</h4>
+                                            <p className="helper-text" style={{ marginTop: '10px' }}>
+                                                <strong>Upfront Payment:</strong> ${formData.installmentAmount || 0} AUD<br/>
+                                                <strong>Remaining Balance:</strong> ${formData.installmentAmount ? membershipFee - parseFloat(formData.installmentAmount) : membershipFee} AUD (via Direct Debit)
+                                            </p>
+                                        </>
+                                    ) : (
+                                        <h4>Membership Fee: ${membershipFee} AUD</h4>
                                     )}
                                 </div>
                             </Grid>
@@ -999,7 +1178,9 @@ const SignUpPage = () => {
                                 disabled={loading}
                             >
                                 {loading ? 'Processing...' :
-                                 formData.paymentType === 'upfront' ? 'Proceed to Payment' : 'Complete Registration'}
+                                 formData.paymentType === 'installments'
+                                    ? `Pay Upfront $${formData.installmentAmount || 0}`
+                                    : 'Proceed to Payment'}
                             </Button>
                         </Grid>
 

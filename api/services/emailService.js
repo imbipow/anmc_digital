@@ -1061,8 +1061,64 @@ This is an automated notification from the ANMC website.
     }
 };
 
+/**
+ * Generic send email function for custom emails
+ * @param {Object} emailData - Email data including to, subject, html/text
+ * @returns {Promise<Object>} - Result with success status and message ID
+ */
+const sendEmail = async (emailData) => {
+    const { to, subject, html, text } = emailData;
+
+    const params = {
+        Source: emailConfig.fromEmail,
+        Destination: {
+            ToAddresses: Array.isArray(to) ? to : [to]
+        },
+        Message: {
+            Subject: {
+                Data: subject,
+                Charset: 'UTF-8'
+            },
+            Body: {}
+        }
+    };
+
+    // Add HTML body if provided
+    if (html) {
+        params.Message.Body.Html = {
+            Data: html,
+            Charset: 'UTF-8'
+        };
+    }
+
+    // Add text body if provided
+    if (text) {
+        params.Message.Body.Text = {
+            Data: text,
+            Charset: 'UTF-8'
+        };
+    }
+
+    // If neither html nor text provided, throw error
+    if (!html && !text) {
+        throw new Error('Email must have either html or text body');
+    }
+
+    try {
+        const command = new SendEmailCommand(params);
+        const client = getSESClient();
+        const response = await client.send(command);
+        console.log('Email sent successfully to:', to, 'MessageId:', response.MessageId);
+        return { success: true, messageId: response.MessageId };
+    } catch (error) {
+        console.error('Error sending email:', error);
+        throw error;
+    }
+};
+
 module.exports = {
     initializeEmailConfig,
+    sendEmail,
     sendBookingRequestEmail,
     sendBookingNotificationToAdmin,
     sendBookingConfirmationEmail,

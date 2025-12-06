@@ -246,7 +246,7 @@ const BookServices = () => {
 
         // Apply 10% discount for life members (on service amount only, not cleaning fee)
         if (isLifeMember) {
-            serviceAmount = serviceAmount * 0.9; // 10% discount
+            serviceAmount = serviceAmount * 0.5; // 50% discount
         }
 
         let total = serviceAmount;
@@ -261,7 +261,7 @@ const BookServices = () => {
 
     const getLifeMemberDiscount = () => {
         if (!selectedService || !isLifeMember) return 0;
-        return selectedService.amount * 0.1; // 10% of original service amount
+        return selectedService.amount * 0.5; // 10% of original service amount
     };
 
     const shouldApplyCleaningFee = () => {
@@ -641,7 +641,7 @@ const BookServices = () => {
                                                     {isLifeMember && (
                                                         <Alert severity="success" sx={{ mt: 2, mb: 2 }}>
                                                             <Typography variant="body2">
-                                                                <strong>Life Member Discount (10%)</strong>
+                                                                <strong>Life Member Discount (50%)</strong>
                                                             </Typography>
                                                             <Typography variant="body2">
                                                                 -${getLifeMemberDiscount().toFixed(2)}

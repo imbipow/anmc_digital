@@ -26,6 +26,7 @@ import SignUpPage from '../SignUpPage'
 import UserSignUpPage from '../UserSignUpPage'
 import RegistrationSuccess from '../RegistrationSuccess'
 import ForgotPassword from '../ForgotPassword'
+import ChangePassword from '../ChangePassword'
 import MemberPortal from '../MemberPortal'
 import UpdateDetails from '../UpdateDetails'
 // MemberDonate removed - donate functionality moved to main /donate page
@@ -75,6 +76,7 @@ const AllRoute = () => {
           <Route path='user-signup' element={<UserSignUpPage/>} />
           <Route path='registration-success' element={<RegistrationSuccess/>} />
           <Route path='forgot-password' element={<ForgotPassword/>} />
+          <Route path='change-password' element={<ChangePassword/>} />
           <Route path='member-portal' element={<ProtectedRoute><MemberPortal/></ProtectedRoute>} />
           <Route path='member/update-details' element={<ProtectedRoute><UpdateDetails/></ProtectedRoute>} />
           <Route path='member/book-services' element={<ProtectedRoute><BookServices/></ProtectedRoute>} />
