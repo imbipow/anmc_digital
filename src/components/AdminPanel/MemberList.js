@@ -78,6 +78,22 @@ const ExpiryField = () => {
     return <Chip label={expiryDate.toLocaleDateString()} color="default" size="small" />;
 };
 
+const BadgeStatusField = () => {
+    const record = useRecordContext();
+    if (!record) return null;
+
+    const badgeStatus = record.badgeTaken || 'no';
+    const isTaken = badgeStatus === 'yes';
+
+    return (
+        <Chip
+            label={isTaken ? 'Taken' : 'Not Taken'}
+            color={isTaken ? 'success' : 'default'}
+            size="small"
+        />
+    );
+};
+
 const MemberFilters = (props) => (
     <Filter {...props}>
         <TextInput label="Search" source="q" alwaysOn />
@@ -188,6 +204,7 @@ export const MemberList = (props) => (
             />
             <ChipField source="paymentStatus" label="Payment" />
             <StatusField label="Status" />
+            <BadgeStatusField label="Badge" />
             <ExpiryField label="Expiry" />
             <DateField source="createdAt" label="Registered" showTime />
             <ConditionalEditButton />

@@ -1,16 +1,14 @@
 const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
-const fs = require('fs').promises;
-const path = require('path');
+const s3Service = require('./s3Service');
 
 class CertificateService {
     constructor() {
-        // Build absolute paths to templates
-        // __dirname is api/services, so we go up 2 levels to project root, then into public
-        this.templatePaths = {
-            general: path.resolve(__dirname, '..', '..', 'public', 'ANMC Membership Certificate-general.pdf'),
-            life: path.resolve(__dirname, '..', '..', 'public', 'ANMC Membership Certificate-life.pdf')
+        // S3 keys for certificate templates
+        this.templateKeys = {
+            general: 'certificates/templates/ANMC Membership Certificate-general.pdf',
+            life: 'certificates/templates/ANMC Membership Certificate-life.pdf'
         };
-        console.log('🔍 Certificate template paths:', this.templatePaths);
+        console.log('🔍 Certificate template S3 keys:', this.templateKeys);
 
         // Text position configuration - ADJUST THESE VALUES TO MATCH YOUR TEMPLATE
         this.positions = {
@@ -45,6 +43,7 @@ class CertificateService {
                 membershipNumber,
                 referenceNo,
                 joinDate,
+                membershipStartDate,
                 membershipCategory,
                 expiryDate
             } = memberData;
@@ -54,22 +53,21 @@ class CertificateService {
 
             // Determine which template to use based on membership category
             const templateType = membershipCategory === 'life' ? 'life' : 'general';
-            const templatePath = this.templatePaths[templateType];
+            const templateKey = this.templateKeys[templateType];
 
-            console.log('📁 Template path:', templatePath);
+            console.log('📁 Template S3 key:', templateKey);
 
-            // Check if template exists
+            // Fetch template from S3
+            let templateBytes;
             try {
-                await fs.access(templatePath);
-                console.log('✅ Template file exists');
+                const s3Object = await s3Service.getFile(templateKey);
+                templateBytes = s3Object.Body;
+                console.log('✅ Template loaded from S3, size:', templateBytes.length, 'bytes');
             } catch (err) {
-                console.error('❌ Template file NOT found at:', templatePath);
-                throw new Error(`Certificate template not found at: ${templatePath}`);
+                console.error('❌ Template file NOT found in S3:', templateKey);
+                console.error('S3 Error:', err.message);
+                throw new Error(`Certificate template not found in S3: ${templateKey}`);
             }
-
-            // Load the template PDF
-            const templateBytes = await fs.readFile(templatePath);
-            console.log('✅ Template loaded, size:', templateBytes.length, 'bytes');
 
             const pdfDoc = await PDFDocument.load(templateBytes);
             console.log('✅ PDF document created');
@@ -130,9 +128,10 @@ class CertificateService {
                 currentY -= this.positions.detailsLineSpacing;
             }
 
-            // Join Date
-            if (joinDate) {
-                const formattedJoinDate = new Date(joinDate).toLocaleDateString('en-AU', {
+            // Join Date - use membershipStartDate if available, fallback to joinDate
+            const dateToUse = membershipStartDate || joinDate;
+            if (dateToUse) {
+                const formattedJoinDate = new Date(dateToUse).toLocaleDateString('en-AU', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'

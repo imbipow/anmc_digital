@@ -1019,4 +1019,91 @@ router.get('/:id/certificate', verifyToken, requireAdmin, async (req, res, next)
     }
 });
 
+// PATCH route for partial updates (supports both ID and referenceNo)
+// NOTE: This must be at the end to avoid conflicting with specific routes like /:id/payment-status
+router.patch('/:idOrRef', verifyToken, requireMember, async (req, res, next) => {
+    try {
+        const { idOrRef } = req.params;
+        const memberData = req.body;
+        let member = null;
+
+        console.log('PATCH update member:', idOrRef);
+        console.log('Update data:', JSON.stringify(memberData, null, 2));
+
+        // Try to get member by numeric ID first
+        if (!isNaN(idOrRef)) {
+            console.log('Trying numeric ID lookup:', parseInt(idOrRef));
+            member = await membersService.getById(parseInt(idOrRef));
+            if (member) {
+                console.log('✅ Found member by numeric ID:', member.id);
+            }
+        }
+
+        // If not found and looks like a referenceNo (starts with ANMC), search by referenceNo
+        if (!member && idOrRef.startsWith('ANMC')) {
+            console.log('Trying referenceNo lookup:', idOrRef);
+            const allMembers = await membersService.getAll({});
+            console.log(`📊 Total members fetched: ${allMembers.length}`);
+
+            member = allMembers.find(m => m.referenceNo === idOrRef);
+            if (member) {
+                console.log('✅ Found member by referenceNo:', member.referenceNo, 'ID:', member.id);
+            } else {
+                console.log('❌ Member not found. Available referenceNos:',
+                    allMembers.slice(0, 5).map(m => m.referenceNo).join(', '), '...');
+            }
+        }
+
+        if (!member) {
+            console.log('❌ Member not found for:', idOrRef);
+            return res.status(404).json({ error: 'Member not found' });
+        }
+
+        // Check if user is admin or updating their own data
+        const isAdmin = req.user.groups.includes('Admin') ||
+                      req.user.groups.includes('ANMCMembers') ||
+                      req.user.groups.includes('AnmcAdmins') ||
+                      req.user.groups.includes('AnmcManagers');
+
+        // Members can only update their own data
+        if (!isAdmin && member.email !== req.user.email) {
+            return res.status(403).json({
+                error: 'Forbidden',
+                message: 'You can only update your own member data'
+            });
+        }
+
+        // If not admin, restrict which fields can be updated
+        if (!isAdmin) {
+            const allowedFields = ['firstName', 'lastName', 'email', 'mobile', 'residentialAddress'];
+            const requestedFields = Object.keys(memberData);
+            const unauthorizedFields = requestedFields.filter(field => !allowedFields.includes(field));
+
+            if (unauthorizedFields.length > 0) {
+                return res.status(403).json({
+                    error: 'Forbidden',
+                    message: `Members can only update these fields: ${allowedFields.join(', ')}. Unauthorized fields: ${unauthorizedFields.join(', ')}`
+                });
+            }
+        }
+
+        // Update member in DynamoDB using the member's actual ID
+        const updatedMember = await membersService.update(member.id, memberData);
+
+        res.json(updatedMember);
+    } catch (error) {
+        console.error('Error updating member:', error);
+        if (error.message === 'Member not found') {
+            return res.status(404).json({ error: error.message });
+        }
+        if (error.code === 'ValidationException') {
+            return res.status(400).json({
+                error: 'Validation error',
+                details: error.message
+            });
+        }
+        next(error);
+    }
+});
+
 module.exports = router;

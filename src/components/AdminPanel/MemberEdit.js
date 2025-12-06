@@ -59,6 +59,10 @@ export const MemberEdit = (props) => (
                 { id: 'inactive', name: 'Inactive' },
                 { id: 'suspended', name: 'Suspended' },
             ]} validate={[required()]} />
+            <SelectInput source="badgeTaken" label="Badge Taken" choices={[
+                { id: 'no', name: 'Not Taken' },
+                { id: 'yes', name: 'Taken' },
+            ]} defaultValue="no" />
 
             <h3>Address</h3>
             <TextInput source="residentialAddress.street" label="Street" fullWidth />

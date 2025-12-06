@@ -23,7 +23,8 @@ import {
     PlayArrow as ReactivateIcon,
     Autorenew as RenewIcon,
     Print as PrintIcon,
-    Download as DownloadIcon
+    Download as DownloadIcon,
+    Badge as BadgeIcon
 } from '@mui/icons-material';
 import {
     Box,
@@ -354,6 +355,43 @@ const MemberActions = () => {
         window.print();
     };
 
+    const handleToggleBadgeStatus = async () => {
+        setLoading(true);
+        try {
+            const token = await cognitoAuthService.getIdToken();
+            if (!token) {
+                notify('Authentication required. Please log in again.', { type: 'error' });
+                setLoading(false);
+                return;
+            }
+
+            const newStatus = record.badgeTaken === 'yes' ? 'no' : 'yes';
+
+            // Use referenceNo for the PATCH request since our backend route supports it
+            const response = await fetch(`${API_BASE_URL}/members/${record.referenceNo || record.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ badgeTaken: newStatus })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to update badge status');
+            }
+
+            notify(`Badge status updated to ${newStatus === 'yes' ? 'Taken' : 'Not Taken'}`, { type: 'success' });
+            refresh();
+        } catch (error) {
+            console.error('Error updating badge status:', error);
+            notify('Failed to update badge status: ' + error.message, { type: 'error' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <>
             <Box sx={{ mt: 2, mb: 2, display: 'flex', gap: 2, flexWrap: 'wrap' }}>
@@ -431,6 +469,19 @@ const MemberActions = () => {
                         disabled={loading}
                     >
                         Download Certificate
+                    </MuiButton>
+                )}
+
+                {/* Toggle Badge Status button - admin only, only show if badge not taken */}
+                {isAdmin && record.badgeTaken !== 'yes' && (
+                    <MuiButton
+                        variant="contained"
+                        color="warning"
+                        startIcon={<BadgeIcon />}
+                        onClick={handleToggleBadgeStatus}
+                        disabled={loading}
+                    >
+                        Mark Badge Taken
                     </MuiButton>
                 )}
 
@@ -736,6 +787,7 @@ export const MemberShow = (props) => (
             <Box className="no-print">
                 <h3>Member Status</h3>
                 <ChipField source="status" />
+                <ChipField source="badgeTaken" label="Badge Status" />
                 <DateField source="approvedAt" label="Approved Date" showTime />
                 <TextField source="approvedBy" label="Approved By" />
                 <DateField source="rejectedAt" label="Rejected Date" showTime />
