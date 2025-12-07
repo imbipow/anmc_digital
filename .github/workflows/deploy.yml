@@ -226,12 +226,12 @@ jobs:
 
       - name: Create production env file
         run: |
-          cat > .env.production << 'EOF'
-          REACT_APP_API_URL=https://d140ihn2kmroxe.cloudfront.net/api
-          REACT_APP_COGNITO_USER_POOL_ID=ap-southeast-2_egMmxcO1M
-          REACT_APP_COGNITO_CLIENT_ID=2h0bk9340rlmevdnsof7ml31ai
-          REACT_APP_COGNITO_REGION=ap-southeast-2
-          REACT_APP_STRIPE_PUBLISHABLE_KEY=pk_test_51SOpLb79WikBwNd3I1NIN2O9zkotpa49yJnHYPmkyIhjQbZGkMZQkDl5XAIWeDMcWiggib8oPQO3Ka4rGB8s3DUj00mwEfMc6o
+          cat > .env.production << EOF
+          REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL}}
+          REACT_APP_COGNITO_USER_POOL_ID=${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }}
+          REACT_APP_COGNITO_CLIENT_ID=${{ secrets.REACT_APP_COGNITO_CLIENT_ID }}
+          REACT_APP_COGNITO_REGION=${{ env.AWS_REGION }}
+          REACT_APP_STRIPE_PUBLISHABLE_KEY=${{ secrets.REACT_APP_STRIPE_PUBLISHABLE_KEY }}
           EOF
 
       - name: Build React application
