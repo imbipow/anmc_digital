@@ -190,12 +190,19 @@ jobs:
         run: npm ci
 
       - name: Create production env file
+        env:
+          API_URL: ${{ secrets.REACT_APP_API_URL }}
+          COGNITO_POOL: ${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }}
+          COGNITO_CLIENT: ${{ secrets.REACT_APP_COGNITO_CLIENT_ID }}
+          COGNITO_REGION: ${{ secrets.REACT_APP_COGNITO_REGION }}
+          STRIPE_KEY: ${{ secrets.REACT_APP_STRIPE_PUBLISHABLE_KEY }}
         run: |
-          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > .env.production
-          echo "REACT_APP_COGNITO_USER_POOL_ID=${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }}" >> .env.production
-          echo "REACT_APP_COGNITO_CLIENT_ID=${{ secrets.REACT_APP_COGNITO_CLIENT_ID }}" >> .env.production
-          echo "REACT_APP_COGNITO_REGION=${{ secrets.REACT_APP_COGNITO_REGION }}" >> .env.production
-          echo "REACT_APP_STRIPE_PUBLISHABLE_KEY=${{ secrets.REACT_APP_STRIPE_PUBLISHABLE_KEY }}" >> .env.production
+          echo "REACT_APP_API_URL=${API_URL:-https://d140ihn2kmroxe.cloudfront.net/api}" > .env.production
+          echo "REACT_APP_COGNITO_USER_POOL_ID=${COGNITO_POOL:-ap-southeast-2_egMmxcO1M}" >> .env.production
+          echo "REACT_APP_COGNITO_CLIENT_ID=${COGNITO_CLIENT:-2h0bk9340rlmevdnsof7ml31ai}" >> .env.production
+          echo "REACT_APP_COGNITO_REGION=${COGNITO_REGION:-ap-southeast-2}" >> .env.production
+          echo "REACT_APP_STRIPE_PUBLISHABLE_KEY=${STRIPE_KEY:-pk_test_51SOpLb79WikBwNd3I1NIN2O9zkotpa49yJnHYPmkyIhjQbZGkMZQkDl5XAIWeDMcWiggib8oPQO3Ka4rGB8s3DUj00mwEfMc6o}" >> .env.production
+          echo "Created .env.production with the following values:"
           cat .env.production
 
       - name: Build React application
