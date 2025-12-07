@@ -191,13 +191,12 @@ jobs:
 
       - name: Create production env file
         run: |
-          cat > .env.production << EOF
-          REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}
-          REACT_APP_COGNITO_USER_POOL_ID=${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }}
-          REACT_APP_COGNITO_CLIENT_ID=${{ secrets.REACT_APP_COGNITO_CLIENT_ID }}
-          REACT_APP_COGNITO_REGION=${{ secrets.REACT_APP_COGNITO_REGION }}
-          REACT_APP_STRIPE_PUBLISHABLE_KEY=${{ secrets.REACT_APP_STRIPE_PUBLISHABLE_KEY }}
-          EOF
+          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > .env.production
+          echo "REACT_APP_COGNITO_USER_POOL_ID=${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }}" >> .env.production
+          echo "REACT_APP_COGNITO_CLIENT_ID=${{ secrets.REACT_APP_COGNITO_CLIENT_ID }}" >> .env.production
+          echo "REACT_APP_COGNITO_REGION=${{ secrets.REACT_APP_COGNITO_REGION }}" >> .env.production
+          echo "REACT_APP_STRIPE_PUBLISHABLE_KEY=${{ secrets.REACT_APP_STRIPE_PUBLISHABLE_KEY }}" >> .env.production
+          cat .env.production
 
       - name: Build React application
         run: npm run build
