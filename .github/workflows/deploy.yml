@@ -111,41 +111,13 @@ jobs:
             echo "Active environment found with status: $ENV_STATUS"
           fi
 
-      - name: Deploy to Elastic Beanstalk with environment variables
+      - name: Deploy to Elastic Beanstalk
         if: steps.check-env.outputs.exists == 'true'
         run: |
-          # Create JSON file with environment variable settings
-          cat > env-settings.json << 'EOF'
-          [
-            {
-              "Namespace": "aws:elasticbeanstalk:application:environment",
-              "OptionName": "CORS_ORIGINS",
-              "Value": "https://d2s2q88fuje4cx.cloudfront.net,https://anmc.org.au,https://www.anmc.org.au,https://anmcinc.org.au,https://www.anmcinc.org.au,https://d140ihn2kmroxe.cloudfront.net,https://dev.anmcinc.org.au,http://dev.anmcinc.org.au"
-            },
-            {
-              "Namespace": "aws:elasticbeanstalk:application:environment",
-              "OptionName": "ENVIRONMENT",
-              "Value": "prod"
-            },
-            {
-              "Namespace": "aws:elasticbeanstalk:application:environment",
-              "OptionName": "NODE_ENV",
-              "Value": "production"
-            },
-            {
-              "Namespace": "aws:elasticbeanstalk:application:environment",
-              "OptionName": "AWS_REGION",
-              "Value": "${{ env.AWS_REGION }}"
-            }
-          ]
-          EOF
-
-          # Deploy new version with environment variables in a single update
           aws elasticbeanstalk update-environment \
             --application-name anmc-api \
             --environment-name anmc-api-prod \
-            --version-label ${{ github.sha }}-${{ steps.timestamp.outputs.time }} \
-            --option-settings file://env-settings.json
+            --version-label ${{ github.sha }}-${{ steps.timestamp.outputs.time }}
 
       - name: Create Elastic Beanstalk environment (if needed)
         if: steps.check-env.outputs.exists == 'false'
@@ -166,7 +138,7 @@ jobs:
         if: steps.check-env.outputs.exists == 'true'
         run: |
           # Invalidate API CloudFront distribution
-          API_CF_DIST_ID="ERV6IVUVM9BD1"
+          API_CF_DIST_ID="d140ihn2kmroxe"
           echo "Invalidating API CloudFront cache (${API_CF_DIST_ID})..."
           INVALIDATION_ID=$(aws cloudfront create-invalidation \
             --distribution-id ${API_CF_DIST_ID} \
@@ -227,7 +199,7 @@ jobs:
       - name: Create production env file
         run: |
           cat > .env.production << EOF
-          REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL}}
+          REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL || 'https://d140ihn2kmroxe.cloudfront.net/api' }}
           REACT_APP_COGNITO_USER_POOL_ID=${{ secrets.REACT_APP_COGNITO_USER_POOL_ID }}
           REACT_APP_COGNITO_CLIENT_ID=${{ secrets.REACT_APP_COGNITO_CLIENT_ID }}
           REACT_APP_COGNITO_REGION=${{ env.AWS_REGION }}
