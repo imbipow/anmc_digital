@@ -114,17 +114,36 @@ jobs:
       - name: Set environment variables
         if: steps.check-env.outputs.exists == 'true'
         run: |
-          # Set CORS_ORIGINS and other critical environment variables
-          CORS_ORIGINS="https://d2s2q88fuje4cx.cloudfront.net,https://anmc.org.au,https://www.anmc.org.au,https://anmcinc.org.au,https://www.anmcinc.org.au,https://d140ihn2kmroxe.cloudfront.net,https://dev.anmcinc.org.au,http://dev.anmcinc.org.au"
+          # Set CORS_ORIGINS and other critical environment variables using JSON
+          cat > env-settings.json << 'EOF'
+          [
+            {
+              "Namespace": "aws:elasticbeanstalk:application:environment",
+              "OptionName": "CORS_ORIGINS",
+              "Value": "https://d2s2q88fuje4cx.cloudfront.net,https://anmc.org.au,https://www.anmc.org.au,https://anmcinc.org.au,https://www.anmcinc.org.au,https://d140ihn2kmroxe.cloudfront.net,https://dev.anmcinc.org.au,http://dev.anmcinc.org.au"
+            },
+            {
+              "Namespace": "aws:elasticbeanstalk:application:environment",
+              "OptionName": "ENVIRONMENT",
+              "Value": "prod"
+            },
+            {
+              "Namespace": "aws:elasticbeanstalk:application:environment",
+              "OptionName": "NODE_ENV",
+              "Value": "production"
+            },
+            {
+              "Namespace": "aws:elasticbeanstalk:application:environment",
+              "OptionName": "AWS_REGION",
+              "Value": "${{ env.AWS_REGION }}"
+            }
+          ]
+          EOF
 
           aws elasticbeanstalk update-environment \
             --application-name anmc-api \
             --environment-name anmc-api-prod \
-            --option-settings \
-              "Namespace=aws:elasticbeanstalk:application:environment,OptionName=CORS_ORIGINS,Value=${CORS_ORIGINS}" \
-              "Namespace=aws:elasticbeanstalk:application:environment,OptionName=ENVIRONMENT,Value=prod" \
-              "Namespace=aws:elasticbeanstalk:application:environment,OptionName=NODE_ENV,Value=production" \
-              "Namespace=aws:elasticbeanstalk:application:environment,OptionName=AWS_REGION,Value=${{ env.AWS_REGION }}"
+            --option-settings file://env-settings.json
 
       - name: Deploy to Elastic Beanstalk
         if: steps.check-env.outputs.exists == 'true'
