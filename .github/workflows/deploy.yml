@@ -111,10 +111,10 @@ jobs:
             echo "Active environment found with status: $ENV_STATUS"
           fi
 
-      - name: Set environment variables
+      - name: Deploy to Elastic Beanstalk with environment variables
         if: steps.check-env.outputs.exists == 'true'
         run: |
-          # Set CORS_ORIGINS and other critical environment variables using JSON
+          # Create JSON file with environment variable settings
           cat > env-settings.json << 'EOF'
           [
             {
@@ -140,19 +140,12 @@ jobs:
           ]
           EOF
 
+          # Deploy new version with environment variables in a single update
           aws elasticbeanstalk update-environment \
             --application-name anmc-api \
             --environment-name anmc-api-prod \
+            --version-label ${{ github.sha }}-${{ steps.timestamp.outputs.time }} \
             --option-settings file://env-settings.json
-
-      - name: Deploy to Elastic Beanstalk
-        if: steps.check-env.outputs.exists == 'true'
-        run: |
-          # Deploy new version
-          aws elasticbeanstalk update-environment \
-            --application-name anmc-api \
-            --environment-name anmc-api-prod \
-            --version-label ${{ github.sha }}-${{ steps.timestamp.outputs.time }}
 
       - name: Create Elastic Beanstalk environment (if needed)
         if: steps.check-env.outputs.exists == 'false'
