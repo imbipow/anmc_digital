@@ -127,13 +127,6 @@ jobs:
           echo "Or manually create the environment in the AWS Console."
           exit 1
 
-      - name: Wait for deployment
-        if: steps.check-env.outputs.exists == 'true'
-        run: |
-          aws elasticbeanstalk wait environment-updated \
-            --application-name anmc-api \
-            --environment-name anmc-api-prod
-
       - name: Invalidate API CloudFront cache
         if: steps.check-env.outputs.exists == 'true'
         run: |
