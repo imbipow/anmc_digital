@@ -47,6 +47,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Install dependencies
+        run: |
+          cd api
+          npm ci --omit=dev
+
       - name: Ensure Elastic Beanstalk application exists
         run: |
           if ! aws elasticbeanstalk describe-applications --application-names anmc-api --region ${{ env.AWS_REGION }} 2>/dev/null; then
@@ -62,8 +67,7 @@ jobs:
       - name: Create deployment package
         run: |
           cd api
-          # Exclude node_modules and dev files, but include package.json and package-lock.json
-          zip -r ../deploy-backend.zip . -x "*.git*" "node_modules/*" "*.log" "*.env*" ".env" "coverage/*" "test/*" ".vscode/*"
+          zip -r ../deploy-backend.zip . -x "*.git*" "*.log" "*.env*" ".env"
 
       - name: Get timestamp
         id: timestamp
@@ -110,10 +114,16 @@ jobs:
       - name: Deploy to Elastic Beanstalk
         if: steps.check-env.outputs.exists == 'true'
         run: |
+          # Update environment with new version and ensure CORS_ORIGINS is set
           aws elasticbeanstalk update-environment \
             --application-name anmc-api \
             --environment-name anmc-api-prod \
-            --version-label ${{ github.sha }}-${{ steps.timestamp.outputs.time }}
+            --version-label ${{ github.sha }}-${{ steps.timestamp.outputs.time }} \
+            --option-settings \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=CORS_ORIGINS,Value="https://d2s2q88fuje4cx.cloudfront.net,https://anmcinc.org.au,https://www.anmcinc.org.au,https://dev.anmcinc.org.au,http://dev.anmcinc.org.au" \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=ENVIRONMENT,Value=prod \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=NODE_ENV,Value=production \
+              Namespace=aws:elasticbeanstalk:application:environment,OptionName=AWS_REGION,Value=${{ env.AWS_REGION }}
 
       - name: Create Elastic Beanstalk environment (if needed)
         if: steps.check-env.outputs.exists == 'false'
