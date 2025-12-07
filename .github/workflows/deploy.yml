@@ -47,11 +47,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Install dependencies
-        run: |
-          cd api
-          npm ci --omit=dev
-
       - name: Ensure Elastic Beanstalk application exists
         run: |
           if ! aws elasticbeanstalk describe-applications --application-names anmc-api --region ${{ env.AWS_REGION }} 2>/dev/null; then
@@ -67,7 +62,7 @@ jobs:
       - name: Create deployment package
         run: |
           cd api
-          zip -r ../deploy-backend.zip . -x "*.git*" "*.log" "*.env*" ".env"
+          zip -r ../deploy-backend.zip . -x "*.git*" "*.log" "*.env*" ".env" "node_modules/*"
 
       - name: Get timestamp
         id: timestamp
