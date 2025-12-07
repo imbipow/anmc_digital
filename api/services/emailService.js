@@ -321,7 +321,7 @@ Important Reminders:
 
 Location:
 Australian Nepalese Multicultural Centre
-[Address details]
+100 Duncans Lane, Diggers Rest VIC 3427
 
 If you have any questions, please contact us at ${emailConfig.adminEmail}.
 
@@ -646,7 +646,7 @@ Status: Active
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 You can now login to the member portal and access all member features:
-${process.env.FRONTEND_URL || 'https://anmcinc.org.au'}/member-login
+https://anmcinc.org.au/member-login
 
 Member Benefits:
 • Book temple services and puja
@@ -953,7 +953,7 @@ Important Information:
 
 Location:
 Australian Nepalese Multicultural Centre
-[Address details]
+100 Duncans Lane, Diggers Rest VIC 3427
 
 If you have any questions, please contact us at ${emailConfig.adminEmail}.
 
