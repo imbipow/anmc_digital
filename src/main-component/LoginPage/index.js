@@ -209,7 +209,7 @@ const LoginPage = () => {
                                         </Link>
                                     </div>
                                     <p style={{ fontSize: '0.85em', color: '#666', marginTop: '10px', lineStyle: 'italic' }}>
-                                        User accounts can book services immediately. Members get full access + 10% discount.
+                                        User accounts can book services immediately. Members get full access + 50% discount.
                                     </p>
                                 </div>
                             ) : (

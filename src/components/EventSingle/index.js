@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import SEO from '../SEO';
 import SidebarWrap from '../SidebarWrap'
 import API_CONFIG from '../../config/api';
+import { cleanWordPressContent } from '../../utils/htmlUtils';
 import './style.css'
 
 const EventSingle = (props) => {
@@ -173,7 +174,7 @@ const EventSingle = (props) => {
                                     {/* Event Description */}
                                     <div className="event-description">
                                         {event.content ? (
-                                            <div dangerouslySetInnerHTML={{ __html: event.content }} />
+                                            <div dangerouslySetInnerHTML={{ __html: cleanWordPressContent(event.content) }} />
                                         ) : (
                                             <p>{event.summary}</p>
                                         )}
@@ -234,7 +235,7 @@ const EventSingle = (props) => {
                                         <TabContent activeTab={activeTab}>
                                             <TabPane tabId="1" id="Details">
                                                 {event.fullDescription ? (
-                                                    <div dangerouslySetInnerHTML={{ __html: event.fullDescription }} />
+                                                    <div dangerouslySetInnerHTML={{ __html: cleanWordPressContent(event.fullDescription) }} />
                                                 ) : (
                                                     <div>
                                                         <p>{event.description || event.summary}</p>

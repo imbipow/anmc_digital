@@ -213,9 +213,8 @@ const Contactpage = () => {
                                         <div className="registration-details">
                                             <h4>Registration Details</h4>
                                             <div className="reg-info">
-                                                <p><strong>ABN:</strong> 12 345 678 901</p>
-                                                <p><strong>Incorporation No:</strong> INC2012345</p>
-                                                <p><strong>Charity Status:</strong> DGR Endorsed</p>
+                                                <p><strong>ABN:</strong> 77 883 818 204</p>
+                                                <p><strong>Charity Status:</strong> Processing DGR Endorsed</p>
                                             </div>
                                         </div>
                                     </div>

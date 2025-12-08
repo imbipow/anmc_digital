@@ -323,7 +323,7 @@ const Service = (props) => {
                                     </li>
                                     <li style={{ marginBottom: '15px', paddingLeft: '25px', position: 'relative', lineHeight: '1.6', color: '#333' }}>
                                         <i className="fa fa-check-circle" style={{ position: 'absolute', left: 0, top: '3px', color: '#4caf50' }}></i>
-                                        <strong>A 10% discount applies to ANMC life members, except the cleaning fee</strong>
+                                        <strong>A 50% discount applies to ANMC life members, except the cleaning fee</strong>
                                     </li>
                                     <li style={{ marginBottom: '15px', paddingLeft: '25px', position: 'relative', lineHeight: '1.6', color: '#333' }}>
                                         <i className="fa fa-check-circle" style={{ position: 'absolute', left: 0, top: '3px', color: '#4caf50' }}></i>

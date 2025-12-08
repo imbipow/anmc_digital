@@ -252,6 +252,110 @@
   gap: 8px;
 }
 
+/* WordPress Converted Elements */
+.wp-caption {
+  max-width: 100%;
+  margin: 20px auto;
+  text-align: center;
+}
+
+.wp-caption img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.wp-caption figcaption {
+  font-size: 14px;
+  color: #666;
+  padding: 10px;
+  background: #f8f9fa;
+  border-top: 1px solid #e0e0e0;
+  font-style: italic;
+}
+
+.gallery-placeholder {
+  padding: 30px;
+  background: #f8f9fa;
+  border: 2px dashed #ddd;
+  text-align: center;
+  margin: 20px 0;
+  border-radius: 5px;
+}
+
+.gallery-placeholder em {
+  color: #999;
+  font-size: 16px;
+}
+
+.video-embed {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+  margin: 20px 0;
+  border-radius: 5px;
+}
+
+.video-embed iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.event-description audio,
+.event-description video {
+  max-width: 100%;
+  margin: 20px 0;
+  display: block;
+}
+
+.event-description blockquote {
+  border-left: 4px solid #029ca5;
+  padding: 15px 20px;
+  margin: 20px 0;
+  background: #f8f9fa;
+  font-style: italic;
+  color: #555;
+}
+
+.event-description pre {
+  background: #2d2d2d;
+  color: #f8f8f2;
+  padding: 20px;
+  border-radius: 5px;
+  overflow-x: auto;
+  margin: 20px 0;
+}
+
+.event-description pre code {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.wp-button {
+  display: inline-block;
+  padding: 12px 30px;
+  background: #029ca5;
+  color: #fff !important;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin: 10px 5px;
+}
+
+.wp-button:hover {
+  background: #027882;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(2, 156, 165, 0.3);
+}
+
 @media(max-width: 767px) {
   .event-meta {
     flex-direction: column;
@@ -265,5 +369,9 @@
   .event-action-buttons .theme-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .video-embed {
+    padding-bottom: 75%; /* Adjust for mobile */
   }
 }

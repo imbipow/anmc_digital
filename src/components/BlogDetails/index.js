@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import contentService from '../../services/contentService';
 import API_CONFIG from '../../config/api';
 import SEO from '../SEO';
-import { stripHtmlTags } from '../../utils/htmlUtils';
+import { stripHtmlTags, cleanWordPressContent } from '../../utils/htmlUtils';
 import './style.css';
 import blog1 from '../../images/blog/img-1.jpg';
 import blog2 from '../../images/blog/img-2.jpg';
@@ -157,14 +157,14 @@ const BlogSingle = () => {
 
                             {/* Article Content */}
                             <div className="article-content">
-                                <div className="article-excerpt">
-                                    <p><strong>{stripHtmlTags(article.excerpt)}</strong></p>
-                                </div>
+                                {article.excerpt && (
+                                    <div className="article-excerpt">
+                                        <div dangerouslySetInnerHTML={{ __html: cleanWordPressContent(article.excerpt) }} />
+                                    </div>
+                                )}
 
                                 <div className="article-body">
-                                    {stripHtmlTags(article.content).split('\n\n').map((paragraph, index) => (
-                                        paragraph.trim() && <p key={index}>{paragraph}</p>
-                                    ))}
+                                    <div dangerouslySetInnerHTML={{ __html: cleanWordPressContent(article.content) }} />
                                 </div>
                             </div>
 
