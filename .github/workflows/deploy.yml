@@ -199,7 +199,7 @@ jobs:
           REACT_APP_COGNITO_USER_POOL_ID: ap-southeast-2_egMmxcO1M
           REACT_APP_COGNITO_CLIENT_ID: 2h0bk9340rlmevdnsof7ml31ai
           REACT_APP_COGNITO_REGION: ap-southeast-2
-          REACT_APP_STRIPE_PUBLISHABLE_KEY: pk_test_51SOpLb79WikBwNd3I1NIN2O9zkotpa49yJnHYPmkyIhjQbZGkMZQkDl5XAIWeDMcWiggib8oPQO3Ka4rGB8s3DUj00mwEfMc6o
+          REACT_APP_STRIPE_PUBLISHABLE_KEY: pk_live_51JYhlrS6PY8ggF6RVa4ZEa2ryGonFLwxypKM2LK6PsB556GmE1LSDdQHtlUvV5FTIjCzhusCz9I0ZVZZFP7Rn24x00apKYgRV8
 
       - name: Deploy to S3
         run: |
