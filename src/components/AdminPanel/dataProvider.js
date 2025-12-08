@@ -62,8 +62,88 @@ const dataProvider = {
             }
 
             const endpoint = resourceToEndpoint[resource] || `/${resource}`;
-            const url = API_CONFIG.getURL(endpoint);
+            let url = API_CONFIG.getURL(endpoint);
 
+            // For members and bookings resources, use server-side pagination to avoid loading all records
+            if (resource === 'members' || resource === 'payments' || resource === 'bookings') {
+                const { page, perPage } = params.pagination;
+                const { field, order } = params.sort;
+                const { q, ...otherFilters } = params.filter;
+
+                // Build query parameters for server-side pagination
+                const queryParams = new URLSearchParams();
+                queryParams.append('page', page);
+                queryParams.append('limit', perPage);
+
+                // Add filters
+                Object.keys(otherFilters).forEach(key => {
+                    if (otherFilters[key] !== undefined && otherFilters[key] !== '') {
+                        queryParams.append(key, otherFilters[key]);
+                    }
+                });
+
+                url = `${url}?${queryParams.toString()}`;
+
+                const response = await httpClient(url);
+                const result = response.json;
+
+                // If paginated response, use it
+                if (result.data && Array.isArray(result.data)) {
+                    let data = result.data;
+
+                    // Apply client-side search filter if needed (server doesn't support search yet)
+                    if (q) {
+                        data = data.filter(record =>
+                            Object.values(record).some(value => {
+                                if (typeof value === 'object' && value !== null) {
+                                    return Object.values(value).some(nestedValue =>
+                                        String(nestedValue).toLowerCase().includes(q.toLowerCase())
+                                    );
+                                }
+                                return String(value).toLowerCase().includes(q.toLowerCase());
+                            })
+                        );
+                    }
+
+                    // Apply client-side sorting (server doesn't support sorting yet)
+                    if (field) {
+                        data.sort((a, b) => {
+                            let aVal = a[field];
+                            let bVal = b[field];
+
+                            if (field.includes('.')) {
+                                const keys = field.split('.');
+                                aVal = keys.reduce((obj, key) => obj?.[key], a);
+                                bVal = keys.reduce((obj, key) => obj?.[key], b);
+                            }
+
+                            // Date sorting
+                            if (field === 'createdAt' || field === 'updatedAt' || field === 'joinDate' || field === 'expiryDate') {
+                                const aDate = new Date(aVal);
+                                const bDate = new Date(bVal);
+                                return order === 'ASC' ? aDate - bDate : bDate - aDate;
+                            }
+
+                            // String sorting
+                            if (typeof aVal === 'string') {
+                                return order === 'ASC'
+                                    ? aVal.localeCompare(bVal)
+                                    : bVal.localeCompare(aVal);
+                            }
+
+                            // Number sorting
+                            return order === 'ASC' ? aVal - bVal : bVal - aVal;
+                        });
+                    }
+
+                    return {
+                        data: data,
+                        total: result.total,
+                    };
+                }
+            }
+
+            // For other resources, use original client-side pagination
             const response = await httpClient(url);
             let data = response.json;
 

@@ -111,28 +111,25 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                // Fetch members stats
-                const membersResponse = await authenticatedFetch(`${API_BASE_URL}/members`);
-                if (membersResponse.ok) {
-                    const members = await membersResponse.json();
-                    const activeMembers = members.filter(m => m.status === 'active').length;
+                // Fetch members counts (optimized endpoint - only returns counts, not full data)
+                const membersCountsResponse = await authenticatedFetch(`${API_BASE_URL}/members/counts`);
+                if (membersCountsResponse.ok) {
+                    const memberCounts = await membersCountsResponse.json();
                     setStats(prev => ({
                         ...prev,
-                        totalMembers: members.length,
-                        activeMembers
+                        totalMembers: memberCounts.total || 0,
+                        activeMembers: memberCounts.active || 0
                     }));
                 }
 
-                // Fetch bookings stats
-                const bookingsResponse = await authenticatedFetch(`${API_BASE_URL}/bookings`);
-                if (bookingsResponse.ok) {
-                    const bookings = await bookingsResponse.json();
-                    const pendingBookings = bookings.filter(b =>
-                        b.status === 'pending' || b.status === 'confirmed'
-                    ).length;
+                // Fetch bookings counts (optimized endpoint - only returns counts, not full data)
+                const bookingsCountsResponse = await authenticatedFetch(`${API_BASE_URL}/bookings/counts`);
+                if (bookingsCountsResponse.ok) {
+                    const bookingCounts = await bookingsCountsResponse.json();
+                    const pendingBookings = (bookingCounts.pending || 0) + (bookingCounts.confirmed || 0);
                     setStats(prev => ({
                         ...prev,
-                        totalBookings: bookings.length,
+                        totalBookings: bookingCounts.total || 0,
                         pendingBookings
                     }));
                 }

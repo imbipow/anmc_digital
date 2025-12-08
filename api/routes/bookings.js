@@ -3,25 +3,54 @@ const router = express.Router();
 const bookingsService = require('../services/bookingsService');
 const { verifyToken, requireManager, requireMember } = require('../middleware/auth');
 
-// Get all bookings (members can see their own, managers see all)
+// Get all bookings with optional pagination (members can see their own, managers see all)
 router.get('/', verifyToken, requireMember, async (req, res, next) => {
     try {
-        const { memberEmail } = req.query;
+        const { memberEmail, page, limit, status, paymentStatus } = req.query;
 
-        let bookings;
+        // If querying by member email, return their bookings
         if (memberEmail) {
-            bookings = await bookingsService.getByMemberEmail(memberEmail);
-        } else {
-            bookings = await bookingsService.getAll();
+            const bookings = await bookingsService.getByMemberEmail(memberEmail);
+            return res.json(bookings);
         }
 
-        res.json(bookings);
+        // Build filters
+        const filters = {};
+        if (status) filters.status = status;
+        if (paymentStatus) filters.paymentStatus = paymentStatus;
+
+        // Check if pagination is requested
+        const pageNum = parseInt(page) || null;
+        const limitNum = parseInt(limit) || 20;
+
+        if (pageNum) {
+            // Return paginated results
+            const result = await bookingsService.getPaginated(pageNum, limitNum, filters);
+            res.json(result);
+        } else {
+            // Return all bookings (backward compatibility)
+            const bookings = await bookingsService.getAll(filters);
+            res.json(bookings);
+        }
     } catch (error) {
         next(error);
     }
 });
 
-// Get booking statistics
+// Get booking counts (lightweight, optimized for dashboard)
+router.get('/counts', verifyToken, requireManager, async (req, res, next) => {
+    try {
+        const filters = {
+            status: req.query.status
+        };
+        const counts = await bookingsService.getCounts(filters);
+        res.json(counts);
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Get booking statistics (full stats)
 router.get('/stats', verifyToken, requireManager, async (req, res, next) => {
     try {
         const stats = await bookingsService.getStats();

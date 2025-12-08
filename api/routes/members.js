@@ -6,7 +6,7 @@ const cognitoService = require('../services/cognitoService');
 const emailService = require('../services/emailService');
 const certificateService = require('../services/certificateService');
 
-// Get all members with optional filters
+// Get all members with optional filters and pagination
 // Members can view their own data by email, admins can view all
 router.get('/', verifyToken, requireMember, async (req, res, next) => {
     try {
@@ -45,11 +45,23 @@ router.get('/', verifyToken, requireMember, async (req, res, next) => {
         const filters = {
             membershipCategory: req.query.membershipCategory,
             membershipType: req.query.membershipType,
-            paymentStatus: req.query.paymentStatus
+            paymentStatus: req.query.paymentStatus,
+            status: req.query.status
         };
 
-        const members = await membersService.getAll(filters);
-        res.json(members);
+        // Check if pagination is requested
+        const page = parseInt(req.query.page) || null;
+        const limit = parseInt(req.query.limit) || 20;
+
+        if (page) {
+            // Return paginated results
+            const result = await membersService.getPaginated(page, limit, filters);
+            res.json(result);
+        } else {
+            // Return all members (backward compatibility)
+            const members = await membersService.getAll(filters);
+            res.json(members);
+        }
     } catch (error) {
         next(error);
     }
@@ -75,7 +87,21 @@ router.get('/check-email', async (req, res, next) => {
     }
 });
 
-// Get member statistics
+// Get member counts (lightweight, optimized for dashboard)
+router.get('/counts', verifyToken, requireAdmin, async (req, res, next) => {
+    try {
+        const filters = {
+            membershipCategory: req.query.membershipCategory,
+            membershipType: req.query.membershipType
+        };
+        const counts = await membersService.getCounts(filters);
+        res.json(counts);
+    } catch (error) {
+        next(error);
+    }
+});
+
+// Get member statistics (full stats with revenue calculations)
 router.get('/stats', verifyToken, requireAdmin, async (req, res, next) => {
     try {
         const stats = await membersService.getStats();

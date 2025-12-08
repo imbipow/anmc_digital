@@ -27,8 +27,77 @@ class MembersService {
         if (filters.paymentStatus) {
             members = members.filter(m => m.paymentStatus === filters.paymentStatus);
         }
+        if (filters.status) {
+            members = members.filter(m => m.status === filters.status);
+        }
 
         return members.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    // Get paginated members with optional filters
+    async getPaginated(page = 1, limit = 20, filters = {}) {
+        // Get all members (we'll optimize this if DynamoDB pagination is needed later)
+        let allMembers = await this.getAll(filters);
+
+        // Calculate pagination
+        const total = allMembers.length;
+        const totalPages = Math.ceil(total / limit);
+        const offset = (page - 1) * limit;
+        const members = allMembers.slice(offset, offset + limit);
+
+        return {
+            data: members,
+            total,
+            page,
+            limit,
+            totalPages,
+            hasMore: page < totalPages
+        };
+    }
+
+    // Get member counts without fetching full data (optimized for dashboard)
+    async getCounts(filters = {}) {
+        let members = await dynamoDBService.getAllItems(this.tableName);
+        const now = new Date();
+
+        // Apply filters if provided
+        if (filters.membershipCategory) {
+            members = members.filter(m => m.membershipCategory === filters.membershipCategory);
+        }
+        if (filters.membershipType) {
+            members = members.filter(m => m.membershipType === filters.membershipType);
+        }
+
+        // Calculate counts
+        const counts = {
+            total: members.length,
+            active: members.filter(m => m.status === 'active').length,
+            pending: members.filter(m => m.status === 'pending_approval').length,
+            inactive: members.filter(m => m.status === 'inactive').length,
+            suspended: members.filter(m => m.status === 'suspended').length,
+            byCategory: {
+                general: members.filter(m => m.membershipCategory === 'general').length,
+                life: members.filter(m => m.membershipCategory === 'life').length
+            },
+            byType: {
+                single: members.filter(m => m.membershipType === 'single').length,
+                family: members.filter(m => m.membershipType === 'family').length
+            }
+        };
+
+        // Calculate expiry-related counts
+        const expired = members.filter(m => this.isMembershipExpired(m));
+        const expiringSoon = members.filter(m => {
+            if (!m.expiryDate || m.membershipCategory === 'life') return false;
+            const expiryDate = new Date(m.expiryDate);
+            const daysUntilExpiry = Math.floor((expiryDate - now) / (1000 * 60 * 60 * 24));
+            return daysUntilExpiry > 0 && daysUntilExpiry <= 30;
+        });
+
+        counts.expired = expired.length;
+        counts.expiringSoon = expiringSoon.length;
+
+        return counts;
     }
 
     // Get member by ID

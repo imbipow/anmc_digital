@@ -11,11 +11,66 @@ class BookingsService {
     }
 
     // Get all bookings (excludes Kalash bookings - they have their own service)
-    async getAll() {
+    async getAll(filters = {}) {
         const bookings = await dynamoDBService.getAllItems(this.tableName);
         // Filter out Kalash bookings - they have their own management interface
-        const serviceBookings = bookings.filter(b => b.bookingType !== 'kalash');
+        let serviceBookings = bookings.filter(b => b.bookingType !== 'kalash');
+
+        // Apply filters
+        if (filters.status) {
+            serviceBookings = serviceBookings.filter(b => b.status === filters.status);
+        }
+        if (filters.paymentStatus) {
+            serviceBookings = serviceBookings.filter(b => b.paymentStatus === filters.paymentStatus);
+        }
+
         return serviceBookings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+
+    // Get paginated bookings with optional filters
+    async getPaginated(page = 1, limit = 20, filters = {}) {
+        let allBookings = await this.getAll(filters);
+
+        // Calculate pagination
+        const total = allBookings.length;
+        const totalPages = Math.ceil(total / limit);
+        const offset = (page - 1) * limit;
+        const bookings = allBookings.slice(offset, offset + limit);
+
+        return {
+            data: bookings,
+            total,
+            page,
+            limit,
+            totalPages,
+            hasMore: page < totalPages
+        };
+    }
+
+    // Get booking counts (optimized for dashboard)
+    async getCounts(filters = {}) {
+        const bookings = await dynamoDBService.getAllItems(this.tableName);
+        // Filter out Kalash bookings
+        const serviceBookings = bookings.filter(b => b.bookingType !== 'kalash');
+
+        // Apply filters if provided
+        let filteredBookings = serviceBookings;
+        if (filters.status) {
+            filteredBookings = filteredBookings.filter(b => b.status === filters.status);
+        }
+
+        // Calculate counts
+        const counts = {
+            total: filteredBookings.length,
+            pending: filteredBookings.filter(b => b.status === 'pending').length,
+            confirmed: filteredBookings.filter(b => b.status === 'confirmed').length,
+            completed: filteredBookings.filter(b => b.status === 'completed').length,
+            cancelled: filteredBookings.filter(b => b.status === 'cancelled').length,
+            paid: filteredBookings.filter(b => b.paymentStatus === 'paid').length,
+            unpaid: filteredBookings.filter(b => b.paymentStatus === 'unpaid').length
+        };
+
+        return counts;
     }
 
     // Get booking by ID
