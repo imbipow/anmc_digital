@@ -447,7 +447,25 @@ const sendBroadcastEmail = async (broadcastData) => {
 
     const results = [];
 
-    for (const batch of batches) {
+    // AWS SES rate limit: 14 emails/second
+    // For 50 emails per batch: 50/14 = 3.57 seconds minimum
+    // Add 4 seconds delay between batches to respect rate limit
+    const delayBetweenBatches = 4000; // milliseconds
+
+    console.log(`📧 Starting broadcast to ${recipients.length} recipients in ${batches.length} batches`);
+    console.log(`⏱️  Estimated time: ~${Math.ceil((batches.length * delayBetweenBatches) / 1000 / 60)} minutes`);
+
+    for (let i = 0; i < batches.length; i++) {
+        const batch = batches[i];
+
+        // Add delay between batches (except for the first batch)
+        if (i > 0) {
+            console.log(`⏳ Waiting 4 seconds before sending batch ${i + 1}/${batches.length}...`);
+            await new Promise(resolve => setTimeout(resolve, delayBetweenBatches));
+        }
+
+        console.log(`📨 Sending batch ${i + 1}/${batches.length} (${batch.length} recipients)...`);
+
         const unsubscribeLink = `${process.env.FRONTEND_URL || 'https://anmcinc.org.au'}/unsubscribe`;
 
         let emailBody, htmlBody;
@@ -555,13 +573,21 @@ ${plainFooter}
             const command = new SendEmailCommand(params);
             const client = getSESClient();
             const response = await client.send(command);
-            console.log(`Broadcast email batch sent successfully: ${response.MessageId}`);
+            console.log(`✅ Batch ${i + 1}/${batches.length} sent successfully: ${response.MessageId}`);
             results.push({ success: true, messageId: response.MessageId, recipientCount: batch.length });
         } catch (error) {
-            console.error('Error sending broadcast email batch:', error);
+            console.error(`❌ Batch ${i + 1}/${batches.length} failed:`, error.message);
             results.push({ success: false, error: error.message, recipientCount: batch.length });
         }
     }
+
+    // Log summary
+    const successCount = results.filter(r => r.success).reduce((sum, r) => sum + r.recipientCount, 0);
+    const failCount = results.filter(r => !r.success).reduce((sum, r) => sum + r.recipientCount, 0);
+    console.log(`\n📊 Broadcast Summary:`);
+    console.log(`   ✅ Successfully sent: ${successCount} emails`);
+    console.log(`   ❌ Failed: ${failCount} emails`);
+    console.log(`   📧 Total batches: ${batches.length}`);
 
     return results;
 };
