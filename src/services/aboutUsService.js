@@ -7,98 +7,28 @@ class AboutUsService {
 
   // Get about us content
   async getAboutUs() {
-    try {
-      // Always fetch fresh data from new API
-      const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.aboutUs));
+    // Always fetch fresh data from new API
+    const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.aboutUs));
 
-      // Check for HTTP errors (404, 500, etc.)
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: Failed to fetch about us data`);
-      }
-
-      const aboutUsData = await response.json();
-
-      // Extract the main about us data (DynamoDB returns single item with id)
-      const data = Array.isArray(aboutUsData) && aboutUsData.length > 0
-        ? aboutUsData[0]
-        : aboutUsData;
-
-      return data;
-    } catch (error) {
-      console.warn('Failed to fetch about us content:', error);
-      return this.getDefaultData();
+    // Check for HTTP errors (404, 500, etc.)
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: Failed to fetch about us data`);
     }
+
+    const aboutUsData = await response.json();
+
+    // Extract the main about us data (DynamoDB returns single item with id)
+    const data = Array.isArray(aboutUsData) && aboutUsData.length > 0
+      ? aboutUsData[0]
+      : aboutUsData;
+
+    return data;
   }
 
   // Update about us content (for static version, just return the data)
   async updateAboutUs(aboutUsData) {
     console.log('Static mode: About Us update requested but not persisted:', aboutUsData);
     return aboutUsData;
-  }
-
-  // Get complete default data
-  getDefaultData() {
-    return {
-      mission: this.getDefaultMission(),
-      vision: this.getDefaultVision(),
-      history: this.getDefaultHistory(),
-      executiveCommittee: this.getDefaultExecutiveCommittee(),
-      governance: this.getDefaultGovernance()
-    };
-  }
-
-  // Default mission
-  getDefaultMission() {
-    return {
-      title: 'Our Mission',
-      content: 'To foster cultural diversity and strengthen community bonds through programs that celebrate Nepalese heritage while promoting integration and multicultural understanding in Australia.',
-      icon: 'fa fa-bullseye'
-    };
-  }
-
-  // Default vision
-  getDefaultVision() {
-    return {
-      title: 'Our Vision',
-      content: 'To be Australia\'s leading multicultural centre that bridges communities, preserves cultural identity, and creates opportunities for growth, learning, and mutual respect among diverse populations.',
-      icon: 'fa fa-eye'
-    };
-  }
-
-  // Default history
-  getDefaultHistory() {
-    return {
-      title: 'Our History',
-      content: 'Established to serve the growing Nepalese community in Australia, ANMC has evolved into a vibrant multicultural hub, organizing events, providing support services, and fostering community connections since our inception.',
-      icon: 'fa fa-history'
-    };
-  }
-
-  // Default executive committee
-  getDefaultExecutiveCommittee() {
-    return {
-      title: 'Executive Committee',
-      subtitle: 'Meet our dedicated leadership team',
-      members: [
-        { title: 'President', position: 'Executive Leadership', description: 'Leading the organization\'s strategic direction and community outreach initiatives while fostering partnerships and growth opportunities.' },
-        { title: 'Vice President', position: 'Operations Management', description: 'Supporting organizational operations and coordinating community programs to ensure effective service delivery and member engagement.' },
-        { title: 'Secretary', position: 'Administrative Affairs', description: 'Managing organizational documentation, communications, and ensuring compliance with governance requirements and community standards.' },
-        { title: 'Treasurer', position: 'Financial Management', description: 'Overseeing financial planning, budget management, and ensuring transparent financial practices for sustainable organizational growth.' }
-      ]
-    };
-  }
-
-  // Default governance
-  getDefaultGovernance() {
-    return {
-      title: 'Governance Structure',
-      subtitle: 'Our organizational leadership framework',
-      structure: [
-        { title: 'Presidential Council', description: 'The Presidential Council provides strategic guidance and oversight, ensuring organizational alignment with community needs and long-term sustainability goals.', icon: 'fa fa-gavel' },
-        { title: 'Patrons', description: 'Distinguished community leaders who lend their expertise and support, helping to advance our mission and strengthen community partnerships.', icon: 'fa fa-shield' },
-        { title: 'Advisors', description: 'Experienced professionals providing specialized knowledge and guidance across various domains to enhance our programs and community impact.', icon: 'fa fa-users' }
-      ]
-    };
   }
 }
 

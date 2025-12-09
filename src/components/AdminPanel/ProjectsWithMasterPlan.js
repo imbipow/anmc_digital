@@ -87,7 +87,7 @@ const ProjectsWithMasterPlan = () => {
                     </Box>
 
                     <Typography variant="body2" color="text.secondary" gutterBottom>
-                        {masterPlan?.title || 'ANMC Development Master Plan'} • {masterPlan?.period || '2025-2030'}
+                        {masterPlan?.title} • {masterPlan?.period}
                     </Typography>
 
                     <Divider sx={{ my: 2 }} />
