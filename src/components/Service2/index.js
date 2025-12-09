@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import contentService from '../../services/contentService'
 import API_CONFIG from '../../config/api'
+import fallbackContent from '../../data/fallbackContent'
 import './style.css'
 
 const Service2 = (props) => {
@@ -25,6 +26,11 @@ const Service2 = (props) => {
                 setProjects(projectsData);
             } catch (error) {
                 console.error('Error loading project data:', error);
+                console.log('Using fallback content for Service2');
+                // Use fallback data
+                if (fallbackContent.projects) {
+                    setProjects(fallbackContent.projects);
+                }
             }
         };
         loadData();
@@ -96,13 +102,13 @@ const Service2 = (props) => {
     ];
 
    const [projectMetrics, setProjectMetrics] = useState([]);
-   
+
        useEffect(() => {
            const loadAchievements = async () => {
                try {
                    const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.achievements));
                    const achievements = await response.json();
-   
+
                    if (achievements && achievements.length > 0) {
                        // Take the latest 4 achievements and format them as metrics
                        const formattedMetrics = achievements.slice(-4).map((achievement, index) => {
@@ -118,6 +124,7 @@ const Service2 = (props) => {
                    }
                } catch (error) {
                    console.error('Error loading project achievements:', error);
+                   console.log('Using fallback content for Service2 achievements');
                }
            };
            loadAchievements();

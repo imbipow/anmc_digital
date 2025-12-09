@@ -10,6 +10,12 @@ class AboutUsService {
     try {
       // Always fetch fresh data from new API
       const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.aboutUs));
+
+      // Check for HTTP errors (404, 500, etc.)
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: Failed to fetch about us data`);
+      }
+
       const aboutUsData = await response.json();
 
       // Extract the main about us data (DynamoDB returns single item with id)

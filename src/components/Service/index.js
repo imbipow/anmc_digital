@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import API_CONFIG from '../../config/api'
 import cognitoAuthService from '../../services/cognitoAuth'
+import fallbackContent from '../../data/fallbackContent'
 import './style.css'
 
 const Service = (props) => {
@@ -24,6 +25,15 @@ const Service = (props) => {
             })
             .catch(error => {
                 console.error('Error fetching services:', error);
+                console.log('Using fallback content for Service');
+                // Use fallback services data
+                if (fallbackContent.services) {
+                    const filteredServices = fallbackContent.services.filter(service =>
+                        service.category !== 'service' &&
+                        !service.anusthanName.toLowerCase().includes('cleaning')
+                    );
+                    setServices(filteredServices);
+                }
                 setLoading(false);
             });
     }, []);

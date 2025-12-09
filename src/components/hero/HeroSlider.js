@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import API_CONFIG from '../../config/api';
+import fallbackContent from '../../data/fallbackContent';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './style.css';
@@ -14,27 +15,66 @@ const HeroSlider = (props) => {
         const loadSlides = async () => {
             try {
                 const response = await fetch(API_CONFIG.getURL('/hero-slides'));
-                if (response.ok) {
-                    const data = await response.json();
-                    // Only show active slides, sorted by order
-                    const activeSlides = data.filter(slide => slide.active !== false);
-                    setSlides(activeSlides);
+
+                // Check for HTTP errors (404, 500, etc.)
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: Failed to fetch hero slides`);
                 }
+
+                const data = await response.json();
+                // Only show active slides, sorted by order
+                const activeSlides = data.filter(slide => slide.active !== false);
+                setSlides(activeSlides);
             } catch (error) {
                 console.error('Error loading hero slides:', error);
-                // Fallback to default slide
-                setSlides([{
-                    id: 'default',
-                    welcomeText: 'Welcome to ANMC',
-                    title: 'Building Bridges, Strengthening Communities',
-                    subtitle: 'The Australian Nepalese Multicultural Centre is dedicated to fostering cultural diversity, community engagement, and supporting our members through various programs and initiatives.',
-                    buttonText: 'Learn More',
-                    buttonLink: '/about',
-                    secondaryButtonText: 'Become a Member',
-                    secondaryButtonLink: '/donate',
-                    imageUrl: props.heroImg || '',
-                    active: true
-                }]);
+                console.log('Using fallback content for HeroSlider');
+
+                // Use fallback hero data from fallbackContent
+                if (fallbackContent.homepage && fallbackContent.homepage.length > 0) {
+                    const heroData = fallbackContent.homepage.find(item => item.component === 'hero');
+                    if (heroData && heroData.data) {
+                        setSlides([{
+                            id: 'fallback',
+                            welcomeText: heroData.data.welcomeText || 'Welcome to ANMC',
+                            title: heroData.data.title || 'Building Bridges, Strengthening Communities',
+                            subtitle: heroData.data.subtitle || 'The Australian Nepalese Multicultural Centre is dedicated to fostering cultural diversity, community engagement, and supporting our members through various programs and initiatives.',
+                            buttonText: heroData.data.learnMoreText || 'Learn More',
+                            buttonLink: '/about',
+                            secondaryButtonText: heroData.data.memberButtonText || 'Become a Member',
+                            secondaryButtonLink: '/donate',
+                            imageUrl: heroData.data.heroImage || props.heroImg || '',
+                            active: true
+                        }]);
+                    } else {
+                        // Hardcoded fallback if fallbackContent doesn't have hero data
+                        setSlides([{
+                            id: 'default',
+                            welcomeText: 'Welcome to ANMC',
+                            title: 'Building Bridges, Strengthening Communities',
+                            subtitle: 'The Australian Nepalese Multicultural Centre is dedicated to fostering cultural diversity, community engagement, and supporting our members through various programs and initiatives.',
+                            buttonText: 'Learn More',
+                            buttonLink: '/about',
+                            secondaryButtonText: 'Become a Member',
+                            secondaryButtonLink: '/donate',
+                            imageUrl: props.heroImg || '',
+                            active: true
+                        }]);
+                    }
+                } else {
+                    // Hardcoded fallback if fallbackContent is not available
+                    setSlides([{
+                        id: 'default',
+                        welcomeText: 'Welcome to ANMC',
+                        title: 'Building Bridges, Strengthening Communities',
+                        subtitle: 'The Australian Nepalese Multicultural Centre is dedicated to fostering cultural diversity, community engagement, and supporting our members through various programs and initiatives.',
+                        buttonText: 'Learn More',
+                        buttonLink: '/about',
+                        secondaryButtonText: 'Become a Member',
+                        secondaryButtonLink: '/donate',
+                        imageUrl: props.heroImg || '',
+                        active: true
+                    }]);
+                }
             } finally {
                 setLoading(false);
             }

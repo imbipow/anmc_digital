@@ -3,12 +3,13 @@ import {Link}  from 'react-router-dom'
 import Logo from '../../images/logo.png'
 import Newsletter from '../Newsletter'
 import API_CONFIG from '../../config/api'
+import fallbackContent from '../../data/fallbackContent'
 import './style.css'
 
 const Footer = (props) =>{
     const [contactInfo, setContactInfo] = useState({
-        address: '123 Community Drive, Melbourne VIC 3000',
-        phone: '03 9555 1234',
+        address: '100 Duncans Lane, Diggers Rest VIC 3427',
+        phone: '+61 450 092 041',
         email: 'info@anmcinc.org.au',
         socialMedia: {
             facebook: '',
@@ -34,7 +35,8 @@ const Footer = (props) =>{
             })
             .catch(error => {
                 console.error('Error fetching contact info:', error);
-                // Keep default values if fetch fails
+                console.log('Using fallback content for Footer');
+                // Keep default values if fetch fails (already set in state)
             });
     }, []);
 

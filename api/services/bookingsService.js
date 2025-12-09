@@ -31,7 +31,27 @@ class BookingsService {
     async getPaginated(page = 1, limit = 20, filters = {}) {
         let allBookings = await this.getAll(filters);
 
-        // Calculate pagination
+        // Apply search filter if provided
+        if (filters.q) {
+            const searchQuery = filters.q.toLowerCase();
+            allBookings = allBookings.filter(booking => {
+                // Search across multiple fields
+                const searchableText = [
+                    booking.id,
+                    booking.memberEmail,
+                    booking.memberName,
+                    booking.serviceName,
+                    booking.status,
+                    booking.paymentStatus,
+                    booking.bookingDate,
+                    booking.notes
+                ].filter(Boolean).join(' ').toLowerCase();
+
+                return searchableText.includes(searchQuery);
+            });
+        }
+
+        // Calculate pagination after search filter
         const total = allBookings.length;
         const totalPages = Math.ceil(total / limit);
         const offset = (page - 1) * limit;

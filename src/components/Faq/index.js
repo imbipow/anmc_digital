@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import API_CONFIG from '../../config/api';
+import fallbackContent from '../../data/fallbackContent';
 import './style.css';
 
 const Faq = () => {
@@ -27,7 +28,14 @@ const Faq = () => {
             setError(null);
         } catch (err) {
             console.error('Error fetching FAQs:', err);
-            setError(err.message);
+            console.log('Using fallback content for Faq');
+            // Use fallback FAQs data
+            if (fallbackContent.faqs && fallbackContent.faqs.length > 0) {
+                setFaqs(fallbackContent.faqs);
+                setError(null);
+            } else {
+                setError(err.message);
+            }
         } finally {
             setLoading(false);
         }

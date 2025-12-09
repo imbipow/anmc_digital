@@ -15,6 +15,14 @@ class HomepageService {
           fetch(API_CONFIG.getURL(API_CONFIG.endpoints.counters))
         ]);
 
+        // Check for HTTP errors (404, 500, etc.)
+        if (!homepageResponse.ok) {
+          throw new Error(`HTTP ${homepageResponse.status}: Failed to fetch homepage data`);
+        }
+        if (!countersResponse.ok) {
+          throw new Error(`HTTP ${countersResponse.status}: Failed to fetch counters data`);
+        }
+
         const homepageData = await homepageResponse.json();
         const countersData = await countersResponse.json();
 
@@ -61,10 +69,10 @@ class HomepageService {
   // Get default counters
   getDefaultCounters() {
     return [
-      { id: 1, count: 500, suffix: "+", label: "Life Members" },
-      { id: 2, count: 25, suffix: "", label: "Acres of Land" },
+      { id: 1, count: 1500, suffix: "+", label: "Life Members" },
+      { id: 2, count: 15, suffix: "", label: "Acres of Land" },
       { id: 3, count: 2, prefix: "$", suffix: "M+", label: "Funds Raised" },
-      { id: 4, count: 1998, suffix: "", label: "Established" }
+      { id: 4, count: 2014, suffix: "", label: "Established" }
     ];
   }
 }

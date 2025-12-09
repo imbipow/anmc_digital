@@ -39,7 +39,31 @@ class MembersService {
         // Get all members (we'll optimize this if DynamoDB pagination is needed later)
         let allMembers = await this.getAll(filters);
 
-        // Calculate pagination
+        // Apply search filter if provided
+        if (filters.q) {
+            const searchQuery = filters.q.toLowerCase();
+            allMembers = allMembers.filter(member => {
+                // Search across multiple fields
+                const searchableText = [
+                    member.firstName,
+                    member.lastName,
+                    member.email,
+                    member.mobile,
+                    member.referenceNo,
+                    member.memberNo,
+                    member.id,
+                    member.city,
+                    member.state,
+                    member.membershipCategory,
+                    member.membershipType,
+                    member.status
+                ].filter(Boolean).join(' ').toLowerCase();
+
+                return searchableText.includes(searchQuery);
+            });
+        }
+
+        // Calculate pagination after search filter
         const total = allMembers.length;
         const totalPages = Math.ceil(total / limit);
         const offset = (page - 1) * limit;

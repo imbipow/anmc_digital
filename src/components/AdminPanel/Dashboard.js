@@ -107,60 +107,97 @@ const Dashboard = () => {
         donationAmount: 0
     });
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchStats = async () => {
             try {
+                setError(null);
+
                 // Fetch members counts (optimized endpoint - only returns counts, not full data)
-                const membersCountsResponse = await authenticatedFetch(`${API_BASE_URL}/members/counts`);
-                if (membersCountsResponse.ok) {
-                    const memberCounts = await membersCountsResponse.json();
-                    setStats(prev => ({
-                        ...prev,
-                        totalMembers: memberCounts.total || 0,
-                        activeMembers: memberCounts.active || 0
-                    }));
+                try {
+                    const membersCountsResponse = await authenticatedFetch(`${API_BASE_URL}/members/counts`);
+                    if (membersCountsResponse.ok) {
+                        const memberCounts = await membersCountsResponse.json();
+                        setStats(prev => ({
+                            ...prev,
+                            totalMembers: memberCounts.total || 0,
+                            activeMembers: memberCounts.active || 0
+                        }));
+                    } else if (membersCountsResponse.status === 429) {
+                        console.warn('Rate limited on members/counts - using cached data');
+                    }
+                } catch (err) {
+                    console.error('Error fetching member counts:', err);
                 }
+
+                // Add small delay to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 100));
 
                 // Fetch bookings counts (optimized endpoint - only returns counts, not full data)
-                const bookingsCountsResponse = await authenticatedFetch(`${API_BASE_URL}/bookings/counts`);
-                if (bookingsCountsResponse.ok) {
-                    const bookingCounts = await bookingsCountsResponse.json();
-                    const pendingBookings = (bookingCounts.pending || 0) + (bookingCounts.confirmed || 0);
-                    setStats(prev => ({
-                        ...prev,
-                        totalBookings: bookingCounts.total || 0,
-                        pendingBookings
-                    }));
+                try {
+                    const bookingsCountsResponse = await authenticatedFetch(`${API_BASE_URL}/bookings/counts`);
+                    if (bookingsCountsResponse.ok) {
+                        const bookingCounts = await bookingsCountsResponse.json();
+                        const pendingBookings = (bookingCounts.pending || 0) + (bookingCounts.confirmed || 0);
+                        setStats(prev => ({
+                            ...prev,
+                            totalBookings: bookingCounts.total || 0,
+                            pendingBookings
+                        }));
+                    } else if (bookingsCountsResponse.status === 429) {
+                        console.warn('Rate limited on bookings/counts - using cached data');
+                    }
+                } catch (err) {
+                    console.error('Error fetching booking counts:', err);
                 }
+
+                // Add small delay to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 100));
 
                 // Fetch messages stats
-                const messagesResponse = await authenticatedFetch(`${API_BASE_URL}/messages`);
-                if (messagesResponse.ok) {
-                    const messages = await messagesResponse.json();
-                    // Filter contact messages only (exclude sent broadcasts)
-                    const contactMessages = messages.filter(m => m.type === 'contact');
-                    const unreadMessages = contactMessages.filter(m => m.status === 'unread').length;
-                    setStats(prev => ({
-                        ...prev,
-                        totalMessages: contactMessages.length,
-                        unreadMessages
-                    }));
+                try {
+                    const messagesResponse = await authenticatedFetch(`${API_BASE_URL}/messages`);
+                    if (messagesResponse.ok) {
+                        const messages = await messagesResponse.json();
+                        // Filter contact messages only (exclude sent broadcasts)
+                        const contactMessages = messages.filter(m => m.type === 'contact');
+                        const unreadMessages = contactMessages.filter(m => m.status === 'unread').length;
+                        setStats(prev => ({
+                            ...prev,
+                            totalMessages: contactMessages.length,
+                            unreadMessages
+                        }));
+                    } else if (messagesResponse.status === 429) {
+                        console.warn('Rate limited on messages - using cached data');
+                    }
+                } catch (err) {
+                    console.error('Error fetching messages stats:', err);
                 }
 
+                // Add small delay to avoid rate limiting
+                await new Promise(resolve => setTimeout(resolve, 100));
+
                 // Fetch donations stats
-                const donationsResponse = await authenticatedFetch(`${API_BASE_URL}/donations`);
-                if (donationsResponse.ok) {
-                    const donations = await donationsResponse.json();
-                    const totalAmount = donations.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0);
-                    setStats(prev => ({
-                        ...prev,
-                        totalDonations: donations.length,
-                        donationAmount: totalAmount
-                    }));
+                try {
+                    const donationsResponse = await authenticatedFetch(`${API_BASE_URL}/donations`);
+                    if (donationsResponse.ok) {
+                        const donations = await donationsResponse.json();
+                        const totalAmount = donations.reduce((sum, d) => sum + (parseFloat(d.amount) || 0), 0);
+                        setStats(prev => ({
+                            ...prev,
+                            totalDonations: donations.length,
+                            donationAmount: totalAmount
+                        }));
+                    } else if (donationsResponse.status === 429) {
+                        console.warn('Rate limited on donations - using cached data');
+                    }
+                } catch (err) {
+                    console.error('Error fetching donations stats:', err);
                 }
             } catch (error) {
                 console.error('Error fetching stats:', error);
+                setError('Failed to load some statistics. Please refresh the page.');
             } finally {
                 setLoading(false);
             }

@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import contentService from '../../services/contentService'
+import fallbackContent from '../../data/fallbackContent'
 import './style.css'
 
 const CounterSection = (props) => {
-    const [counters, setCounters] = useState([
-        { id: 1, count: 500, suffix: "+", label: "Life Members" },
-        { id: 2, count: 25, suffix: "", label: "Acres of Land" },
-        { id: 3, count: 2, prefix: "$", suffix: "M+", label: "Funds Raised" },
-        { id: 4, count: 1998, suffix: "", label: "Established" }
-    ]);
+    const [counters, setCounters] = useState([]);
 
     useEffect(() => {
         const loadCounters = async () => {
@@ -19,6 +15,11 @@ const CounterSection = (props) => {
                 }
             } catch (error) {
                 console.error('Error loading counters:', error);
+                // Use fallback content from generated file
+                console.log('Using fallback content for Counters');
+                if (fallbackContent.counters && fallbackContent.counters.length > 0) {
+                    setCounters(fallbackContent.counters);
+                }
             }
         };
         loadCounters();

@@ -18,6 +18,7 @@ router.get('/', verifyToken, requireMember, async (req, res, next) => {
         const filters = {};
         if (status) filters.status = status;
         if (paymentStatus) filters.paymentStatus = paymentStatus;
+        if (req.query.q) filters.q = req.query.q; // Add search query to filters
 
         // Check if pagination is requested
         const pageNum = parseInt(page) || null;

@@ -75,6 +75,11 @@ const dataProvider = {
                 queryParams.append('page', page);
                 queryParams.append('limit', perPage);
 
+                // Add search query to backend (server-side search)
+                if (q) {
+                    queryParams.append('q', q);
+                }
+
                 // Add filters
                 Object.keys(otherFilters).forEach(key => {
                     if (otherFilters[key] !== undefined && otherFilters[key] !== '') {
@@ -90,20 +95,6 @@ const dataProvider = {
                 // If paginated response, use it
                 if (result.data && Array.isArray(result.data)) {
                     let data = result.data;
-
-                    // Apply client-side search filter if needed (server doesn't support search yet)
-                    if (q) {
-                        data = data.filter(record =>
-                            Object.values(record).some(value => {
-                                if (typeof value === 'object' && value !== null) {
-                                    return Object.values(value).some(nestedValue =>
-                                        String(nestedValue).toLowerCase().includes(q.toLowerCase())
-                                    );
-                                }
-                                return String(value).toLowerCase().includes(q.toLowerCase());
-                            })
-                        );
-                    }
 
                     // Apply client-side sorting (server doesn't support sorting yet)
                     if (field) {

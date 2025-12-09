@@ -46,7 +46,8 @@ router.get('/', verifyToken, requireMember, async (req, res, next) => {
             membershipCategory: req.query.membershipCategory,
             membershipType: req.query.membershipType,
             paymentStatus: req.query.paymentStatus,
-            status: req.query.status
+            status: req.query.status,
+            q: req.query.q // Add search query to filters
         };
 
         // Check if pagination is requested

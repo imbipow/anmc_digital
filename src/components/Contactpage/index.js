@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import contentService from '../../services/contentService';
+import fallbackContent from '../../data/fallbackContent';
 import API_CONFIG from '../../config/api';
 import { getPhoneValidationError } from '../../utils/phoneValidation';
 import './style.css'
@@ -46,6 +47,50 @@ const Contactpage = () => {
                 }
             } catch (error) {
                 console.error('Error loading contact data:', error);
+                console.log('Using fallback content for Contactpage');
+
+                // Use hardcoded fallback for contact info (not in fallbackContent.js)
+                setContactInfo({
+                    address: '100 Duncans Lane, Diggers Rest VIC 3427',
+                    email: 'info@anmcinc.org.au',
+                    phone: '+61 450 092 041',
+                    emergencyPhone: '+61 400 123 456',
+                    officeHours: 'Monday to Friday: 9:00 AM - 5:00 PM',
+                    weekendHours: 'Saturday: 10:00 AM - 2:00 PM'
+                });
+
+                // Use fallback for executive committee
+                if (fallbackContent.aboutUs && fallbackContent.aboutUs.executiveCommittee && fallbackContent.aboutUs.executiveCommittee.members) {
+                    const formattedMembers = fallbackContent.aboutUs.executiveCommittee.members.map(member => ({
+                        name: member.name || member.title,
+                        position: member.title || member.position,
+                        email: member.email,
+                        phone: member.phone
+                    }));
+                    setExecutiveMembers(formattedMembers);
+                } else {
+                    // Hardcoded fallback if fallbackContent doesn't have executive members
+                    setExecutiveMembers([
+                        {
+                            name: 'Dr Tilak Pokhrel',
+                            position: 'President',
+                            email: 'president@anmc.org.au',
+                            phone: '+61 450 092 041'
+                        },
+                        {
+                            name: 'Sudhir Shakya',
+                            position: 'Secretary',
+                            email: 'secretary@anmcinc.org.au',
+                            phone: null
+                        },
+                        {
+                            name: 'Arjun Dhakal',
+                            position: 'Treasurer',
+                            email: 'treasurer@anmcinc.org.au',
+                            phone: null
+                        }
+                    ]);
+                }
             }
         };
         loadContactData();
@@ -157,7 +202,7 @@ const Contactpage = () => {
                                                 <p>
                                                     <strong>General Inquiries:</strong><br/>
                                                     <a href={`mailto:${contactInfo.email || 'info@anmcinc.org.au'}`}>{contactInfo.email || 'info@anmcinc.org.au'}</a><br/>
-                                                    <a href={`tel:${contactInfo.phone || '+61398765432'}`}>{contactInfo.phone || '+61 3 9876 5432'}</a>
+                                                    <a href={`tel:${contactInfo.phone || '+61398765432'}`}>{contactInfo.phone || '+61 450 092 041'}</a>
                                                 </p>
                                                 <p>
                                                     <strong>Emergency Contact:</strong><br/>

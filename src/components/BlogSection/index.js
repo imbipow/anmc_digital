@@ -3,6 +3,7 @@ import author from '../../images/blog/admin.jpg'
 import {Link} from 'react-router-dom'
 
 import contentService from '../../services/contentService'
+import fallbackContent from '../../data/fallbackContent'
 
 import './style.css'
 
@@ -11,7 +12,7 @@ const BlogSection = (props) => {
         sectionTitle: "Recent Updates",
         sectionHeading: "Latest News & Events"
     });
-    
+
     const [blogPosts, setBlogPosts] = useState([
         {
           id: 1,
@@ -104,6 +105,20 @@ const BlogSection = (props) => {
                 }
             } catch (error) {
                 console.error('Error loading blog section content:', error);
+                // Use fallback content from generated file
+                console.log('Using fallback content for Blog Section');
+                if (fallbackContent.news && fallbackContent.news.length > 0) {
+                    const fallbackPosts = fallbackContent.news.slice(0, 3).map((item, index) => ({
+                        id: `news-${item.id}`,
+                        title: item.title,
+                        authorName: item.authorName || 'ANMC Admin',
+                        date: item.publishDate || item.date,
+                        blogImg: item.featuredImage || (index === 0 ? props.blogImg1 : index === 1 ? props.blogImg2 : props.blogImg3),
+                        link: `/news/${item.slug}`,
+                        type: 'news'
+                    }));
+                    setBlogPosts(fallbackPosts);
+                }
             }
         };
         loadContent();

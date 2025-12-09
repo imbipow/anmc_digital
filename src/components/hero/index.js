@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {Link} from 'react-router-dom'
 import contentService from '../../services/contentService'
+import fallbackContent from '../../data/fallbackContent'
 import './style.css'
 
 const Hero = (props) => {
@@ -21,6 +22,13 @@ const Hero = (props) => {
                 }
             } catch (error) {
                 console.error('Error loading hero content:', error);
+                console.log('Using fallback content for Hero');
+                if (fallbackContent.homepage && fallbackContent.homepage.length > 0) {
+                    const heroComponent = fallbackContent.homepage.find(comp => comp.component === 'hero' || comp.id === 'hero');
+                    if (heroComponent && heroComponent.data) {
+                        setContent(heroComponent.data);
+                    }
+                }
             }
         };
         loadContent();
