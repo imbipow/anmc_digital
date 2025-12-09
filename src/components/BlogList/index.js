@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Link} from 'react-router-dom'
 import contentService from '../../services/contentService'
 import { stripAndTruncate } from '../../utils/htmlUtils'
+import fallbackContent from '../../data/fallbackContent'
 import './style.css'
 import blog1 from '../../images/blog/img-1.jpg'
 import blog2 from '../../images/blog/img-2.jpg'
@@ -57,22 +58,73 @@ const BlogList = () => {
 
                     setNewsArticles(sortedNews);
                 } else {
-                    // Fallback to default data if API fails
-                    setNewsArticles([
-                        {
-                            id: 1,
-                            title: "ANMC Celebrates Dashain Festival with Community Gathering",
-                            excerpt: "The Australian Nepalese Multicultural Centre hosted a vibrant Dashain celebration, bringing together over 200 community members to celebrate Nepal's biggest festival.",
-                            image: blog1,
-                            category: "Events",
-                            author: "ANMC Admin",
-                            date: "March 15, 2024",
-                            featured: true
-                        }
-                    ]);
+                    console.log('Using fallback content for BlogList - no API data');
+                    // Use fallback data from fallbackContent.js
+                    if (fallbackContent.news && fallbackContent.news.length > 0) {
+                        const images = [blog1, blog2, blog3, blog4, blog5, blog6];
+                        const publishedNews = fallbackContent.news.filter(article =>
+                            article.status === 'published'
+                        );
+                        const formattedNews = publishedNews.map((article, index) => ({
+                            id: article.id,
+                            title: article.title,
+                            excerpt: stripAndTruncate(article.excerpt || article.content, 200),
+                            image: article.featuredImage || images[index % images.length],
+                            category: article.category || 'News',
+                            author: article.authorName || 'ANMC Admin',
+                            date: new Date(article.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+                            featured: article.featured === true || article.featured === 'true',
+                            slug: article.slug
+                        }));
+                        const sortedNews = formattedNews.sort((a, b) => {
+                            const idA = parseInt(a.id) || 0;
+                            const idB = parseInt(b.id) || 0;
+                            return idB - idA;
+                        });
+                        setNewsArticles(sortedNews);
+                    } else {
+                        // Last resort fallback
+                        setNewsArticles([
+                            {
+                                id: 1,
+                                title: "ANMC Celebrates Dashain Festival with Community Gathering",
+                                excerpt: "The Australian Nepalese Multicultural Centre hosted a vibrant Dashain celebration, bringing together over 200 community members to celebrate Nepal's biggest festival.",
+                                image: blog1,
+                                category: "Events",
+                                author: "ANMC Admin",
+                                date: "March 15, 2024",
+                                featured: true
+                            }
+                        ]);
+                    }
                 }
             } catch (error) {
                 console.error('Error loading news:', error);
+                console.log('Using fallback content for BlogList');
+                // Use fallback data on error
+                if (fallbackContent.news && fallbackContent.news.length > 0) {
+                    const images = [blog1, blog2, blog3, blog4, blog5, blog6];
+                    const publishedNews = fallbackContent.news.filter(article =>
+                        article.status === 'published'
+                    );
+                    const formattedNews = publishedNews.map((article, index) => ({
+                        id: article.id,
+                        title: article.title,
+                        excerpt: stripAndTruncate(article.excerpt || article.content, 200),
+                        image: article.featuredImage || images[index % images.length],
+                        category: article.category || 'News',
+                        author: article.authorName || 'ANMC Admin',
+                        date: new Date(article.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }),
+                        featured: article.featured === true || article.featured === 'true',
+                        slug: article.slug
+                    }));
+                    const sortedNews = formattedNews.sort((a, b) => {
+                        const idA = parseInt(a.id) || 0;
+                        const idB = parseInt(b.id) || 0;
+                        return idB - idA;
+                    });
+                    setNewsArticles(sortedNews);
+                }
             }
         };
         loadNews();

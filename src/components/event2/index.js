@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {Link} from 'react-router-dom'
 import contentService from '../../services/contentService'
+import fallbackContent from '../../data/fallbackContent'
 import { formatTimeRange } from '../../utils/timeUtils'
 import './style.css'
 
@@ -124,9 +125,114 @@ const EventSection2 = (props) => {
                 }
             } catch (error) {
                 console.error('Error loading events:', error);
-                // Set fallback data if API fails
-                setUpcomingEventsDefault();
-                setRecentEventsDefault();
+                console.log('Using fallback content for Event Page (event2)');
+
+                // Use generated fallback content from API
+                if (fallbackContent.events && fallbackContent.events.length > 0) {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    // Filter upcoming events from fallback
+                    const upcomingEventsData = fallbackContent.events.filter(event => {
+                        if (!event.startDate) return false;
+                        const eventDate = new Date(event.startDate);
+                        eventDate.setHours(0, 0, 0, 0);
+                        return eventDate >= today;
+                    });
+
+                    // Filter past events from fallback
+                    const pastEventsData = fallbackContent.events.filter(event => {
+                        if (!event.startDate) return false;
+                        const eventDate = new Date(event.startDate);
+                        eventDate.setHours(0, 0, 0, 0);
+                        return eventDate < today;
+                    });
+
+                    // Format upcoming events
+                    const formattedUpcoming = upcomingEventsData
+                        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))
+                        .map(event => {
+                            const startDate = new Date(event.startDate);
+
+                            const formattedStartDate = startDate.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+
+                            let fullDateDisplay = formattedStartDate;
+
+                            if (event.endDate) {
+                                const endDate = new Date(event.endDate);
+                                const formattedEndDate = endDate.toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                });
+
+                                if (formattedEndDate !== formattedStartDate) {
+                                    fullDateDisplay = `${formattedStartDate} - ${formattedEndDate}`;
+                                }
+                            }
+
+                            // Handle ISO timestamps in fallback data
+                            let timeDisplay = '';
+                            if (event.time) {
+                                timeDisplay = event.time;
+                            } else if (event.startTime && event.endTime) {
+                                const startTime = new Date(event.startTime).toLocaleTimeString('en-US', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: true
+                                });
+                                const endTime = new Date(event.endTime).toLocaleTimeString('en-US', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: true
+                                });
+                                timeDisplay = `${startTime} - ${endTime}`;
+                            }
+
+                            return {
+                                id: event.id,
+                                slug: event.slug,
+                                date: startDate.getDate().toString(),
+                                month: startDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
+                                year: startDate.getFullYear().toString(),
+                                fullDate: fullDateDisplay,
+                                title: event.title,
+                                description: event.description || event.content,
+                                time: timeDisplay,
+                                venue: event.location,
+                                category: event.category || 'Event',
+                                status: event.status === 'upcoming' ? 'registration-open' : 'coming-soon'
+                            };
+                        });
+                    setUpcomingEvents(formattedUpcoming);
+
+                    // Format past events
+                    const formattedRecent = pastEventsData
+                        .sort((a, b) => new Date(b.startDate) - new Date(a.startDate))
+                        .slice(0, 3)
+                        .map((event, index) => {
+                            const images = [props.eventImg1, props.eventImg2, props.eventImg3];
+                            return {
+                                id: event.id,
+                                slug: event.slug,
+                                title: event.title,
+                                date: new Date(event.startDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' }),
+                                summary: event.description || event.content?.substring(0, 150) + '...',
+                                image: event.featuredImage || images[index % images.length],
+                                highlights: [`${event.maxAttendees || '100+'} attendees`, event.category || 'Community event', 'Cultural activities']
+                            };
+                        });
+                    setRecentEvents(formattedRecent);
+                    setHasMorePastEvents(pastEventsData.length > 3);
+                } else {
+                    // Hardcoded fallback as last resort
+                    setUpcomingEventsDefault();
+                    setRecentEventsDefault();
+                }
             }
         };
         loadEvents();

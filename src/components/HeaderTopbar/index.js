@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import {Link}  from 'react-router-dom'
 import contentService from '../../services/contentService'
+import fallbackContent from '../../data/fallbackContent'
 import './style.css'
 
 const HeaderTopbar = () => {
     const [contactInfo, setContactInfo] = useState({
-        phone: '+61 3 9876 5432',
+        phone: '0451 070 296',
         email: 'info@anmcinc.org.au'
     });
 
@@ -15,13 +16,19 @@ const HeaderTopbar = () => {
                 const data = await contentService.getContact();
                 if (data) {
                     setContactInfo({
-                        phone: data.phone || '+61 3 9876 5432',
+                        phone: data.phone || '0451 070 296',
                         email: data.email || 'info@anmcinc.org.au'
                     });
                 }
             } catch (error) {
                 console.error('Error loading contact info:', error);
-                // Keep default values if API fails
+                console.log('Using fallback content for HeaderTopbar');
+
+                // Use hardcoded fallback for contact info (not in fallbackContent.js)
+                setContactInfo({
+                    phone: '0451 070 296',
+                    email: 'info@anmcinc.org.au'
+                });
             }
         };
         loadContactInfo();

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import API_CONFIG from '../../config/api';
+import fallbackContent from '../../data/fallbackContent';
 import './style.css';
 
 const ProjectAchievements = (props) => {
@@ -26,6 +27,20 @@ const ProjectAchievements = (props) => {
                 }
             } catch (error) {
                 console.error('Error loading project achievements:', error);
+                console.log('Using fallback content for ProjectAchievements');
+                // Use fallback counters data
+                if (fallbackContent.counters && fallbackContent.counters.length > 0) {
+                    const formattedMetrics = fallbackContent.counters.map((counter) => ({
+                        icon: counter.prefix === '$' ? 'fa fa-dollar-sign' :
+                              counter.label.toLowerCase().includes('land') ? 'fa fa-map-marker' :
+                              counter.label.toLowerCase().includes('member') ? 'fa fa-users' :
+                              'fa fa-calendar',
+                        number: `${counter.prefix || ''}${counter.count}${counter.suffix || ''}`,
+                        label: counter.label,
+                        description: ''
+                    }));
+                    setProjectMetrics(formattedMetrics);
+                }
             }
         };
         loadAchievements();

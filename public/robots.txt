@@ -1,3 +1,55 @@
-# https://www.robotstxt.org/robotstxt.html
+# Robots.txt for Australian Nepalese Multicultural Centre (ANMC)
+# https://anmcinc.org.au
+
 User-agent: *
-Disallow:
+Allow: /
+
+# Disallow admin and private areas
+Disallow: /admin
+Disallow: /member-portal
+Disallow: /member/
+Disallow: /login
+Disallow: /signup
+Disallow: /user-signup
+Disallow: /forgot-password
+Disallow: /change-password
+Disallow: /registration-success
+Disallow: /booking-success
+Disallow: /kalash-booking-success
+Disallow: /booking-cancelled
+
+# Disallow API endpoints
+Disallow: /api/
+
+# Disallow build files
+Disallow: /static/
+Disallow: /*.json$
+
+# Allow CSS and JS for better rendering
+Allow: /static/css/
+Allow: /static/js/
+
+# Sitemaps
+Sitemap: https://anmcinc.org.au/sitemap.xml
+
+# Crawl delay (be respectful)
+Crawl-delay: 1
+
+# Specific bot rules
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 0
+
+# Block bad bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /

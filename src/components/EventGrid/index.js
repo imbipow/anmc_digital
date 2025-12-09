@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import contentService from '../../services/contentService';
+import fallbackContent from '../../data/fallbackContent';
 import { formatTimeRange } from '../../utils/timeUtils';
 import './style.css';
 
@@ -142,7 +143,78 @@ const EventGrid = ({ showTitle = true, limit = 6 }) => {
                 setEvents(formattedEvents);
             } catch (error) {
                 console.error('EventGrid: Error loading events:', error);
-                setEvents([]);
+                console.log('Using fallback content for EventGrid');
+
+                // Use fallback events
+                if (fallbackContent.events && fallbackContent.events.length > 0) {
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+
+                    const fallbackEvents = fallbackContent.events
+                        .filter(event => {
+                            if (!event.startDate) return false;
+                            const eventStartDate = new Date(event.startDate);
+                            eventStartDate.setHours(0, 0, 0, 0);
+                            return eventStartDate >= today;
+                        })
+                        .map(event => {
+                            const startDate = new Date(event.startDate);
+                            const formattedStartDate = startDate.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric'
+                            });
+
+                            let dateDisplay = formattedStartDate;
+                            if (event.endDate) {
+                                const endDate = new Date(event.endDate);
+                                const formattedEndDate = endDate.toLocaleDateString('en-US', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                });
+                                if (formattedEndDate !== formattedStartDate) {
+                                    dateDisplay = `${formattedStartDate} - ${formattedEndDate}`;
+                                }
+                            }
+
+                            let timeDisplay = '';
+                            if (event.time) {
+                                timeDisplay = event.time;
+                            } else if (event.startTime && event.endTime) {
+                                const startTime = new Date(event.startTime).toLocaleTimeString('en-US', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: true
+                                });
+                                const endTime = new Date(event.endTime).toLocaleTimeString('en-US', {
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: true
+                                });
+                                timeDisplay = `${startTime} - ${endTime}`;
+                            }
+
+                            return {
+                                id: event.id,
+                                title: event.title,
+                                description: event.description || event.summary,
+                                image: event.featuredImage || event.image,
+                                category: event.category || 'Event',
+                                date: dateDisplay,
+                                startDate: startDate,
+                                time: timeDisplay,
+                                location: event.location,
+                                slug: event.slug
+                            };
+                        })
+                        .sort((a, b) => a.startDate - b.startDate)
+                        .slice(0, limit);
+
+                    setEvents(fallbackEvents);
+                } else {
+                    setEvents([]);
+                }
             } finally {
                 setLoading(false);
             }

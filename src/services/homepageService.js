@@ -15,6 +15,14 @@ class HomepageService {
           fetch(API_CONFIG.getURL(API_CONFIG.endpoints.counters))
         ]);
 
+        // Check for HTTP errors (404, 500, etc.)
+        if (!homepageResponse.ok) {
+          throw new Error(`HTTP ${homepageResponse.status}: Failed to fetch homepage data`);
+        }
+        if (!countersResponse.ok) {
+          throw new Error(`HTTP ${countersResponse.status}: Failed to fetch counters data`);
+        }
+
         const homepageData = await homepageResponse.json();
         const countersData = await countersResponse.json();
 

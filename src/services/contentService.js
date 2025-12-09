@@ -68,11 +68,17 @@ class ContentService {
         ? API_CONFIG.endpoints.newsFeatured
         : API_CONFIG.endpoints.news;
       const response = await fetch(API_CONFIG.getURL(endpoint));
+
+      // Check for HTTP errors (404, 500, etc.)
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: Failed to fetch news`);
+      }
+
       const news = await response.json();
       return news;
     } catch (error) {
       console.error('Error fetching news:', error);
-      return [];
+      throw error; // Re-throw to trigger fallback in components
     }
   }
 
@@ -83,11 +89,17 @@ class ContentService {
         ? API_CONFIG.endpoints.eventsFeatured
         : API_CONFIG.endpoints.events;
       const response = await fetch(API_CONFIG.getURL(endpoint));
+
+      // Check for HTTP errors (404, 500, etc.)
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: Failed to fetch events`);
+      }
+
       const events = await response.json();
       return events;
     } catch (error) {
       console.error('Error fetching events:', error);
-      return [];
+      throw error; // Re-throw to trigger fallback in components
     }
   }
 
@@ -98,11 +110,17 @@ class ContentService {
         ? API_CONFIG.endpoints.projectsFeatured
         : API_CONFIG.endpoints.projects;
       const response = await fetch(API_CONFIG.getURL(endpoint));
+
+      // Check for HTTP errors (404, 500, etc.)
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: Failed to fetch projects`);
+      }
+
       const projects = await response.json();
       return projects;
     } catch (error) {
       console.error('Error fetching projects:', error);
-      return [];
+      throw error; // Re-throw to trigger fallback in components
     }
   }
 
@@ -120,11 +138,17 @@ class ContentService {
   async getFacilities() {
     try {
       const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.facilities));
+
+      // Check for HTTP errors (404, 500, etc.)
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: Failed to fetch facilities`);
+      }
+
       const facilities = await response.json();
       return facilities;
     } catch (error) {
       console.error('Error fetching facilities:', error);
-      return [];
+      throw error; // Re-throw to trigger fallback in components
     }
   }
 
@@ -132,11 +156,17 @@ class ContentService {
   async getContact() {
     try {
       const response = await fetch(API_CONFIG.getURL(API_CONFIG.endpoints.contact));
+
+      // Check for HTTP errors (404, 500, etc.)
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: Failed to fetch contact info`);
+      }
+
       const contact = await response.json();
       return Array.isArray(contact) ? contact[0] : contact;
     } catch (error) {
       console.error('Error fetching contact info:', error);
-      return {};
+      throw error; // Re-throw to trigger fallback in components
     }
   }
 

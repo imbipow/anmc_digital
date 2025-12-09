@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {Link} from 'react-router-dom'
 import contentService from '../../services/contentService'
+import fallbackContent from '../../data/fallbackContent'
 
 import './style.css'
 
@@ -83,6 +84,59 @@ const EventSection = (props) => {
                 }
             } catch (error) {
                 console.error('Error loading events:', error);
+                console.log('Using fallback content for Events');
+                if (fallbackContent.events && fallbackContent.events.length > 0) {
+                    const fallbackEvents = fallbackContent.events.slice(0, 2).map((event, index) => {
+                        const startDate = new Date(event.startDate);
+
+                        // Format date to match EventSingle style
+                        const formattedStartDate = startDate.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+
+                        const formattedEndDate = event.endDate ? new Date(event.endDate).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        }) : null;
+
+                        const dateDisplay = formattedEndDate && formattedEndDate !== formattedStartDate
+                            ? `${formattedStartDate} - ${formattedEndDate}`
+                            : formattedStartDate;
+
+                        let timeDisplay = event.time || '';
+                        if (!timeDisplay && event.startTime && event.endTime) {
+                            // Format ISO timestamps to readable time
+                            const startTime = new Date(event.startTime).toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true
+                            });
+                            const endTime = new Date(event.endTime).toLocaleTimeString('en-US', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                hour12: true
+                            });
+                            timeDisplay = `${startTime} - ${endTime}`;
+                        }
+
+                        return {
+                            eventImg: event.featuredImage || event.image || (index === 0 ? props.eventImg1 : props.eventImg2),
+                            date: startDate.getDate().toString(),
+                            month: startDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase(),
+                            title: event.title,
+                            fullDate: dateDisplay,
+                            time: timeDisplay,
+                            location: event.location,
+                            des: event.description || event.summary,
+                            btn: "Learn More...",
+                            link: `/event/${event.slug || event.id}`,
+                        };
+                    });
+                    setEventList(fallbackEvents);
+                }
             }
         };
         loadEvents();
