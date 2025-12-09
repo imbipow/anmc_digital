@@ -9,7 +9,7 @@ import './style.css'
 const Footer = (props) =>{
     const [contactInfo, setContactInfo] = useState({
         address: '100 Duncans Lane, Diggers Rest VIC 3427',
-        phone: '0451 070 296',
+        phone: '+61 450 092 041',
         email: 'info@anmcinc.org.au',
         socialMedia: {
             facebook: '',

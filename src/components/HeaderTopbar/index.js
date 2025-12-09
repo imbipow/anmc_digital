@@ -6,7 +6,7 @@ import './style.css'
 
 const HeaderTopbar = () => {
     const [contactInfo, setContactInfo] = useState({
-        phone: '0451 070 296',
+        phone: '+61 450 092 041',
         email: 'info@anmcinc.org.au'
     });
 
@@ -16,7 +16,7 @@ const HeaderTopbar = () => {
                 const data = await contentService.getContact();
                 if (data) {
                     setContactInfo({
-                        phone: data.phone || '0451 070 296',
+                        phone: data.phone || '+61 450 092 041',
                         email: data.email || 'info@anmcinc.org.au'
                     });
                 }
@@ -26,7 +26,7 @@ const HeaderTopbar = () => {
 
                 // Use hardcoded fallback for contact info (not in fallbackContent.js)
                 setContactInfo({
-                    phone: '0451 070 296',
+                    phone: '+61 450 092 041',
                     email: 'info@anmcinc.org.au'
                 });
             }

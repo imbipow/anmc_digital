@@ -53,7 +53,7 @@ const Contactpage = () => {
                 setContactInfo({
                     address: '100 Duncans Lane, Diggers Rest VIC 3427',
                     email: 'info@anmcinc.org.au',
-                    phone: '0451 070 296',
+                    phone: '+61 450 092 041',
                     emergencyPhone: '+61 400 123 456',
                     officeHours: 'Monday to Friday: 9:00 AM - 5:00 PM',
                     weekendHours: 'Saturday: 10:00 AM - 2:00 PM'
@@ -202,7 +202,7 @@ const Contactpage = () => {
                                                 <p>
                                                     <strong>General Inquiries:</strong><br/>
                                                     <a href={`mailto:${contactInfo.email || 'info@anmcinc.org.au'}`}>{contactInfo.email || 'info@anmcinc.org.au'}</a><br/>
-                                                    <a href={`tel:${contactInfo.phone || '+61398765432'}`}>{contactInfo.phone || '0451 070 296'}</a>
+                                                    <a href={`tel:${contactInfo.phone || '+61398765432'}`}>{contactInfo.phone || '+61 450 092 041'}</a>
                                                 </p>
                                                 <p>
                                                     <strong>Emergency Contact:</strong><br/>
