@@ -1,151 +1,64 @@
 const dynamoDBService = require('./dynamodb');
 const config = require('../config');
-const fs = require('fs').promises;
-const path = require('path');
 
 class DonationsService {
   constructor() {
     this.tableName = config.tables.donations;
-    this.localDataPath = path.join(__dirname, '../data/donations.json');
-    this.useDynamoDB = process.env.USE_DYNAMODB === 'true';
-  }
-
-  async getLocalData() {
-    try {
-      const data = await fs.readFile(this.localDataPath, 'utf8');
-      return JSON.parse(data);
-    } catch (error) {
-      console.error('Error reading local donations data:', error);
-      return [];
-    }
-  }
-
-  async saveLocalData(data) {
-    try {
-      await fs.writeFile(this.localDataPath, JSON.stringify(data, null, 2));
-    } catch (error) {
-      console.error('Error writing local donations data:', error);
-      throw error;
-    }
   }
 
   async getAll() {
-    if (this.useDynamoDB) {
-      const donations = await dynamoDBService.getAllItems(this.tableName);
-      return donations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    } else {
-      const donations = await this.getLocalData();
-      return donations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    }
+    const donations = await dynamoDBService.getAllItems(this.tableName);
+    return donations.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   }
 
   async getById(id) {
-    if (this.useDynamoDB) {
-      return await dynamoDBService.getItem(this.tableName, { id: parseInt(id) });
-    } else {
-      const donations = await this.getLocalData();
-      return donations.find(donation => donation.id === parseInt(id)) || null;
-    }
+    return await dynamoDBService.getItem(this.tableName, { id: parseInt(id) });
   }
 
   async getByStatus(status) {
-    if (this.useDynamoDB) {
-      const donations = await dynamoDBService.getAllItems(this.tableName);
-      return donations
-        .filter(donation => donation.paymentStatus === status)
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    } else {
-      const donations = await this.getLocalData();
-      return donations
-        .filter(donation => donation.paymentStatus === status)
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    }
+    const donations = await dynamoDBService.getAllItems(this.tableName);
+    return donations
+      .filter(donation => donation.paymentStatus === status)
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   }
 
   async create(donationData) {
-    if (this.useDynamoDB) {
-      const donations = await dynamoDBService.getAllItems(this.tableName);
-      const newId = donations.length > 0 ? Math.max(...donations.map(d => d.id)) + 1 : 1;
+    const donations = await dynamoDBService.getAllItems(this.tableName);
+    const newId = donations.length > 0 ? Math.max(...donations.map(d => d.id)) + 1 : 1;
 
-      const newDonation = {
-        id: newId,
-        ...donationData,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
+    const newDonation = {
+      id: newId,
+      ...donationData,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
 
-      return await dynamoDBService.createItem(this.tableName, newDonation);
-    } else {
-      const donations = await this.getLocalData();
-      const newId = donations.length > 0 ? Math.max(...donations.map(d => d.id)) + 1 : 1;
-
-      const newDonation = {
-        id: newId,
-        ...donationData,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      };
-
-      donations.push(newDonation);
-      await this.saveLocalData(donations);
-      return newDonation;
-    }
+    return await dynamoDBService.createItem(this.tableName, newDonation);
   }
 
   async update(id, updates) {
-    if (this.useDynamoDB) {
-      const donation = await this.getById(id);
+    const donation = await this.getById(id);
 
-      if (!donation) {
-        throw new Error('Donation not found');
-      }
-
-      return await dynamoDBService.updateItem(
-        this.tableName,
-        { id: parseInt(id) },
-        { ...updates, updatedAt: new Date().toISOString() }
-      );
-    } else {
-      const donations = await this.getLocalData();
-      const index = donations.findIndex(donation => donation.id === parseInt(id));
-
-      if (index === -1) {
-        throw new Error('Donation not found');
-      }
-
-      donations[index] = {
-        ...donations[index],
-        ...updates,
-        updatedAt: new Date().toISOString()
-      };
-      await this.saveLocalData(donations);
-      return donations[index];
+    if (!donation) {
+      throw new Error('Donation not found');
     }
+
+    return await dynamoDBService.updateItem(
+      this.tableName,
+      { id: parseInt(id) },
+      { ...updates, updatedAt: new Date().toISOString() }
+    );
   }
 
   async delete(id) {
-    if (this.useDynamoDB) {
-      const donation = await this.getById(id);
+    const donation = await this.getById(id);
 
-      if (!donation) {
-        throw new Error('Donation not found');
-      }
-
-      await dynamoDBService.deleteItem(this.tableName, { id: parseInt(id) });
-      return donation;
-    } else {
-      const donations = await this.getLocalData();
-      const index = donations.findIndex(donation => donation.id === parseInt(id));
-
-      if (index === -1) {
-        throw new Error('Donation not found');
-      }
-
-      const deletedDonation = donations[index];
-      donations.splice(index, 1);
-      await this.saveLocalData(donations);
-      return deletedDonation;
+    if (!donation) {
+      throw new Error('Donation not found');
     }
+
+    await dynamoDBService.deleteItem(this.tableName, { id: parseInt(id) });
+    return donation;
   }
 
   async getTotalAmount() {

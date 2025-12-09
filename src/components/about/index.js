@@ -19,23 +19,7 @@ const About = () => {
                 console.log('Fallback aboutUs exists?', !!fallbackContent.aboutUs);
                 console.log('Executive members count:', fallbackContent.aboutUs?.executiveCommittee?.members?.length);
                 console.log('Governance structure count:', fallbackContent.aboutUs?.governance?.structure?.length);
-                setAboutData(fallbackContent.aboutUs || {
-                    mission: {
-                        title: 'Our Mission',
-                        content: 'To foster cultural diversity and strengthen community bonds through programs that celebrate Nepalese heritage while promoting integration and multicultural understanding in Australia.',
-                        icon: 'fa fa-bullseye'
-                    },
-                    vision: {
-                        title: 'Our Vision',
-                        content: 'To be Australia\'s leading multicultural centre that bridges communities, preserves cultural identity, and creates opportunities for growth, learning, and mutual respect among diverse populations.',
-                        icon: 'fa fa-eye'
-                    },
-                    history: {
-                        title: 'Our History',
-                        content: 'Established to serve the growing Nepalese community in Australia, ANMC has evolved into a vibrant multicultural hub, organizing events, providing support services, and fostering community connections since our inception.',
-                        icon: 'fa fa-history'
-                    }
-                });
+                setAboutData(fallbackContent.aboutUs);
             } finally {
                 setLoading(false);
             }
@@ -174,7 +158,7 @@ const About = () => {
                         <p>{aboutData.governance?.subtitle || 'Our organizational leadership framework'}</p>
                     </div>
                     <div className="row">
-                        {aboutData.governance?.structure?.length > 0 ? (
+                        {aboutData.governance?.structure?.length > 0 && (
                             aboutData.governance.structure.map((item, index) => (
                                 <div key={index} className="col-lg-4 col-md-6 col-sm-12">
                                     <div className="governance-card">
@@ -206,37 +190,6 @@ const About = () => {
                                     </div>
                                 </div>
                             ))
-                        ) : (
-                            // Default governance items if none provided
-                            <>
-                                <div className="col-lg-4 col-md-6 col-sm-12">
-                                    <div className="governance-card">
-                                        <div className="governance-icon">
-                                            <i className="fa fa-gavel"></i>
-                                        </div>
-                                        <h3>Presidential Council</h3>
-                                        <p>The Presidential Council provides strategic guidance and oversight, ensuring organizational alignment with community needs and long-term sustainability goals.</p>
-                                    </div>
-                                </div>
-                                <div className="col-lg-4 col-md-6 col-sm-12">
-                                    <div className="governance-card">
-                                        <div className="governance-icon">
-                                            <i className="fa fa-shield"></i>
-                                        </div>
-                                        <h3>Patrons</h3>
-                                        <p>Distinguished community leaders who lend their expertise and support, helping to advance our mission and strengthen community partnerships.</p>
-                                    </div>
-                                </div>
-                                <div className="col-lg-4 col-md-6 col-sm-12">
-                                    <div className="governance-card">
-                                        <div className="governance-icon">
-                                            <i className="fa fa-users"></i>
-                                        </div>
-                                        <h3>Advisors</h3>
-                                        <p>Experienced professionals providing specialized knowledge and guidance across various domains to enhance our programs and community impact.</p>
-                                    </div>
-                                </div>
-                            </>
                         )}
                     </div>
                 </div>
