@@ -138,8 +138,8 @@ const Service2 = (props) => {
                         <div className="col-12">
                             <div className="wpo-section-title text-center">
                                 <span>Our Vision</span>
-                                <h2>{masterPlan.title || 'ANMC Development Master Plan'}</h2>
-                                <p>{masterPlan.description || 'A comprehensive four-phase development plan to create Australia\'s premier multicultural community centre, fostering cultural diversity, community integration, and providing essential services to the Australian-Nepalese and broader multicultural community.'}</p>
+                                <h2>{masterPlan.title}</h2>
+                                <p>{masterPlan.description}</p>
                             </div>
                         </div>
                     </div>
