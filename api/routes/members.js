@@ -519,53 +519,86 @@ router.put('/:id', verifyToken, requireMember, async (req, res, next) => {
         // Update member in DynamoDB
         const updatedMember = await membersService.update(id, memberData);
 
-        // Update Cognito user attributes if user exists in Cognito
-        try {
-            const cognitoUser = await cognitoService.getUser(oldEmail);
+        // Update or create Cognito user
+        if (cognitoService.isConfigured()) {
+            try {
+                const cognitoUser = await cognitoService.getUser(oldEmail);
 
-            if (cognitoUser) {
-                const cognitoAttributes = {};
+                if (cognitoUser) {
+                    // User exists - update attributes
+                    const cognitoAttributes = {};
 
-                // Update first name
-                if (memberData.firstName && memberData.firstName !== existingMember.firstName) {
-                    cognitoAttributes.given_name = memberData.firstName;
-                }
-
-                // Update last name
-                if (memberData.lastName && memberData.lastName !== existingMember.lastName) {
-                    cognitoAttributes.family_name = memberData.lastName;
-                }
-
-                // Update phone number
-                if (memberData.mobile && memberData.mobile !== existingMember.mobile) {
-                    let formattedPhone = memberData.mobile;
-                    if (memberData.mobile.startsWith('04')) {
-                        formattedPhone = '+61' + memberData.mobile.substring(1);
-                    } else if (!memberData.mobile.startsWith('+')) {
-                        formattedPhone = '+61' + memberData.mobile;
+                    // Update first name
+                    if (memberData.firstName && memberData.firstName !== existingMember.firstName) {
+                        cognitoAttributes.given_name = memberData.firstName;
                     }
-                    cognitoAttributes.phone_number = formattedPhone;
-                }
 
-                // Update email - set as unverified to trigger verification
-                if (emailChanged) {
-                    cognitoAttributes.email = memberData.email;
-                    cognitoAttributes.email_verified = 'false'; // Require re-verification
-                    console.log(`📧 Email changed from ${oldEmail} to ${memberData.email}, verification required`);
-                }
+                    // Update last name
+                    if (memberData.lastName && memberData.lastName !== existingMember.lastName) {
+                        cognitoAttributes.family_name = memberData.lastName;
+                    }
 
-                // Update Cognito attributes if there are any changes
-                if (Object.keys(cognitoAttributes).length > 0) {
-                    await cognitoService.updateUserAttributes(oldEmail, cognitoAttributes);
-                    console.log(`✅ Cognito user attributes updated for: ${oldEmail}`);
+                    // Update phone number
+                    if (memberData.mobile && memberData.mobile !== existingMember.mobile) {
+                        let formattedPhone = memberData.mobile;
+                        if (memberData.mobile.startsWith('04')) {
+                            formattedPhone = '+61' + memberData.mobile.substring(1);
+                        } else if (!memberData.mobile.startsWith('+')) {
+                            formattedPhone = '+61' + memberData.mobile;
+                        }
+                        cognitoAttributes.phone_number = formattedPhone;
+                    }
+
+                    // Update email - set as unverified to trigger verification
+                    if (emailChanged) {
+                        cognitoAttributes.email = memberData.email;
+                        cognitoAttributes.email_verified = 'false'; // Require re-verification
+                        console.log(`📧 Email changed from ${oldEmail} to ${memberData.email}, verification required`);
+                    }
+
+                    // Update Cognito attributes if there are any changes
+                    if (Object.keys(cognitoAttributes).length > 0) {
+                        await cognitoService.updateUserAttributes(oldEmail, cognitoAttributes);
+                        console.log(`✅ Cognito user attributes updated for: ${oldEmail}`);
+                    }
+                } else {
+                    // User doesn't exist - create new Cognito user if member is active/approved
+                    if (updatedMember.status === 'active' && isAdmin) {
+                        console.log(`🔐 Creating new Cognito user for member: ${updatedMember.email}`);
+
+                        // Generate temporary password
+                        const tempPassword = cognitoService.generateTemporaryPassword();
+
+                        const cognitoResult = await cognitoService.createUser({
+                            email: updatedMember.email,
+                            password: tempPassword,
+                            firstName: updatedMember.firstName,
+                            lastName: updatedMember.lastName,
+                            phone: updatedMember.mobile,
+                            membershipType: updatedMember.membershipCategory,
+                            membershipCategory: updatedMember.membershipType,
+                            memberId: updatedMember.referenceNo
+                        }, true, 'member', false, false); // enabled=true, userType=member, forceReset=false, sendEmail=false
+
+                        // Update member with Cognito user ID
+                        await membersService.update(id, {
+                            cognitoUserId: cognitoResult.userSub,
+                            cognitoEnabled: true
+                        });
+
+                        console.log(`✅ Cognito user created for: ${updatedMember.email}`);
+                        console.log(`📧 Temporary password: ${tempPassword}`);
+
+                        // TODO: Send welcome email with temporary password
+                    } else {
+                        console.log(`⚠️ No Cognito user found for: ${oldEmail}, skipping Cognito creation (member status: ${updatedMember.status})`);
+                    }
                 }
-            } else {
-                console.log(`⚠️ No Cognito user found for: ${oldEmail}, skipping Cognito update`);
+            } catch (cognitoError) {
+                // Log the error but don't fail the entire update
+                console.error('❌ Error syncing Cognito user:', cognitoError);
+                console.log('⚠️ Member data updated in DynamoDB but Cognito sync failed');
             }
-        } catch (cognitoError) {
-            // Log the error but don't fail the entire update
-            console.error('❌ Error updating Cognito user:', cognitoError);
-            console.log('⚠️ Member data updated in DynamoDB but Cognito sync failed');
         }
 
         res.json({
@@ -1195,10 +1228,98 @@ router.patch('/:idOrRef', verifyToken, requireMember, async (req, res, next) => 
             }
         }
 
+        const emailChanged = memberData.email && memberData.email !== member.email;
+        const oldEmail = member.email;
+
         // Update member in DynamoDB using the member's actual ID
         const updatedMember = await membersService.update(member.id, memberData);
 
-        res.json(updatedMember);
+        // Update or create Cognito user
+        if (cognitoService.isConfigured()) {
+            try {
+                const cognitoUser = await cognitoService.getUser(oldEmail);
+
+                if (cognitoUser) {
+                    // User exists - update attributes
+                    const cognitoAttributes = {};
+
+                    // Update first name
+                    if (memberData.firstName && memberData.firstName !== member.firstName) {
+                        cognitoAttributes.given_name = memberData.firstName;
+                    }
+
+                    // Update last name
+                    if (memberData.lastName && memberData.lastName !== member.lastName) {
+                        cognitoAttributes.family_name = memberData.lastName;
+                    }
+
+                    // Update phone number
+                    if (memberData.mobile && memberData.mobile !== member.mobile) {
+                        let formattedPhone = memberData.mobile;
+                        if (memberData.mobile.startsWith('04')) {
+                            formattedPhone = '+61' + memberData.mobile.substring(1);
+                        } else if (!memberData.mobile.startsWith('+')) {
+                            formattedPhone = '+61' + memberData.mobile;
+                        }
+                        cognitoAttributes.phone_number = formattedPhone;
+                    }
+
+                    // Update email - set as unverified to trigger verification
+                    if (emailChanged) {
+                        cognitoAttributes.email = memberData.email;
+                        cognitoAttributes.email_verified = 'false'; // Require re-verification
+                        console.log(`📧 Email changed from ${oldEmail} to ${memberData.email}, verification required`);
+                    }
+
+                    // Update Cognito attributes if there are any changes
+                    if (Object.keys(cognitoAttributes).length > 0) {
+                        await cognitoService.updateUserAttributes(oldEmail, cognitoAttributes);
+                        console.log(`✅ Cognito user attributes updated for: ${oldEmail}`);
+                    }
+                } else {
+                    // User doesn't exist - create new Cognito user if member is active/approved
+                    if (updatedMember.status === 'active' && isAdmin) {
+                        console.log(`🔐 Creating new Cognito user for member: ${updatedMember.email}`);
+
+                        // Generate temporary password
+                        const tempPassword = cognitoService.generateTemporaryPassword();
+
+                        const cognitoResult = await cognitoService.createUser({
+                            email: updatedMember.email,
+                            password: tempPassword,
+                            firstName: updatedMember.firstName,
+                            lastName: updatedMember.lastName,
+                            phone: updatedMember.mobile,
+                            membershipType: updatedMember.membershipCategory,
+                            membershipCategory: updatedMember.membershipType,
+                            memberId: updatedMember.referenceNo
+                        }, true, 'member', false, false); // enabled=true, userType=member, forceReset=false, sendEmail=false
+
+                        // Update member with Cognito user ID
+                        await membersService.update(member.id, {
+                            cognitoUserId: cognitoResult.userSub,
+                            cognitoEnabled: true
+                        });
+
+                        console.log(`✅ Cognito user created for: ${updatedMember.email}`);
+                        console.log(`📧 Temporary password: ${tempPassword}`);
+
+                        // TODO: Send welcome email with temporary password
+                    } else {
+                        console.log(`⚠️ No Cognito user found for: ${oldEmail}, skipping Cognito creation (member status: ${updatedMember.status})`);
+                    }
+                }
+            } catch (cognitoError) {
+                // Log the error but don't fail the entire update
+                console.error('❌ Error syncing Cognito user:', cognitoError);
+                console.log('⚠️ Member data updated in DynamoDB but Cognito sync failed');
+            }
+        }
+
+        res.json({
+            ...updatedMember,
+            emailVerificationRequired: emailChanged
+        });
     } catch (error) {
         console.error('Error updating member:', error);
         if (error.message === 'Member not found') {

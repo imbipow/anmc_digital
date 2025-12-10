@@ -57,6 +57,10 @@ const ForgotPassword = (props) => {
                 toast.error('No account found with this email address');
             } else if (error.code === 'LimitExceededException') {
                 toast.error('Too many attempts. Please try again later');
+            } else if (error.code === 'UserInForceChangePasswordState') {
+                toast.error('Your account requires initial password setup. Please check your email for your temporary password and use it to log in, then change your password.');
+            } else if (error.code === 'InvalidParameterException') {
+                toast.error('Unable to send password reset email. Please contact support if you need assistance.');
             } else {
                 toast.error(error.message || 'Failed to send verification code');
             }
