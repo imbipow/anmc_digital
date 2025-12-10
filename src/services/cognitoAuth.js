@@ -365,6 +365,8 @@ class CognitoAuthService {
 
     /**
      * Forgot password - initiate reset
+     * Note: This may not work for users in FORCE_CHANGE_PASSWORD state
+     * Those users should use their temporary password to log in and change it
      */
     forgotPassword(email) {
         return new Promise((resolve, reject) => {
@@ -382,10 +384,24 @@ class CognitoAuthService {
 
             cognitoUser.forgotPassword({
                 onSuccess: (data) => {
+                    console.log('✅ Password reset code sent successfully');
                     resolve(data);
                 },
                 onFailure: (err) => {
-                    reject(err);
+                    console.error('❌ Forgot password error:', err);
+
+                    // Handle specific error cases
+                    if (err.code === 'InvalidParameterException' &&
+                        err.message && err.message.includes('Cannot reset password for the user as there is no registered/verified email')) {
+                        // User might be in FORCE_CHANGE_PASSWORD state
+                        reject({
+                            ...err,
+                            code: 'UserInForceChangePasswordState',
+                            message: 'Your account requires initial password setup. Please check your email for your temporary password or contact support.'
+                        });
+                    } else {
+                        reject(err);
+                    }
                 }
             });
         });
