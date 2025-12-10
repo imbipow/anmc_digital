@@ -9,6 +9,45 @@ const MESSAGES_TABLE = config.tables.messages;
 const MEMBERS_TABLE = config.tables.members;
 const SUBSCRIBERS_TABLE = config.tables.subscribers;
 
+/**
+ * Filter out dummy/test email addresses
+ * @param {string[]} emails - Array of email addresses
+ * @returns {string[]} Filtered array without dummy emails
+ */
+const filterDummyEmails = (emails) => {
+    const dummyPatterns = [
+        /^test/i,               // test@example.com, testuser@domain.com
+        /^dummy/i,              // dummy@example.com
+        /^fake/i,               // fake@example.com
+        /^sample/i,             // sample@example.com
+        /@example\.com$/i,      // anything@example.com
+        /@test\.com$/i,         // anything@test.com
+        /@dummy\.com$/i,        // anything@dummy.com
+        /@fake\.com$/i,         // anything@fake.com
+        /noreply/i,             // noreply@domain.com
+        /no-reply/i,            // no-reply@domain.com
+        /@localhost$/i,         // anything@localhost
+        /^admin@test/i,         // admin@test.com
+        /^user\d+@/i,           // user1@domain.com, user123@domain.com
+        /^\d+@/,                // 123@domain.com (numeric only)
+        /^temp/i,               // temp@example.com
+        /^demo/i,               // demo@example.com
+    ];
+
+    return emails.filter(email => {
+        if (!email || typeof email !== 'string') return false;
+
+        // Check if email matches any dummy pattern
+        const isDummy = dummyPatterns.some(pattern => pattern.test(email));
+
+        if (isDummy) {
+            console.log(`⏭️  Skipping dummy email: ${email}`);
+        }
+
+        return !isDummy;
+    });
+};
+
 // Create contact form message - PUBLIC ENDPOINT
 router.post('/contact', async (req, res) => {
     try {
@@ -212,6 +251,24 @@ router.post('/broadcast', verifyToken, requireAdmin, async (req, res) => {
 
         // Remove duplicates
         emailList = [...new Set(emailList)];
+
+        // Filter out dummy/test emails
+        const originalCount = emailList.length;
+        emailList = filterDummyEmails(emailList);
+        const filteredCount = originalCount - emailList.length;
+
+        if (filteredCount > 0) {
+            console.log(`🧹 Filtered out ${filteredCount} dummy email(s) from broadcast`);
+        }
+
+        // Validate we still have recipients after filtering
+        if (emailList.length === 0) {
+            return res.status(400).json({
+                error: 'No valid recipients after filtering dummy emails',
+                originalCount: originalCount,
+                filteredCount: filteredCount
+            });
+        }
 
         // Save broadcast message
         const broadcastMessage = {
