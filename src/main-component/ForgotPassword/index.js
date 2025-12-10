@@ -14,7 +14,7 @@ const ForgotPassword = (props) => {
 
     const push = useNavigate();
 
-    const [step, setStep] = useState(1); // 1: Request code, 2: Confirm new password
+    const [step, setStep] = useState(1); // 1: Request code, 2: Confirm new password, 3: Reset for FORCE_CHANGE_PASSWORD
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
 
@@ -58,7 +58,10 @@ const ForgotPassword = (props) => {
             } else if (error.code === 'LimitExceededException') {
                 toast.error('Too many attempts. Please try again later');
             } else if (error.code === 'UserInForceChangePasswordState') {
-                toast.error('Your account requires initial password setup. Please check your email for your temporary password and use it to log in, then change your password.');
+                // User needs initial password setup - redirect to step 3 for direct password reset
+                setEmail(value.email);
+                setStep(3);
+                toast.info('Your account requires initial password setup. Please set your new password below.');
             } else if (error.code === 'InvalidParameterException') {
                 toast.error('Unable to send password reset email. Please contact support if you need assistance.');
             } else {
@@ -140,11 +143,72 @@ const ForgotPassword = (props) => {
             setLoading(false);
         }
     };
+
+    // Step 3: Direct password reset for FORCE_CHANGE_PASSWORD users
+    const submitDirectResetForm = async (e) => {
+        e.preventDefault();
+
+        // Validate password fields
+        if (!validator.fieldValid('newPassword') || !validator.fieldValid('confirmPassword')) {
+            validator.showMessages();
+            toast.error('Please fill in all fields');
+            return;
+        }
+
+        // Check if passwords match
+        if (value.newPassword !== value.confirmPassword) {
+            toast.error('Passwords do not match');
+            return;
+        }
+
+        // Validate password strength
+        if (value.newPassword.length < 8) {
+            toast.error('Password must be at least 8 characters long');
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
+            const response = await fetch(`${API_URL}/users/reset-password-forced`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    newPassword: value.newPassword
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to reset password');
+            }
+
+            toast.success('Password has been set successfully! You can now log in with your new password.');
+            setValue({
+                email: '',
+                verificationCode: '',
+                newPassword: '',
+                confirmPassword: ''
+            });
+            validator.hideMessages();
+            push('/login');
+        } catch (error) {
+            console.error('Direct password reset error:', error);
+            toast.error(error.message || 'Failed to reset password');
+        } finally {
+            setLoading(false);
+        }
+    };
     return (
         <Grid className="loginWrapper">
             <Grid className="loginForm">
                 <h2>Forgot Password</h2>
-                <p>{step === 1 ? 'Enter your email to receive a verification code' : 'Enter the verification code and your new password'}</p>
+                <p>{step === 1 ? 'Enter your email to receive a verification code' : step === 2 ? 'Enter the verification code and your new password' : 'Set your new password'}</p>
 
                 {step === 1 ? (
                     // Step 1: Request verification code
@@ -190,7 +254,7 @@ const ForgotPassword = (props) => {
                             </Grid>
                         </Grid>
                     </form>
-                ) : (
+                ) : step === 2 ? (
                     // Step 2: Confirm new password
                     <form onSubmit={submitResetForm}>
                         <Grid container spacing={3}>
@@ -290,6 +354,96 @@ const ForgotPassword = (props) => {
                                         Resend Code
                                     </Button>
                                 </p>
+                                <p className="noteHelp">
+                                    <Button
+                                        onClick={() => setStep(1)}
+                                        style={{
+                                            background: 'none',
+                                            border: 'none',
+                                            color: '#1e3c72',
+                                            textDecoration: 'underline',
+                                            cursor: 'pointer',
+                                            padding: 0,
+                                            fontSize: 'inherit'
+                                        }}
+                                    >
+                                        Change email address
+                                    </Button>
+                                    {' | '}
+                                    <Link to="/login">Return to Sign In</Link>
+                                </p>
+                            </Grid>
+                        </Grid>
+                    </form>
+                ) : (
+                    // Step 3: Direct password reset for FORCE_CHANGE_PASSWORD users
+                    <form onSubmit={submitDirectResetForm}>
+                        <Grid container spacing={3}>
+                            <Grid item xs={12}>
+                                <p style={{ fontSize: '14px', color: '#666', marginBottom: '20px' }}>
+                                    Setting password for <strong>{email}</strong>
+                                </p>
+                                <p style={{ fontSize: '13px', color: '#ff9800', marginBottom: '20px', backgroundColor: '#fff3e0', padding: '10px', borderRadius: '4px' }}>
+                                    Your account requires initial password setup. Please create a new password below.
+                                </p>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    className="inputOutline"
+                                    fullWidth
+                                    placeholder="New Password"
+                                    value={value.newPassword}
+                                    variant="outlined"
+                                    name="newPassword"
+                                    label="New Password"
+                                    type="password"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    onBlur={(e) => changeHandler(e)}
+                                    onChange={(e) => changeHandler(e)}
+                                    disabled={loading}
+                                />
+                                {validator.message('newPassword', value.newPassword, 'required|min:8')}
+                                <p style={{ fontSize: '12px', color: '#666', marginTop: '5px' }}>
+                                    Password must be at least 8 characters, with uppercase, lowercase, number, and special character
+                                </p>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    className="inputOutline"
+                                    fullWidth
+                                    placeholder="Confirm Password"
+                                    value={value.confirmPassword}
+                                    variant="outlined"
+                                    name="confirmPassword"
+                                    label="Confirm Password"
+                                    type="password"
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                    onBlur={(e) => changeHandler(e)}
+                                    onChange={(e) => changeHandler(e)}
+                                    disabled={loading}
+                                />
+                                {validator.message('confirmPassword', value.confirmPassword, 'required')}
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Grid className="formFooter">
+                                    <Button
+                                        fullWidth
+                                        className="cBtn cBtnLarge cBtnTheme"
+                                        type="submit"
+                                        disabled={loading}
+                                    >
+                                        {loading ? (
+                                            <>
+                                                <CircularProgress size={20} color="inherit" style={{ marginRight: '10px' }} />
+                                                Setting Password...
+                                            </>
+                                        ) : 'Set New Password'}
+                                    </Button>
+                                </Grid>
                                 <p className="noteHelp">
                                     <Button
                                         onClick={() => setStep(1)}
