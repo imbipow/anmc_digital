@@ -250,7 +250,7 @@ class MembersService {
     }
 
     // Calculate membership fee
-    calculateMembershipFee(membershipCategory, membershipType) {
+    calculateMembershipFee(membershipCategory, membershipType, paymentType = 'full') {
         const fees = {
             'general': {
                 'single': 100,
@@ -262,7 +262,14 @@ class MembersService {
             }
         };
 
-        return fees[membershipCategory]?.[membershipType] || 0;
+        let fee = fees[membershipCategory]?.[membershipType] || 0;
+
+        // Apply 10% discount for upfront life membership payments
+        if (membershipCategory === 'life' && paymentType === 'full') {
+            fee = fee * 0.9; // 10% discount
+        }
+
+        return fee;
     }
 
     // Get statistics

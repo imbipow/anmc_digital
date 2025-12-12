@@ -94,21 +94,28 @@ const SignUpPage = () => {
     const [checkingEmail, setCheckingEmail] = useState(false);
 
     // Calculate membership fee based on category and type
-    const calculateFee = (category, type) => {
+    const calculateFee = (category, type, paymentType = 'upfront') => {
         const fees = {
             'general': { 'single': 100, 'family': 200 },
             'life': { 'single': 1000, 'family': 1500 }
         };
-        return fees[category]?.[type] || 0;
+        let fee = fees[category]?.[type] || 0;
+
+        // Apply 10% discount for upfront life membership payments
+        if (category === 'life' && paymentType === 'upfront') {
+            fee = fee * 0.9; // 10% discount
+        }
+
+        return fee;
     };
 
-    // Update membership fee when category or type changes
+    // Update membership fee when category, type, or payment type changes
     React.useEffect(() => {
         if (formData.membershipCategory && formData.membershipType) {
-            const fee = calculateFee(formData.membershipCategory, formData.membershipType);
+            const fee = calculateFee(formData.membershipCategory, formData.membershipType, formData.paymentType);
             setMembershipFee(fee);
         }
-    }, [formData.membershipCategory, formData.membershipType]);
+    }, [formData.membershipCategory, formData.membershipType, formData.paymentType]);
 
     // Handle input changes
     const handleChange = (e) => {
@@ -688,12 +695,24 @@ const SignUpPage = () => {
                                     <FormControlLabel
                                         value="single"
                                         control={<Radio />}
-                                        label={`Single ${membershipFee > 0 && formData.membershipType === 'single' ? `($${membershipFee})` : ''}`}
+                                        label={
+                                            formData.membershipCategory === 'life' && formData.paymentType === 'upfront' && formData.membershipType === 'single' ? (
+                                                <span>Single ($1000)</span>
+                                            ) : (
+                                                `Single ${membershipFee > 0 && formData.membershipType === 'single' ? `($${membershipFee})` : ''}`
+                                            )
+                                        }
                                     />
                                     <FormControlLabel
                                         value="family"
                                         control={<Radio />}
-                                        label={`Family ${membershipFee > 0 && formData.membershipType === 'family' ? `($${membershipFee})` : ''}`}
+                                        label={
+                                            formData.membershipCategory === 'life' && formData.paymentType === 'upfront' && formData.membershipType === 'family' ? (
+                                                <span>Family ($1500)</span>
+                                            ) : (
+                                                `Family ${membershipFee > 0 && formData.membershipType === 'family' ? `($${membershipFee})` : ''}`
+                                            )
+                                        }
                                     />
                                 </RadioGroup>
                                 {errors.membershipType && <span className="error-text">{errors.membershipType}</span>}
@@ -1173,7 +1192,33 @@ const SignUpPage = () => {
                                             </p>
                                         </>
                                     ) : (
-                                        <h4>Membership Fee: ${membershipFee} AUD</h4>
+                                        <>
+                                            {formData.membershipCategory === 'life' && formData.paymentType === 'upfront' ? (
+                                                <>
+                                                    <div style={{ textDecoration: 'line-through', color: '#999', marginBottom: '5px' }}>
+                                                        Original Price: ${formData.membershipType === 'single' ? 1000 : 1500} AUD
+                                                    </div>
+                                                    <h4 style={{ color: '#2e7d32', marginTop: 0 }}>
+                                                        Membership Fee: ${membershipFee} AUD
+                                                        <span style={{
+                                                            marginLeft: '10px',
+                                                            fontSize: '0.9em',
+                                                            backgroundColor: '#4caf50',
+                                                            color: 'white',
+                                                            padding: '2px 8px',
+                                                            borderRadius: '4px'
+                                                        }}>
+                                                            10% Discount Applied
+                                                        </span>
+                                                    </h4>
+                                                    <p className="helper-text" style={{ color: '#2e7d32', marginTop: '5px' }}>
+                                                        You save ${formData.membershipType === 'single' ? 100 : 150} AUD with upfront payment!
+                                                    </p>
+                                                </>
+                                            ) : (
+                                                <h4>Membership Fee: ${membershipFee} AUD</h4>
+                                            )}
+                                        </>
                                     )}
                                 </div>
                             </Grid>

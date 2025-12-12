@@ -20,6 +20,13 @@ import {
 const DonationFilters = [
     <SearchInput source="q" alwaysOn placeholder="Search donations..." />,
     <SelectInput
+        source="donationType"
+        choices={[
+            { id: 'general', name: 'General' },
+            { id: 'brick', name: 'Brick' },
+        ]}
+    />,
+    <SelectInput
         source="paymentStatus"
         choices={[
             { id: 'succeeded', name: 'Succeeded' },
@@ -49,6 +56,7 @@ const DonationList = () => (
             <TextField source="lastName" label="Last Name" />
             <EmailField source="email" label="Email" />
             <TextField source="phone" label="Phone" />
+            <TextField source="donationType" label="Type" />
             <NumberField source="amount" label="Amount ($)" options={{ style: 'currency', currency: 'AUD' }} />
             <ChipField source="paymentStatus" label="Status" />
             <DateField source="createdAt" label="Date" showTime />

@@ -41,6 +41,15 @@ const DonationEdit = () => (
                     <Typography variant="h6" gutterBottom>
                         Donation Details
                     </Typography>
+                    <SelectInput
+                        source="donationType"
+                        choices={[
+                            { id: 'general', name: 'General' },
+                            { id: 'brick', name: 'Brick' },
+                        ]}
+                        fullWidth
+                        disabled
+                    />
                     <NumberInput source="amount" fullWidth disabled label="Amount (AUD)" />
                     <SelectInput
                         source="paymentStatus"

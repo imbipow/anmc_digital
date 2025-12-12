@@ -249,7 +249,8 @@ router.post('/register', async (req, res, next) => {
         // Calculate membership fee
         const membershipFee = membersService.calculateMembershipFee(
             memberData.membershipCategory,
-            memberData.membershipType
+            memberData.membershipType,
+            memberData.paymentType || 'full'
         );
 
         // Prepare member data for database (NEVER save passwords)
@@ -458,7 +459,8 @@ router.post('/', verifyToken, requireAdmin, async (req, res, next) => {
         if (!memberData.membershipFee) {
             memberData.membershipFee = membersService.calculateMembershipFee(
                 memberData.membershipCategory,
-                memberData.membershipType
+                memberData.membershipType,
+                memberData.paymentType || 'full'
             );
         }
 
@@ -936,7 +938,8 @@ router.post('/:id/renew', verifyToken, requireAdmin, async (req, res, next) => {
         // Calculate renewal fee
         const renewalFee = membersService.calculateMembershipFee(
             member.membershipCategory,
-            member.membershipType
+            member.membershipType,
+            'full' // Renewals are always full payment
         );
 
         // Prepare payment data if payment info provided

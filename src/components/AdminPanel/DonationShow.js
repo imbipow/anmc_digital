@@ -51,17 +51,20 @@ const DonationShow = () => (
                         Donation Details
                     </Typography>
                     <Grid container spacing={2}>
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={3}>
+                            <TextField source="donationType" label="Donation Type" />
+                        </Grid>
+                        <Grid item xs={12} md={3}>
                             <NumberField
                                 source="amount"
                                 label="Amount"
                                 options={{ style: 'currency', currency: 'AUD' }}
                             />
                         </Grid>
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={3}>
                             <TextField source="currency" label="Currency" />
                         </Grid>
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={3}>
                             <ChipField source="paymentStatus" label="Payment Status" />
                         </Grid>
                         <Grid item xs={12}>
