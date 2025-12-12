@@ -35,7 +35,6 @@ import {
     TextField as MuiTextField,
     Button as MuiButton
 } from '@mui/material';
-import jsPDF from 'jspdf';
 import cognitoAuthService from '../../services/cognitoAuth';
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
@@ -406,10 +405,9 @@ const MemberActions = () => {
         }
     };
 
-    const handlePrintMemberDetails = async () => {
+    const handleDownloadMemberDetails = async () => {
         setLoading(true);
         try {
-            // Fetch fresh member data from API
             const token = await cognitoAuthService.getIdToken();
             if (!token) {
                 notify('Authentication required. Please log in again.', { type: 'error' });
@@ -417,227 +415,43 @@ const MemberActions = () => {
                 return;
             }
 
-            const response = await fetch(`${API_BASE_URL}/members/${record.id}`, {
+            // Download PDF member details
+            const response = await fetch(`${API_BASE_URL}/members/${record.id}/details-pdf`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
             });
 
             if (!response.ok) {
-                throw new Error('Failed to fetch member data');
+                throw new Error('Failed to generate member details PDF');
             }
 
-            const memberData = await response.json();
+            // Get the PDF blob
+            const blob = await response.blob();
 
-            // Create PDF
-            const pdf = new jsPDF('p', 'mm', 'a4');
-            const pageWidth = 210;
-            const pageHeight = 297;
-            const margin = 15;
-            const contentWidth = pageWidth - (margin * 2);
-            let yPosition = margin;
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            // Sanitize filename by removing special characters
+            const sanitizedName = `${record.firstName}_${record.lastName}`.replace(/[^a-zA-Z0-9_]/g, '_');
+            link.download = `Member_Details_${sanitizedName}_${record.referenceNo || 'MEMBER'}.pdf`;
+            document.body.appendChild(link);
+            link.click();
 
-            // Helper function to add text with automatic page breaks
-            const addText = (text, fontSize = 10, isBold = false, color = [0, 0, 0]) => {
-                pdf.setFontSize(fontSize);
-                pdf.setFont('helvetica', isBold ? 'bold' : 'normal');
-                pdf.setTextColor(color[0], color[1], color[2]);
-
-                const lines = pdf.splitTextToSize(text, contentWidth);
-                lines.forEach(line => {
-                    if (yPosition > pageHeight - margin) {
-                        pdf.addPage();
-                        yPosition = margin;
-                    }
-                    pdf.text(line, margin, yPosition);
-                    yPosition += fontSize * 0.5;
-                });
-            };
-
-            const addSection = (title) => {
-                yPosition += 5;
-                if (yPosition > pageHeight - margin - 20) {
-                    pdf.addPage();
-                    yPosition = margin;
-                }
-                pdf.setDrawColor(30, 60, 114);
-                pdf.setLineWidth(0.5);
-                addText(title, 14, true, [30, 60, 114]);
-                pdf.line(margin, yPosition, pageWidth - margin, yPosition);
-                yPosition += 5;
-            };
-
-            const addField = (label, value) => {
-                if (!value || value === 'N/A' || value === '') return;
-                if (yPosition > pageHeight - margin - 10) {
-                    pdf.addPage();
-                    yPosition = margin;
-                }
-                // Add label and value on same line
-                pdf.setFontSize(10);
-                pdf.setFont('helvetica', 'bold');
-                pdf.setTextColor(0, 0, 0);
-                pdf.text(`${label}:`, margin, yPosition);
-
-                // Calculate value position (after label)
-                const labelWidth = pdf.getTextWidth(`${label}:`) + 3;
-                pdf.setFont('helvetica', 'normal');
-                pdf.setTextColor(60, 60, 60);
-                const valueLines = pdf.splitTextToSize(String(value), contentWidth - labelWidth);
-                pdf.text(valueLines[0], margin + labelWidth, yPosition);
-                yPosition += 6;
-
-                // Add additional lines if value wraps
-                if (valueLines.length > 1) {
-                    for (let i = 1; i < valueLines.length; i++) {
-                        if (yPosition > pageHeight - margin - 10) {
-                            pdf.addPage();
-                            yPosition = margin;
-                        }
-                        pdf.text(valueLines[i], margin + labelWidth, yPosition);
-                        yPosition += 6;
-                    }
-                }
-            };
-
-            // Title
-            pdf.setFillColor(30, 60, 114);
-            pdf.rect(0, 0, pageWidth, 25, 'F');
-            pdf.setTextColor(255, 255, 255);
-            pdf.setFontSize(20);
-            pdf.setFont('helvetica', 'bold');
-            pdf.text('ANMC MEMBERSHIP FORM', pageWidth / 2, 15, { align: 'center' });
-            yPosition = 35;
-
-            // Reference Number
-            pdf.setTextColor(0, 0, 0);
-            addText(`Reference Number: ${memberData.referenceNo || 'N/A'}`, 12, true);
-            yPosition += 5;
-
-            // Personal Information
-            addSection('PERSONAL INFORMATION');
-            addField('First Name', memberData.firstName);
-            addField('Last Name', memberData.lastName);
-            addField('Email', memberData.email);
-            addField('Mobile', memberData.mobile);
-            addField('Gender', memberData.gender);
-            addField('Age', memberData.age);
-
-            // Membership Details
-            addSection('MEMBERSHIP DETAILS');
-            addField('Category', memberData.membershipCategory);
-            addField('Type', memberData.membershipType);
-            addField('Membership Fee', memberData.membershipFee ? `$${memberData.membershipFee} AUD` : 'N/A');
-            addField('Payment Type', memberData.paymentType);
-            addField('Payment Status', memberData.paymentStatus);
-            addField('Payment Date', memberData.paymentDate ? new Date(memberData.paymentDate).toLocaleDateString('en-AU') : 'N/A');
-            addField('Membership Start Date', memberData.membershipStartDate ? new Date(memberData.membershipStartDate).toLocaleDateString('en-AU') : 'N/A');
-            addField('Expiry Date', memberData.expiryDate ? new Date(memberData.expiryDate).toLocaleDateString('en-AU') : memberData.membershipCategory === 'life' ? 'LIFETIME' : 'N/A');
-            addField('Renewals Count', memberData.renewalCount || '0');
-
-            // Installment Details
-            if (memberData.paymentType === 'installments') {
-                addSection('INSTALLMENT PAYMENT DETAILS');
-                addField('Upfront Payment', memberData.installmentAmount ? `$${memberData.installmentAmount} AUD` : 'N/A');
-                addField('Remaining Balance', memberData.remainingBalance ? `$${memberData.remainingBalance} AUD` : 'N/A');
-                addField('Direct Debit Account Name', memberData.directDebitAccountName);
-                addField('BSB', memberData.directDebitBsb);
-                addField('Account Number', memberData.directDebitAccountNumber);
-                if (memberData.directDebitAuthorityAccepted) {
-                    addField('Direct Debit Authority', 'Accepted');
-                }
-            }
-
-            // Address
-            addSection('RESIDENTIAL ADDRESS');
-            if (memberData.residentialAddress) {
-                addField('Street', memberData.residentialAddress.street);
-                addField('Suburb', memberData.residentialAddress.suburb);
-                addField('State', memberData.residentialAddress.state);
-                addField('Postcode', memberData.residentialAddress.postcode);
-                addField('Country', memberData.residentialAddress.country);
-            }
-
-            // Family Information
-            addSection('FAMILY INFORMATION');
-            addField('Primary Member', memberData.isPrimaryMember ? 'Yes' : 'No');
-            if (memberData.linkedMemberReferenceNo) {
-                addField('Linked To', memberData.linkedMemberReferenceNo);
-                addField('Relationship', memberData.relationship);
-            }
-
-            // Family Members Table
-            if (memberData.familyMembers && memberData.familyMembers.length > 0) {
-                yPosition += 5;
-                addText('Linked Family Members:', 11, true);
-                yPosition += 3;
-
-                // Table header
-                pdf.setFillColor(230, 230, 230);
-                pdf.rect(margin, yPosition, contentWidth, 8, 'F');
-                pdf.setFontSize(9);
-                pdf.setFont('helvetica', 'bold');
-                pdf.text('Ref No', margin + 2, yPosition + 5);
-                pdf.text('Name', margin + 30, yPosition + 5);
-                pdf.text('Email', margin + 80, yPosition + 5);
-                pdf.text('Relationship', margin + 140, yPosition + 5);
-                yPosition += 10;
-
-                // Table rows
-                pdf.setFont('helvetica', 'normal');
-                memberData.familyMembers.forEach((fm, index) => {
-                    if (yPosition > pageHeight - margin - 10) {
-                        pdf.addPage();
-                        yPosition = margin;
-                    }
-
-                    if (index % 2 === 0) {
-                        pdf.setFillColor(245, 245, 245);
-                        pdf.rect(margin, yPosition - 4, contentWidth, 8, 'F');
-                    }
-
-                    pdf.text(fm.referenceNo || '', margin + 2, yPosition + 2);
-                    pdf.text(`${fm.firstName} ${fm.lastName}`, margin + 30, yPosition + 2);
-                    pdf.text(fm.email || '', margin + 80, yPosition + 2);
-                    pdf.text(fm.relationship || '', margin + 140, yPosition + 2);
-                    yPosition += 8;
-                });
-            }
-
-            // Member Status
-            addSection('MEMBER STATUS');
-            addField('Status', memberData.status);
-            addField('Badge Status', memberData.badgeTaken === 'yes' ? 'Taken' : 'Not Taken');
-            if (memberData.approvedAt) {
-                addField('Approved Date', new Date(memberData.approvedAt).toLocaleString('en-AU'));
-                addField('Approved By', memberData.approvedBy);
-            }
-            if (memberData.createdAt) {
-                addField('Registration Date', new Date(memberData.createdAt).toLocaleString('en-AU'));
-            }
-
-            // Footer
-            const pageCount = pdf.internal.getNumberOfPages();
-            for (let i = 1; i <= pageCount; i++) {
-                pdf.setPage(i);
-                pdf.setFontSize(8);
-                pdf.setTextColor(128, 128, 128);
-                pdf.text(`Page ${i} of ${pageCount}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
-                pdf.text(`Generated: ${new Date().toLocaleString('en-AU')}`, margin, pageHeight - 10);
-            }
-
-            // Download PDF
-            const sanitizedName = `${memberData.firstName}_${memberData.lastName}`.replace(/[^a-zA-Z0-9_]/g, '_');
-            pdf.save(`Member_Details_${sanitizedName}_${memberData.referenceNo || 'MEMBER'}.pdf`);
+            // Cleanup
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
 
             notify('Member details PDF downloaded successfully!', { type: 'success' });
         } catch (error) {
-            console.error('Error generating PDF:', error);
-            notify('Failed to generate PDF: ' + error.message, { type: 'error' });
+            console.error('Error downloading member details:', error);
+            notify('Failed to download member details: ' + error.message, { type: 'error' });
         } finally {
             setLoading(false);
         }
     };
+
 
     const handleToggleBadgeStatus = async () => {
         setLoading(true);
@@ -774,10 +588,10 @@ const MemberActions = () => {
                     variant="outlined"
                     color="primary"
                     startIcon={<DownloadIcon />}
-                    onClick={handlePrintMemberDetails}
+                    onClick={handleDownloadMemberDetails}
                     disabled={loading}
                 >
-                    Download Member Details PDF
+                    Download Member Details
                 </MuiButton>
             </Box>
 

@@ -5,6 +5,7 @@ const { verifyToken, requireAdmin, requireMember } = require('../middleware/auth
 const cognitoService = require('../services/cognitoService');
 const emailService = require('../services/emailService');
 const certificateService = require('../services/certificateService');
+const memberDetailsPdfService = require('../services/memberDetailsPdfService');
 
 // Get all members with optional filters and pagination
 // Members can view their own data by email, admins can view all
@@ -1159,6 +1160,35 @@ router.get('/:id/certificate', verifyToken, requireAdmin, async (req, res, next)
         res.send(pdfBuffer);
     } catch (error) {
         console.error('Error generating certificate:', error);
+        next(error);
+    }
+});
+
+// Generate member details PDF
+router.get('/:id/details-pdf', verifyToken, requireAdmin, async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Get member data with family members
+        const member = await membersService.getById(id);
+
+        if (!member) {
+            return res.status(404).json({ error: 'Member not found' });
+        }
+
+        // Generate member details PDF
+        const pdfBuffer = await memberDetailsPdfService.generateMemberDetailsPdf(member);
+        const filename = memberDetailsPdfService.getMemberDetailsFilename(member);
+
+        // Set response headers for PDF download
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+        res.setHeader('Content-Length', pdfBuffer.length);
+
+        // Send the PDF
+        res.send(pdfBuffer);
+    } catch (error) {
+        console.error('Error generating member details PDF:', error);
         next(error);
     }
 });
