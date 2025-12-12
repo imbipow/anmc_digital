@@ -122,7 +122,10 @@ const Footer = (props) =>{
                 <div className="container">
                     <div className="row">
                         <div className="col col-xs-12">
-                            <p className="copyright">&copy; 2025 ANMC INC. All rights reserved. | Registered with CAV</p>
+                            <p className="copyright">
+                                &copy; 2025 ANMC INC. All rights reserved. | Registered with CAV
+                                <span style={{ marginLeft: '15px' }}>| Developed by <a href="https://dreamsystech.com.au/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'underline' }}>DreamSys Technologies</a></span>
+                            </p>
                         </div>
                     </div>
                 </div>
