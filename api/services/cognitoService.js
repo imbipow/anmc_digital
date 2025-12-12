@@ -497,45 +497,6 @@ class CognitoService {
             errors
         };
     }
-
-    /**
-     * Reset password for users in FORCE_CHANGE_PASSWORD status
-     * This allows users who were created by admin to reset their password without knowing temporary password
-     * @param {string} username - Username (email)
-     * @param {string} newPassword - New password to set
-     * @returns {Promise<void>}
-     */
-    async resetPasswordForForcedUser(username, newPassword) {
-        if (!this.isConfigured()) {
-            throw new Error('Cognito not configured');
-        }
-
-        try {
-            // Get user to check status
-            const user = await this.getUser(username);
-
-            if (!user) {
-                throw new Error('User not found');
-            }
-
-            // Set the new password as permanent (bypassing temporary password requirement)
-            const params = {
-                UserPoolId: this.userPoolId,
-                Username: username,
-                Password: newPassword,
-                Permanent: true // Make password permanent, removing FORCE_CHANGE_PASSWORD status
-            };
-
-            const command = new AdminSetUserPasswordCommand(params);
-            const cognitoClient = this.getCognitoClient();
-            await cognitoClient.send(command);
-
-            console.log(`✅ Password reset successfully for user in FORCE_CHANGE_PASSWORD status: ${username}`);
-        } catch (error) {
-            console.error(`❌ Error resetting password for forced user: ${error.message}`);
-            throw error;
-        }
-    }
 }
 
 module.exports = new CognitoService();
