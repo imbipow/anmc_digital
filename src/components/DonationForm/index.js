@@ -15,7 +15,8 @@ const DonationForm = ({ onClose, onSuccess }) => {
         lastName: '',
         email: '',
         phone: '',
-        amount: '',
+        amount: '250',
+        donationType: 'brick',
         comments: ''
     });
     const [errors, setErrors] = useState({});
@@ -51,7 +52,14 @@ const DonationForm = ({ onClose, onSuccess }) => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+
+        // If donation type is changed to brick, set amount to 250
+        if (name === 'donationType' && value === 'brick') {
+            setFormData(prev => ({ ...prev, [name]: value, amount: '250' }));
+        } else {
+            setFormData(prev => ({ ...prev, [name]: value }));
+        }
+
         // Clear error when user starts typing
         if (errors[name]) {
             setErrors(prev => ({ ...prev, [name]: '' }));
@@ -229,6 +237,20 @@ const DonationForm = ({ onClose, onSuccess }) => {
                     </div>
 
                     <div className="form-group">
+                        <label htmlFor="donationType">Donation Type *</label>
+                        <select
+                            id="donationType"
+                            name="donationType"
+                            value={formData.donationType}
+                            onChange={handleInputChange}
+                            className="form-select"
+                        >
+                            <option value="brick">Brick Donation ($250)</option>
+                            <option value="general">General Donation</option>
+                        </select>
+                    </div>
+
+                    <div className="form-group">
                         <label htmlFor="amount">Donation Amount (AUD) *</label>
                         <div className="amount-input-wrapper">
                             <span className="currency-symbol"></span>
@@ -242,21 +264,24 @@ const DonationForm = ({ onClose, onSuccess }) => {
                                 step="0.01"
                                 placeholder="100.00"
                                 className={errors.amount ? 'error' : ''}
+                                disabled={formData.donationType === 'brick'}
                             />
                         </div>
                         {errors.amount && <span className="error-message">{errors.amount}</span>}
-                        <div className="quick-amounts">
-                            {[50, 100, 250, 500, 1000].map(amt => (
-                                <button
-                                    key={amt}
-                                    type="button"
-                                    className="quick-amount-btn"
-                                    onClick={() => setFormData(prev => ({ ...prev, amount: amt.toString() }))}
-                                >
-                                    ${amt}
-                                </button>
-                            ))}
-                        </div>
+                        {formData.donationType !== 'brick' && (
+                            <div className="quick-amounts">
+                                {[50, 100, 250, 500, 1000].map(amt => (
+                                    <button
+                                        key={amt}
+                                        type="button"
+                                        className="quick-amount-btn"
+                                        onClick={() => setFormData(prev => ({ ...prev, amount: amt.toString() }))}
+                                    >
+                                        ${amt}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className="form-group">
